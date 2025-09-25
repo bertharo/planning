@@ -54,7 +54,7 @@ export function DataSourcePanel({ dataSources, setDataSources }: DataSourcePanel
     if (savedConfigs) {
       try {
         const configs = JSON.parse(savedConfigs)
-        setDataSources(prev => 
+        setDataSources((prev: DataSource[]) => 
           prev.map(source => ({
             ...source,
             config: configs[source.id] || source.config,
@@ -111,7 +111,7 @@ export function DataSourcePanel({ dataSources, setDataSources }: DataSourcePanel
       localStorage.setItem('dataSourceConfigs', JSON.stringify(savedConfigs))
 
       // Update the data source
-      setDataSources(prev =>
+      setDataSources((prev: DataSource[]) =>
         prev.map(source =>
           source.id === sourceId
             ? {
