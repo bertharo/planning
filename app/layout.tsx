@@ -7,6 +7,10 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: 'SaaS Planning Platform',
   description: 'Natural language interface for financial planning and modeling',
+  icons: {
+    icon: '/favicon.ico',
+  },
+  manifest: '/site.webmanifest',
 }
 
 export default function RootLayout({

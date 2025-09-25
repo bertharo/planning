@@ -1,0 +1,9 @@
+{
+  "name": "SaaS Planning Platform",
+  "short_name": "Planning",
+  "description": "Natural language interface for financial planning and modeling",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3b82f6"
+}
