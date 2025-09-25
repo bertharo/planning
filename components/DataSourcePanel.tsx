@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { 
   Database, 
   Users, 
@@ -11,7 +11,9 @@ import {
   Settings,
   Plus,
   Check,
-  X
+  X,
+  Save,
+  AlertCircle
 } from 'lucide-react'
 
 interface DataSource {
@@ -19,6 +21,11 @@ interface DataSource {
   name: string
   type: string
   connected: boolean
+  config?: DataSourceConfig
+}
+
+interface DataSourceConfig {
+  [key: string]: string | boolean
 }
 
 interface DataSourcePanelProps {
@@ -37,6 +44,28 @@ const dataSourceIcons = {
 
 export function DataSourcePanel({ dataSources, setDataSources }: DataSourcePanelProps) {
   const [showConfig, setShowConfig] = useState<string | null>(null)
+  const [configForm, setConfigForm] = useState<DataSourceConfig>({})
+  const [isSaving, setIsSaving] = useState(false)
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'success' | 'error'>('idle')
+
+  // Load saved configurations from localStorage on mount
+  useEffect(() => {
+    const savedConfigs = localStorage.getItem('dataSourceConfigs')
+    if (savedConfigs) {
+      try {
+        const configs = JSON.parse(savedConfigs)
+        setDataSources(prev => 
+          prev.map(source => ({
+            ...source,
+            config: configs[source.id] || source.config,
+            connected: configs[source.id] ? Object.keys(configs[source.id]).length > 0 : source.connected
+          }))
+        )
+      } catch (error) {
+        console.error('Error loading saved configurations:', error)
+      }
+    }
+  }, [setDataSources])
 
   const toggleConnection = (id: string) => {
     setDataSources(
@@ -49,7 +78,63 @@ export function DataSourcePanel({ dataSources, setDataSources }: DataSourcePanel
   }
 
   const toggleConfig = (id: string) => {
-    setShowConfig(showConfig === id ? null : id)
+    if (showConfig === id) {
+      setShowConfig(null)
+      setConfigForm({})
+    } else {
+      setShowConfig(id)
+      // Load existing config if available
+      const source = dataSources.find(s => s.id === id)
+      setConfigForm(source?.config || {})
+    }
+    setSaveStatus('idle')
+  }
+
+  const updateConfigForm = (key: string, value: string | boolean) => {
+    setConfigForm(prev => ({
+      ...prev,
+      [key]: value
+    }))
+  }
+
+  const saveConfiguration = async (sourceId: string) => {
+    setIsSaving(true)
+    setSaveStatus('idle')
+
+    try {
+      // Simulate API call delay
+      await new Promise(resolve => setTimeout(resolve, 1000))
+
+      // Save to localStorage
+      const savedConfigs = JSON.parse(localStorage.getItem('dataSourceConfigs') || '{}')
+      savedConfigs[sourceId] = configForm
+      localStorage.setItem('dataSourceConfigs', JSON.stringify(savedConfigs))
+
+      // Update the data source
+      setDataSources(prev =>
+        prev.map(source =>
+          source.id === sourceId
+            ? {
+                ...source,
+                config: configForm,
+                connected: Object.keys(configForm).length > 0
+              }
+            : source
+        )
+      )
+
+      setSaveStatus('success')
+      setTimeout(() => {
+        setShowConfig(null)
+        setConfigForm({})
+        setSaveStatus('idle')
+      }, 1500)
+    } catch (error) {
+      console.error('Error saving configuration:', error)
+      setSaveStatus('error')
+    } finally {
+      setIsSaving(false)
+    }
   }
 
   return (
@@ -117,7 +202,9 @@ export function DataSourcePanel({ dataSources, setDataSources }: DataSourcePanel
                           <input
                             type="url"
                             placeholder="https://docs.google.com/spreadsheets/d/..."
-                            className="w-full px-3 py-2 border border-input rounded-md text-sm"
+                            value={configForm.sheetsUrl || ''}
+                            onChange={(e) => updateConfigForm('sheetsUrl', e.target.value)}
+                            className="w-full px-3 py-2 border border-input rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                           />
                         </div>
                         <div>
@@ -127,7 +214,9 @@ export function DataSourcePanel({ dataSources, setDataSources }: DataSourcePanel
                           <input
                             type="text"
                             placeholder="Sheet1, Data, etc."
-                            className="w-full px-3 py-2 border border-input rounded-md text-sm"
+                            value={configForm.sheetName || ''}
+                            onChange={(e) => updateConfigForm('sheetName', e.target.value)}
+                            className="w-full px-3 py-2 border border-input rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                           />
                         </div>
                         <div>
@@ -137,13 +226,17 @@ export function DataSourcePanel({ dataSources, setDataSources }: DataSourcePanel
                           <input
                             type="password"
                             placeholder="Enter Google API key..."
-                            className="w-full px-3 py-2 border border-input rounded-md text-sm"
+                            value={configForm.apiKey || ''}
+                            onChange={(e) => updateConfigForm('apiKey', e.target.value)}
+                            className="w-full px-3 py-2 border border-input rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                           />
                         </div>
                         <div className="flex items-center space-x-2">
                           <input
                             type="checkbox"
                             id="auto-refresh"
+                            checked={configForm.autoRefresh || false}
+                            onChange={(e) => updateConfigForm('autoRefresh', e.target.checked)}
                             className="rounded"
                           />
                           <label htmlFor="auto-refresh" className="text-sm">
@@ -162,7 +255,9 @@ export function DataSourcePanel({ dataSources, setDataSources }: DataSourcePanel
                           <input
                             type="text"
                             placeholder="/path/to/file.xlsx or URL"
-                            className="w-full px-3 py-2 border border-input rounded-md text-sm"
+                            value={configForm.filePath || ''}
+                            onChange={(e) => updateConfigForm('filePath', e.target.value)}
+                            className="w-full px-3 py-2 border border-input rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                           />
                         </div>
                         <div>
@@ -172,7 +267,9 @@ export function DataSourcePanel({ dataSources, setDataSources }: DataSourcePanel
                           <input
                             type="text"
                             placeholder="Sheet1, Data, etc."
-                            className="w-full px-3 py-2 border border-input rounded-md text-sm"
+                            value={configForm.sheetName || ''}
+                            onChange={(e) => updateConfigForm('sheetName', e.target.value)}
+                            className="w-full px-3 py-2 border border-input rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                           />
                         </div>
                         <div>
@@ -182,15 +279,18 @@ export function DataSourcePanel({ dataSources, setDataSources }: DataSourcePanel
                           <input
                             type="text"
                             placeholder="A1:Z100 or leave blank for auto-detect"
-                            className="w-full px-3 py-2 border border-input rounded-md text-sm"
+                            value={configForm.dataRange || ''}
+                            onChange={(e) => updateConfigForm('dataRange', e.target.value)}
+                            className="w-full px-3 py-2 border border-input rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                           />
                         </div>
                         <div className="flex items-center space-x-2">
                           <input
                             type="checkbox"
                             id="header-row"
+                            checked={configForm.hasHeaders !== false}
+                            onChange={(e) => updateConfigForm('hasHeaders', e.target.checked)}
                             className="rounded"
-                            defaultChecked
                           />
                           <label htmlFor="header-row" className="text-sm">
                             First row contains headers
@@ -208,7 +308,9 @@ export function DataSourcePanel({ dataSources, setDataSources }: DataSourcePanel
                           <input
                             type="text"
                             placeholder="Enter connection details..."
-                            className="w-full px-3 py-2 border border-input rounded-md text-sm"
+                            value={configForm.connectionString || ''}
+                            onChange={(e) => updateConfigForm('connectionString', e.target.value)}
+                            className="w-full px-3 py-2 border border-input rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                           />
                         </div>
                         <div>
@@ -218,15 +320,40 @@ export function DataSourcePanel({ dataSources, setDataSources }: DataSourcePanel
                           <input
                             type="password"
                             placeholder="Enter API key..."
-                            className="w-full px-3 py-2 border border-input rounded-md text-sm"
+                            value={configForm.apiKey || ''}
+                            onChange={(e) => updateConfigForm('apiKey', e.target.value)}
+                            className="w-full px-3 py-2 border border-input rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                           />
                         </div>
                       </>
                     )}
                     
-                    <button className="w-full px-3 py-2 bg-primary text-primary-foreground rounded-md text-sm hover:bg-primary/90">
-                      Save Configuration
-                    </button>
+                    <div className="space-y-2">
+                      {saveStatus === 'error' && (
+                        <div className="flex items-center space-x-2 text-sm text-destructive">
+                          <AlertCircle className="w-4 h-4" />
+                          <span>Error saving configuration. Please try again.</span>
+                        </div>
+                      )}
+                      
+                      <button 
+                        onClick={() => saveConfiguration(source.id)}
+                        disabled={isSaving}
+                        className="w-full px-3 py-2 bg-primary text-primary-foreground rounded-md text-sm hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+                      >
+                        {isSaving ? (
+                          <>
+                            <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
+                            <span>Saving...</span>
+                          </>
+                        ) : (
+                          <>
+                            <Save className="w-4 h-4" />
+                            <span>{saveStatus === 'success' ? 'Saved!' : 'Save Configuration'}</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
                   </div>
                 </div>
               )}
