@@ -28,6 +28,12 @@ interface DataSourceConfig {
   [key: string]: string | boolean
 }
 
+// Helper function to get string value from config
+const getStringValue = (value: string | boolean | undefined): string => {
+  if (typeof value === 'boolean') return value.toString()
+  return value || ''
+}
+
 interface DataSourcePanelProps {
   dataSources: DataSource[]
   setDataSources: React.Dispatch<React.SetStateAction<DataSource[]>>
@@ -202,7 +208,7 @@ export function DataSourcePanel({ dataSources, setDataSources }: DataSourcePanel
                           <input
                             type="url"
                             placeholder="https://docs.google.com/spreadsheets/d/..."
-                            value={configForm.sheetsUrl || ''}
+                            value={getStringValue(configForm.sheetsUrl)}
                             onChange={(e) => updateConfigForm('sheetsUrl', e.target.value)}
                             className="w-full px-3 py-2 border border-input rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                           />
@@ -214,7 +220,7 @@ export function DataSourcePanel({ dataSources, setDataSources }: DataSourcePanel
                           <input
                             type="text"
                             placeholder="Sheet1, Data, etc."
-                            value={configForm.sheetName || ''}
+                            value={getStringValue(configForm.sheetName)}
                             onChange={(e) => updateConfigForm('sheetName', e.target.value)}
                             className="w-full px-3 py-2 border border-input rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                           />
@@ -226,7 +232,7 @@ export function DataSourcePanel({ dataSources, setDataSources }: DataSourcePanel
                           <input
                             type="password"
                             placeholder="Enter Google API key..."
-                            value={configForm.apiKey || ''}
+                            value={getStringValue(configForm.apiKey)}
                             onChange={(e) => updateConfigForm('apiKey', e.target.value)}
                             className="w-full px-3 py-2 border border-input rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                           />
@@ -255,7 +261,7 @@ export function DataSourcePanel({ dataSources, setDataSources }: DataSourcePanel
                           <input
                             type="text"
                             placeholder="/path/to/file.xlsx or URL"
-                            value={configForm.filePath || ''}
+                            value={getStringValue(configForm.filePath)}
                             onChange={(e) => updateConfigForm('filePath', e.target.value)}
                             className="w-full px-3 py-2 border border-input rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                           />
@@ -267,7 +273,7 @@ export function DataSourcePanel({ dataSources, setDataSources }: DataSourcePanel
                           <input
                             type="text"
                             placeholder="Sheet1, Data, etc."
-                            value={configForm.sheetName || ''}
+                            value={getStringValue(configForm.sheetName)}
                             onChange={(e) => updateConfigForm('sheetName', e.target.value)}
                             className="w-full px-3 py-2 border border-input rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                           />
@@ -279,7 +285,7 @@ export function DataSourcePanel({ dataSources, setDataSources }: DataSourcePanel
                           <input
                             type="text"
                             placeholder="A1:Z100 or leave blank for auto-detect"
-                            value={configForm.dataRange || ''}
+                            value={getStringValue(configForm.dataRange)}
                             onChange={(e) => updateConfigForm('dataRange', e.target.value)}
                             className="w-full px-3 py-2 border border-input rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                           />
@@ -308,7 +314,7 @@ export function DataSourcePanel({ dataSources, setDataSources }: DataSourcePanel
                           <input
                             type="text"
                             placeholder="Enter connection details..."
-                            value={configForm.connectionString || ''}
+                            value={getStringValue(configForm.connectionString)}
                             onChange={(e) => updateConfigForm('connectionString', e.target.value)}
                             className="w-full px-3 py-2 border border-input rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                           />
@@ -320,7 +326,7 @@ export function DataSourcePanel({ dataSources, setDataSources }: DataSourcePanel
                           <input
                             type="password"
                             placeholder="Enter API key..."
-                            value={configForm.apiKey || ''}
+                            value={getStringValue(configForm.apiKey)}
                             onChange={(e) => updateConfigForm('apiKey', e.target.value)}
                             className="w-full px-3 py-2 border border-input rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                           />
