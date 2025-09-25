@@ -34,6 +34,13 @@ const getStringValue = (value: string | boolean | undefined): string => {
   return value || ''
 }
 
+// Helper function to get boolean value from config
+const getBooleanValue = (value: string | boolean | undefined): boolean => {
+  if (typeof value === 'boolean') return value
+  if (typeof value === 'string') return value === 'true'
+  return false
+}
+
 interface DataSourcePanelProps {
   dataSources: DataSource[]
   setDataSources: React.Dispatch<React.SetStateAction<DataSource[]>>
@@ -241,7 +248,7 @@ export function DataSourcePanel({ dataSources, setDataSources }: DataSourcePanel
                           <input
                             type="checkbox"
                             id="auto-refresh"
-                            checked={configForm.autoRefresh || false}
+                            checked={getBooleanValue(configForm.autoRefresh)}
                             onChange={(e) => updateConfigForm('autoRefresh', e.target.checked)}
                             className="rounded"
                           />
@@ -294,7 +301,7 @@ export function DataSourcePanel({ dataSources, setDataSources }: DataSourcePanel
                           <input
                             type="checkbox"
                             id="header-row"
-                            checked={configForm.hasHeaders !== false}
+                            checked={getBooleanValue(configForm.hasHeaders)}
                             onChange={(e) => updateConfigForm('hasHeaders', e.target.checked)}
                             className="rounded"
                           />
