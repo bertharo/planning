@@ -30,7 +30,7 @@ interface DataSourceConfig {
 
 interface DataSourcePanelProps {
   dataSources: DataSource[]
-  setDataSources: (sources: DataSource[]) => void
+  setDataSources: React.Dispatch<React.SetStateAction<DataSource[]>>
 }
 
 const dataSourceIcons = {
