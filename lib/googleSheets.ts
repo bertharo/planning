@@ -183,7 +183,7 @@ export class GoogleSheetsService {
   }
 
   // Test function to verify Google Sheets connection
-  async testConnection(config: SheetConfig): Promise<{ success: boolean; message: string; data?: any }> {
+  async testConnection(config: SheetConfig): Promise<{ success: boolean; message: string; data?: any; errorDetails?: any }> {
     try {
       if (!config.apiKey) {
         return { success: false, message: 'No API key provided' }
@@ -206,9 +206,31 @@ export class GoogleSheetsService {
       
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}))
+        let errorMessage = `API Error ${response.status}: ${errorData.error?.message || response.statusText}`
+        
+        // Provide more helpful error messages
+        if (response.status === 400) {
+          if (errorData.error?.message?.includes('API key not valid')) {
+            errorMessage = `Invalid API Key: Please check your Google Sheets API key. Make sure it's correctly copied and has Google Sheets API enabled.`
+          } else if (errorData.error?.message?.includes('API key not found')) {
+            errorMessage = `API Key Not Found: The API key appears to be empty or incorrectly formatted.`
+          } else {
+            errorMessage = `Bad Request: ${errorData.error?.message || 'Check your API key and sheet URL.'}`
+          }
+        } else if (response.status === 403) {
+          errorMessage = `Access Forbidden: Your API key doesn't have permission to access Google Sheets. Make sure Google Sheets API is enabled in Google Cloud Console.`
+        } else if (response.status === 404) {
+          errorMessage = `Sheet Not Found: The spreadsheet ID or sheet name doesn't exist. Check your Google Sheets URL.`
+        }
+        
         return { 
           success: false, 
-          message: `API Error ${response.status}: ${errorData.error?.message || response.statusText}` 
+          message: errorMessage,
+          errorDetails: {
+            status: response.status,
+            originalError: errorData.error?.message || response.statusText,
+            statusText: response.statusText
+          }
         }
       }
 

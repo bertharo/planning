@@ -409,13 +409,13 @@ export function DataSourcePanel({ dataSources, setDataSources }: DataSourcePanel
                              )}
 
                              {testResult && (
-                               <div className={`flex items-center space-x-2 text-sm p-2 rounded ${
+                               <div className={`flex items-start space-x-2 text-sm p-2 rounded ${
                                  testResult.success 
                                    ? 'text-green-600 bg-green-50' 
                                    : 'text-destructive bg-destructive/10'
                                }`}>
-                                 {testResult.success ? <Check className="w-4 h-4" /> : <AlertCircle className="w-4 h-4" />}
-                                 <div>
+                                 {testResult.success ? <Check className="w-4 h-4 mt-0.5" /> : <AlertCircle className="w-4 h-4 mt-0.5" />}
+                                 <div className="flex-1">
                                    <div className="font-medium">{testResult.success ? 'Connection Successful!' : 'Connection Failed'}</div>
                                    <div className="text-xs">{testResult.message}</div>
                                    {testResult.data && (
@@ -424,6 +424,23 @@ export function DataSourcePanel({ dataSources, setDataSources }: DataSourcePanel
                                        {testResult.data.headers.length > 0 && (
                                          <div>Headers: {testResult.data.headers.join(', ')}</div>
                                        )}
+                                     </div>
+                                   )}
+                                   {!testResult.success && testResult.message.includes('API key') && (
+                                     <div className="mt-2 p-2 bg-blue-50 border border-blue-200 rounded text-xs">
+                                       <div className="font-medium text-blue-800 mb-1">📋 How to get a valid Google Sheets API key:</div>
+                                       <ol className="list-decimal list-inside space-y-1 text-blue-700">
+                                         <li>Go to <a href="https://console.cloud.google.com/" target="_blank" rel="noopener noreferrer" className="underline">Google Cloud Console</a></li>
+                                         <li>Create a new project or select existing one</li>
+                                         <li>Enable Google Sheets API</li>
+                                         <li>Go to "Credentials" → "Create Credentials" → "API Key"</li>
+                                         <li>Copy the API key and paste it above</li>
+                                         <li>Make your Google Sheet publicly readable</li>
+                                       </ol>
+                                       <div className="mt-1 text-blue-600">
+                                         💡 <strong>Quick tip:</strong> Your sheet URL should look like: 
+                                         <code className="bg-blue-100 px-1 rounded">https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/edit</code>
+                                       </div>
                                      </div>
                                    )}
                                  </div>
