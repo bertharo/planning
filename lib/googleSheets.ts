@@ -75,15 +75,15 @@ export class GoogleSheetsService {
       console.log('Headers found:', headers)
 
       // Now try to find the specific row by searching in chunks
-      // For large sheets, we'll search in the first 500 rows first
-      const searchRange = 'A2:Z501' // Skip header, search first 500 data rows
+      // For very large sheets, use smaller chunks to avoid API limits
+      const searchRange = 'A2:Z101' // Skip header, search first 100 data rows
       const sheetData = await this.getSheetData(config, searchRange)
       
       if (!sheetData || !sheetData.values.length) {
         return null
       }
 
-      console.log('Searching in first 500 rows:', sheetData.values.length, 'rows')
+      console.log('Searching in first 100 rows:', sheetData.values.length, 'rows')
 
       // Find the row that matches the query criteria
       const matchingRow = this.findMatchingRow(headers, sheetData.values, query)
@@ -99,16 +99,16 @@ export class GoogleSheetsService {
         }
       }
 
-      // If not found in first 500 rows, try the next chunk
-      console.log('Not found in first 500 rows, searching next chunk...')
-      const nextSearchRange = 'A502:Z1001'
+      // If not found in first 100 rows, try the next chunk
+      console.log('Not found in first 100 rows, searching next chunk...')
+      const nextSearchRange = 'A102:Z201'
       const nextSheetData = await this.getSheetData(config, nextSearchRange)
       
       if (nextSheetData && nextSheetData.values.length > 0) {
         const nextMatchingRow = this.findMatchingRow(headers, nextSheetData.values, query)
         
         if (nextMatchingRow) {
-          const rowIndex = nextSheetData.values.indexOf(nextMatchingRow) + 502 // +502 for the offset
+          const rowIndex = nextSheetData.values.indexOf(nextMatchingRow) + 102 // +102 for the offset
           return {
             value: this.extractMetricValue(nextMatchingRow, headers, query.metric || 'ARR'),
             rowData: nextMatchingRow,
@@ -116,6 +116,34 @@ export class GoogleSheetsService {
             rowIndex: rowIndex,
             columnIndex: this.getColumnIndex(headers, query.metric || 'ARR')
           }
+        }
+      }
+
+      // Try a few more chunks if needed
+      for (let chunk = 2; chunk <= 10; chunk++) {
+        console.log(`Searching chunk ${chunk + 1}...`)
+        const chunkStart = chunk * 100 + 2
+        const chunkEnd = chunkStart + 99
+        const chunkRange = `A${chunkStart}:Z${chunkEnd}`
+        
+        try {
+          const chunkData = await this.getSheetData(config, chunkRange)
+          if (chunkData && chunkData.values.length > 0) {
+            const chunkMatchingRow = this.findMatchingRow(headers, chunkData.values, query)
+            if (chunkMatchingRow) {
+              const rowIndex = chunkData.values.indexOf(chunkMatchingRow) + chunkStart
+              return {
+                value: this.extractMetricValue(chunkMatchingRow, headers, query.metric || 'ARR'),
+                rowData: chunkMatchingRow,
+                headers: headers,
+                rowIndex: rowIndex,
+                columnIndex: this.getColumnIndex(headers, query.metric || 'ARR')
+              }
+            }
+          }
+        } catch (error) {
+          console.log(`Error reading chunk ${chunk + 1}:`, error)
+          break
         }
       }
 
