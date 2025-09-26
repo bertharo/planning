@@ -315,10 +315,12 @@ export function NaturalLanguageInterface() {
            let groupByColumn = 'arr_category'
            if (lowerQuery.includes('deal type') || lowerQuery.includes('deal_type')) {
              groupByColumn = 'deal_type'
-           } else if (lowerQuery.includes('product')) {
+           } else if (lowerQuery.includes('by product') || lowerQuery.includes('product by')) {
              groupByColumn = 'product'
-           } else if (lowerQuery.includes('region')) {
+           } else if (lowerQuery.includes('by region') || lowerQuery.includes('region by')) {
              groupByColumn = 'region'
+           } else if (lowerQuery.includes('by segment') || lowerQuery.includes('segment by')) {
+             groupByColumn = 'industry'
            }
 
            // Determine value column
@@ -332,12 +334,24 @@ export function NaturalLanguageInterface() {
            // Parse filters
            const filters: any = {}
 
-           // Product filter
-           if (lowerQuery.includes('product')) {
-             const productMatch = lowerQuery.match(/product\s+(\w+)/)
-             if (productMatch) {
-               filters.product = productMatch[1]
-             }
+           // ARR Category filter (for queries like "product churn by product")
+           const arrCategories = ['contraction', 'customer churn', 'expansion', 'net new', 'product add on', 'product churn']
+           const foundArrCategory = arrCategories.find(category => lowerQuery.includes(category))
+           if (foundArrCategory) {
+             filters.arrCategory = foundArrCategory
+           }
+
+           // Deal Type filter
+           const dealTypes = ['new', 'expansion', 'churn', 'contraction']
+           const foundDealType = dealTypes.find(type => lowerQuery.includes(type))
+           if (foundDealType) {
+             filters.dealType = foundDealType
+           }
+
+           // Product filter (specific product)
+           const productMatch = lowerQuery.match(/product\s+(\w+)/)
+           if (productMatch) {
+             filters.product = productMatch[1]
            }
 
            // Region filter
@@ -379,14 +393,20 @@ export function NaturalLanguageInterface() {
              }).format(value)
            }
 
-           let response = `📊 **Breakdown Analysis Results**
+           // Create a more descriptive title based on filters
+           let title = "Breakdown Analysis Results"
+           if (query.filters?.arrCategory) {
+             title = `${query.filters.arrCategory.charAt(0).toUpperCase() + query.filters.arrCategory.slice(1)} Breakdown`
+           }
+
+           let response = `📊 **${title}**
 
 **Query:** "${originalQuery}"
 **Grouped by:** ${query.groupByColumn.replace('_', ' ').toUpperCase()}
 **Value Column:** ${query.valueColumn.replace('_', ' ').toUpperCase()}
 **Rows Analyzed:** ${result.rowCount}
 
-**📈 Breakdown by Category:**`
+**📈 Breakdown by ${query.groupByColumn.replace('_', ' ').toUpperCase()}:**`
 
            // Format each category with proper alignment
            result.groups.forEach((group: any) => {
@@ -400,6 +420,8 @@ export function NaturalLanguageInterface() {
 
            if (query.filters) {
              response += `\n\n**🔍 Filters Applied:**`
+             if (query.filters.arrCategory) response += `\n• ARR Category: ${query.filters.arrCategory}`
+             if (query.filters.dealType) response += `\n• Deal Type: ${query.filters.dealType}`
              if (query.filters.product) response += `\n• Product: ${query.filters.product}`
              if (query.filters.region) response += `\n• Region: ${query.filters.region}`
              if (query.filters.segment) response += `\n• Segment: ${query.filters.segment}`

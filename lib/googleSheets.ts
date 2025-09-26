@@ -520,10 +520,18 @@ export class GoogleSheetsService {
         }
       }
 
-      // Check ARR category filter (for "platform")
+      // Check ARR category filter (for "product churn", "expansion", etc.)
       if (filters.arrCategory) {
         const arrCategoryCol = this.findColumnIndex(headers, ['arr_category', 'category'])
         if (arrCategoryCol !== -1 && !row[arrCategoryCol]?.toLowerCase().includes(filters.arrCategory.toLowerCase())) {
+          return false
+        }
+      }
+
+      // Check deal type filter (alternative to ARR category)
+      if (filters.dealType) {
+        const dealTypeCol = this.findColumnIndex(headers, ['deal_type', 'type'])
+        if (dealTypeCol !== -1 && !row[dealTypeCol]?.toLowerCase().includes(filters.dealType.toLowerCase())) {
           return false
         }
       }
@@ -556,6 +564,8 @@ export class GoogleSheetsService {
         region?: string
         segment?: string
         timePeriod?: string
+        arrCategory?: string
+        dealType?: string
       }
     }
   ): Promise<{
