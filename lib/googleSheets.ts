@@ -27,8 +27,9 @@ export class GoogleSheetsService {
       }
 
       // Determine the range to read
+      // For large sheets, use a more targeted range
       const sheetName = config.sheetName || 'Sheet1'
-      const fullRange = range || `${sheetName}!A:Z`
+      const fullRange = range || `${sheetName}!A1:Z1000` // Limit to first 1000 rows for large sheets
 
       console.log(`Reading from sheet: ${sheetId}, range: ${fullRange}`)
 
@@ -63,33 +64,62 @@ export class GoogleSheetsService {
     metric?: string
   }): Promise<any> {
     try {
-      const sheetData = await this.getSheetData(config)
+      // For large sheets, try to find the data more efficiently
+      // First, try to get just the headers and a small sample
+      const headerData = await this.getSheetData(config, 'A1:Z1') // Just headers
+      if (!headerData || !headerData.values.length) {
+        return null
+      }
+
+      const headers = headerData.values[0]
+      console.log('Headers found:', headers)
+
+      // Now try to find the specific row by searching in chunks
+      // For large sheets, we'll search in the first 500 rows first
+      const searchRange = 'A2:Z501' // Skip header, search first 500 data rows
+      const sheetData = await this.getSheetData(config, searchRange)
+      
       if (!sheetData || !sheetData.values.length) {
         return null
       }
 
-      console.log('Sheet data received:', sheetData.values.length, 'rows')
-
-      // Parse the sheet data to find matching records
-      const headers = sheetData.values[0] // First row is headers
-      const dataRows = sheetData.values.slice(1) // Rest are data rows
-
-      console.log('Headers:', headers)
-      console.log('Data rows:', dataRows.length)
+      console.log('Searching in first 500 rows:', sheetData.values.length, 'rows')
 
       // Find the row that matches the query criteria
-      const matchingRow = this.findMatchingRow(headers, dataRows, query)
+      const matchingRow = this.findMatchingRow(headers, sheetData.values, query)
       
       if (matchingRow) {
+        const rowIndex = sheetData.values.indexOf(matchingRow) + 2 // +2 for header row and 1-indexed
         return {
           value: this.extractMetricValue(matchingRow, headers, query.metric || 'ARR'),
           rowData: matchingRow,
           headers: headers,
-          rowIndex: dataRows.indexOf(matchingRow) + 2, // +2 because we skip header row and 1-indexed
+          rowIndex: rowIndex,
           columnIndex: this.getColumnIndex(headers, query.metric || 'ARR')
         }
       }
 
+      // If not found in first 500 rows, try the next chunk
+      console.log('Not found in first 500 rows, searching next chunk...')
+      const nextSearchRange = 'A502:Z1001'
+      const nextSheetData = await this.getSheetData(config, nextSearchRange)
+      
+      if (nextSheetData && nextSheetData.values.length > 0) {
+        const nextMatchingRow = this.findMatchingRow(headers, nextSheetData.values, query)
+        
+        if (nextMatchingRow) {
+          const rowIndex = nextSheetData.values.indexOf(nextMatchingRow) + 502 // +502 for the offset
+          return {
+            value: this.extractMetricValue(nextMatchingRow, headers, query.metric || 'ARR'),
+            rowData: nextMatchingRow,
+            headers: headers,
+            rowIndex: rowIndex,
+            columnIndex: this.getColumnIndex(headers, query.metric || 'ARR')
+          }
+        }
+      }
+
+      console.log('Data not found in first 1000 rows')
       return null
     } catch (error) {
       console.error('Error finding data for query:', error)
@@ -199,11 +229,13 @@ export class GoogleSheetsService {
       }
 
       // Try multiple approaches to connect to the sheet
+      // For large sheets, use smaller, more targeted ranges
       const testRanges = [
-        'A1:Z10', // Default sheet, no sheet name
-        'Sheet1!A1:Z10', // Explicit Sheet1
-        'Dummy ARR Data!A1:Z10', // Based on the actual tab name from the sheet
-        'A1:E10' // Smaller range
+        'A1:E10', // Small range, just headers and a few rows
+        'A1:Z5', // Even smaller range
+        'Sheet1!A1:E10', // Explicit Sheet1 with small range
+        'Dummy ARR Data!A1:E10', // Actual tab name with small range
+        'A1:A10' // Just first column
       ]
       
       let lastError = null
