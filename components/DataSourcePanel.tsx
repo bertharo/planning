@@ -174,30 +174,33 @@ export function DataSourcePanel({ dataSources, setDataSources }: DataSourcePanel
   }
 
   return (
-    <div className="h-full flex flex-col">
-      <div className="p-4 border-b border-border">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold">Data Sources</h2>
+    <div className="h-full flex flex-col max-h-screen lg:max-h-none">
+      <div className="p-3 lg:p-4 border-b border-border">
+        <div className="flex items-center justify-between mb-3 lg:mb-4">
+          <h2 className="text-base lg:text-lg font-semibold">Data Sources</h2>
           <button className="p-2 hover:bg-accent rounded-md">
             <Plus className="w-4 h-4" />
           </button>
         </div>
+        <p className="text-xs lg:text-sm text-muted-foreground">
+          Connect and configure your financial data sources.
+        </p>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4 space-y-3">
+      <div className="flex-1 overflow-y-auto p-3 lg:p-4 space-y-3">
         {dataSources.map((source) => {
           const Icon = dataSourceIcons[source.id as keyof typeof dataSourceIcons]
           
           return (
-            <div key={source.id} className="border border-border rounded-lg p-3">
+            <div key={source.id} className="border border-border rounded-lg p-2 lg:p-3">
               <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <div className="p-2 bg-secondary rounded-md">
+                <div className="flex items-center space-x-2 lg:space-x-3">
+                  <div className="p-1.5 lg:p-2 bg-secondary rounded-md">
                     <Icon className="w-4 h-4" />
                   </div>
                   <div>
-                    <h3 className="font-medium">{source.name}</h3>
-                    <p className="text-sm text-muted-foreground">{source.type}</p>
+                    <h3 className="font-medium text-sm lg:text-base">{source.name}</h3>
+                    <p className="text-xs lg:text-sm text-muted-foreground">{source.type}</p>
                   </div>
                 </div>
                 

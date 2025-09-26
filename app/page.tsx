@@ -20,27 +20,27 @@ export default function Home() {
   ])
 
   return (
-    <div className="flex h-screen bg-background">
-      {/* Left Panel - Data Sources */}
-      <div className="w-80 border-r border-border bg-card">
-        <DataSourcePanel 
+    <div className="flex flex-col lg:flex-row h-screen bg-background">
+      {/* Mobile: Collapsible Data Sources Panel */}
+      <div className="lg:w-80 w-full border-b lg:border-b-0 lg:border-r border-border bg-card lg:block">
+        <DataSourcePanel
           dataSources={dataSources}
           setDataSources={setDataSources}
         />
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col min-h-0">
         <Header activeTab={activeTab} setActiveTab={setActiveTab} />
-        
-        <div className="flex-1 flex">
-          {/* Natural Language Interface */}
-          <div className="w-96 border-r border-border bg-card">
+
+        <div className="flex-1 flex flex-col lg:flex-row min-h-0">
+          {/* Mobile: Collapsible Natural Language Interface */}
+          <div className="lg:w-96 w-full border-b lg:border-b-0 lg:border-r border-border bg-card lg:block">
             <NaturalLanguageInterface />
           </div>
 
-          {/* Content Area */}
-          <div className="flex-1 p-6">
+          {/* Content Area - Full width on mobile, flexible on desktop */}
+          <div className="flex-1 p-3 lg:p-6 min-h-0 overflow-auto">
             {activeTab === 'dashboard' && <DashboardSection />}
             {activeTab === 'models' && <ModelsSection />}
             {activeTab === 'scenarios' && <ScenariosSection />}

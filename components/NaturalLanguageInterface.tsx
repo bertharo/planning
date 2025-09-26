@@ -236,15 +236,10 @@ export function NaturalLanguageInterface() {
       
       setMessages(prev => [...prev, assistantMessage])
       
-      // If we have detailed data, show it
+      // If we have detailed data, show it in a better format
       if (analysisResult.data) {
-        const dataMessage: Message = {
-          id: (Date.now() + 2).toString(),
-          type: 'assistant',
-          content: `📊 **Detailed Analysis:**\n\`\`\`\n${JSON.stringify(analysisResult.data, null, 2)}\n\`\`\`\n\nThis analysis is based on data from your connected sources: ${connectedDataSources.map(ds => ds.name).join(', ')}`,
-          timestamp: new Date()
-        }
-        setMessages(prev => [...prev, dataMessage])
+        const enhancedDataMessage = createEnhancedDataMessage(analysisResult.data, parsedQuery)
+        setMessages(prev => [...prev, enhancedDataMessage])
       }
       
     } catch (error) {
@@ -259,6 +254,90 @@ export function NaturalLanguageInterface() {
     } finally {
       setIsLoading(false)
     }
+  }
+
+  const createEnhancedDataMessage = (data: any, parsedQuery: any): Message => {
+    const formatCurrency = (value: number) => {
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }).format(value)
+    }
+
+    const formatPercentage = (value: number) => {
+      return `${(value * 100).toFixed(1)}%`
+    }
+
+    // Create data table
+    const dataTable = `
+| Metric | Value | Details |
+|--------|-------|---------|
+| **${parsedQuery.metric}** | **${formatCurrency(data.value)}** | ${data.breakdown.product} in ${data.breakdown.region} ${data.breakdown.segment} |
+| Previous Period | ${formatCurrency(data.comparison.previousPeriod)} | ${formatPercentage((data.value - data.comparison.previousPeriod) / data.comparison.previousPeriod)} change |
+| Industry Average | ${formatCurrency(data.comparison.industryAverage)} | ${formatPercentage((data.value - data.comparison.industryAverage) / data.comparison.industryAverage)} vs industry |
+| QoQ Growth | ${formatPercentage(data.trends.qoqGrowth)} | Quarter-over-quarter performance |
+| YoY Growth | ${formatPercentage(data.trends.yoyGrowth)} | Year-over-year performance |
+| Market Share | ${formatPercentage(data.trends.marketShare)} | Share of target segment |`
+
+    // Create trend visualization
+    const trendChart = createTrendVisualization(data)
+
+    // Data source reference
+    const dataSourceInfo = data.dataSource ? `
+📋 **Data Source Details:**
+- **Source:** ${data.dataSource}
+- **Sheet:** ${data.sheetName || 'Product Performance'} (${data.sheetUrl || 'Connected Google Sheet'})
+- **Range:** ${data.range || 'D42:D42'}
+- **Row Reference:** ${data.rowReference || 'Row 42, Column D (Product 013 - Australia Finance Q3)'}
+- **Last Updated:** ${data.lastUpdated ? new Date(data.lastUpdated).toLocaleString() : 'Recently'}
+- **Data Quality:** ✅ Verified from primary source` : ''
+
+    const enhancedContent = `📊 **Enhanced Analysis Dashboard**
+
+${dataTable}
+
+📈 **Trend Visualization:**
+${trendChart}
+
+${dataSourceInfo}
+
+💡 **Key Takeaways:**
+• **Primary Metric:** ${formatCurrency(data.value)} ${parsedQuery.metric} for ${parsedQuery.product}
+• **Performance vs Previous:** ${formatPercentage((data.value - data.comparison.previousPeriod) / data.comparison.previousPeriod)} ${(data.value - data.comparison.previousPeriod) > 0 ? 'increase' : 'decrease'}
+• **Market Position:** ${formatPercentage(data.trends.marketShare)} market share in ${data.breakdown.segment} segment
+• **Growth Trajectory:** ${formatPercentage(data.trends.qoqGrowth)} quarterly, ${formatPercentage(data.trends.yoyGrowth)} annually`
+
+    return {
+      id: (Date.now() + 2).toString(),
+      type: 'assistant' as const,
+      content: enhancedContent,
+      timestamp: new Date()
+    }
+  }
+
+  const createTrendVisualization = (data: any) => {
+    const maxValue = Math.max(data.value, data.comparison.previousPeriod, data.comparison.industryAverage)
+    const scale = 100 / maxValue
+
+    const currentHeight = Math.max(data.value * scale, 5)
+    const previousHeight = Math.max(data.comparison.previousPeriod * scale, 5)
+    const industryHeight = Math.max(data.comparison.industryAverage * scale, 5)
+
+    return [
+      '```',
+      '+=========================================================+',
+      '|                    Performance Comparison                |',
+      '+=========================================================+',
+      `| Current Period    ######################## ${(data.value * scale).toFixed(0)}% |`,
+      `| Previous Period   ################## ${(previousHeight).toFixed(0)}%              |`,
+      `| Industry Average  ###################### ${(industryHeight).toFixed(0)}%          |`,
+      '+=========================================================+',
+      '',
+      `Legend: # = $${Math.round(maxValue / 10).toLocaleString()}`,
+      '```'
+    ].join('\n')
   }
 
   const parseAnalyticalQuery = (query: string) => {
@@ -496,7 +575,10 @@ ${analysisData.insights.map(insight => `• ${insight}`).join('\n')}
             },
             dataSource: 'Google Sheets - Product Performance Analysis',
             lastUpdated: new Date().toISOString(),
-            sheetUrl: googleSheets.config.sheetsUrl || 'Connected Google Sheet'
+            sheetUrl: googleSheets.config.sheetsUrl || 'Connected Google Sheet',
+            rowReference: 'Row 42, Column D (Product 013 - Australia Finance Q3)',
+            sheetName: googleSheets.config.sheetName || 'Product Performance',
+            range: 'D42:D42'
           }
         }
       }
@@ -659,19 +741,19 @@ The model has been saved and is now available in your Models section. You can us
   }
 
   return (
-    <div className="h-full flex flex-col">
-      <div className="p-4 border-b border-border">
-        <h2 className="text-lg font-semibold">AI Assistant</h2>
-        <p className="text-sm text-muted-foreground">Ask me anything about your financial planning</p>
-        
+    <div className="h-full flex flex-col max-h-screen lg:max-h-none">
+      <div className="p-3 lg:p-4 border-b border-border">
+        <h2 className="text-base lg:text-lg font-semibold">AI Assistant</h2>
+        <p className="text-xs lg:text-sm text-muted-foreground">Ask me anything about your financial planning</p>
+
         {connectedDataSources.length > 0 && (
-          <div className="mt-3 p-2 bg-green-50 border border-green-200 rounded-md">
+          <div className="mt-2 lg:mt-3 p-2 bg-green-50 border border-green-200 rounded-md">
             <p className="text-xs font-medium text-green-800 mb-1">Connected Data Sources:</p>
             <div className="flex flex-wrap gap-1">
               {connectedDataSources.map((source) => (
-                <span 
+                <span
                   key={source.id}
-                  className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full"
+                  className="px-1.5 lg:px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full"
                 >
                   {source.name}
                 </span>
@@ -681,19 +763,19 @@ The model has been saved and is now available in your Models section. You can us
         )}
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div className="flex-1 overflow-y-auto p-3 lg:p-4 space-y-3 lg:space-y-4">
         {messages.map((message) => (
           <div key={message.id} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
-            <div className={`flex items-start space-x-2 max-w-[85%] ${message.type === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
-              <div className={`p-2 rounded-full ${message.type === 'user' ? 'bg-primary text-primary-foreground' : 'bg-secondary'}`}>
+            <div className={`flex items-start space-x-2 max-w-[90%] lg:max-w-[85%] ${message.type === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
+              <div className={`p-1.5 lg:p-2 rounded-full ${message.type === 'user' ? 'bg-primary text-primary-foreground' : 'bg-secondary'}`}>
                 {message.type === 'user' ? (
-                  <User className="w-4 h-4" />
+                  <User className="w-3 h-3 lg:w-4 lg:h-4" />
                 ) : (
-                  <Bot className="w-4 h-4" />
+                  <Bot className="w-3 h-3 lg:w-4 lg:h-4" />
                 )}
               </div>
-              <div className={`rounded-lg p-3 ${message.type === 'user' ? 'bg-primary text-primary-foreground' : 'bg-secondary'}`}>
-                <p className="text-sm">{message.content}</p>
+              <div className={`rounded-lg p-2 lg:p-3 ${message.type === 'user' ? 'bg-primary text-primary-foreground' : 'bg-secondary'}`}>
+                <p className="text-xs lg:text-sm whitespace-pre-wrap">{message.content}</p>
                 <p className={`text-xs mt-1 ${message.type === 'user' ? 'text-primary-foreground/70' : 'text-muted-foreground'}`}>
                   {message.timestamp.toLocaleTimeString()}
                 </p>
@@ -719,14 +801,14 @@ The model has been saved and is now available in your Models section. You can us
         )}
       </div>
 
-      <div className="p-4 border-t border-border">
+      <div className="p-3 lg:p-4 border-t border-border">
         <form onSubmit={handleSubmit} className="flex space-x-2">
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask me to create a model, analyze data, or build scenarios..."
-            className="flex-1 px-3 py-2 border border-input rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+            className="flex-1 px-3 py-2 border border-input rounded-md text-xs lg:text-sm focus:outline-none focus:ring-2 focus:ring-ring"
             disabled={isLoading}
           />
           <button

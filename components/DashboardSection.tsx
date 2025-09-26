@@ -174,33 +174,33 @@ export function DashboardSection() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 lg:space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between space-y-3 lg:space-y-0">
         <div>
-          <h2 className="text-2xl font-bold">Financial Dashboard</h2>
-          <p className="text-muted-foreground">Real-time insights from your connected data sources</p>
+          <h2 className="text-lg lg:text-2xl font-bold">Financial Dashboard</h2>
+          <p className="text-xs lg:text-sm text-muted-foreground">Real-time insights from your connected data sources</p>
         </div>
-        <div className="flex items-center space-x-3">
-          <select 
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-3 w-full lg:w-auto">
+          <select
             value={selectedTimeframe}
             onChange={(e) => setSelectedTimeframe(e.target.value)}
-            className="px-3 py-2 border border-input rounded-md text-sm"
+            className="px-3 py-2 border border-input rounded-md text-xs lg:text-sm"
           >
             <option value="1M">Last Month</option>
             <option value="3M">Last 3 Months</option>
             <option value="6M">Last 6 Months</option>
             <option value="1Y">Last Year</option>
           </select>
-          <button className="flex items-center space-x-2 px-3 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90">
+          <button className="flex items-center justify-center space-x-2 px-3 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90">
             <Download className="w-4 h-4" />
-            <span>Export</span>
+            <span className="text-xs lg:text-sm">Export</span>
           </button>
         </div>
       </div>
 
       {/* Key Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-6">
         <MetricCard
           title="Total Revenue"
           value={formatCurrency(dashboardData.revenue.current)}
@@ -232,7 +232,7 @@ export function DashboardSection() {
       </div>
 
       {/* Charts Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 lg:gap-6">
         <ChartCard
           title="Revenue Trend"
           data={dashboardData.charts.revenueTrend}
@@ -246,7 +246,7 @@ export function DashboardSection() {
       </div>
 
       {/* Breakdown Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 lg:gap-6">
         <ChartCard
           title="Product Revenue Breakdown"
           data={dashboardData.charts.productBreakdown}
@@ -260,7 +260,7 @@ export function DashboardSection() {
       </div>
 
       {/* Data Tables */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 lg:gap-6">
         <TableCard
           title="Top Products by Revenue"
           data={dashboardData.tables.topProducts}
@@ -303,19 +303,19 @@ function MetricCard({ title, value, growth, icon, color }: MetricCardProps) {
   const isPositive = growth >= 0
 
   return (
-    <div className="bg-card border border-border rounded-lg p-6 hover:shadow-md transition-shadow">
+    <div className="bg-card border border-border rounded-lg p-3 lg:p-6 hover:shadow-md transition-shadow">
       <div className="flex items-center justify-between">
-        <div className={`p-2 rounded-lg border ${colorClasses[color]}`}>
+        <div className={`p-1.5 lg:p-2 rounded-lg border ${colorClasses[color]}`}>
           {icon}
         </div>
-        <div className={`flex items-center space-x-1 text-sm ${isPositive ? 'text-green-600' : 'text-red-600'}`}>
+        <div className={`flex items-center space-x-1 text-xs lg:text-sm ${isPositive ? 'text-green-600' : 'text-red-600'}`}>
           {isPositive ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
           <span>{Math.abs(growth).toFixed(1)}%</span>
         </div>
       </div>
-      <div className="mt-4">
-        <p className="text-2xl font-bold">{value}</p>
-        <p className="text-sm text-muted-foreground">{title}</p>
+      <div className="mt-2 lg:mt-4">
+        <p className="text-lg lg:text-2xl font-bold">{value}</p>
+        <p className="text-xs lg:text-sm text-muted-foreground">{title}</p>
       </div>
     </div>
   )
@@ -329,9 +329,9 @@ interface ChartCardProps {
 
 function ChartCard({ title, data, type }: ChartCardProps) {
   return (
-    <div className="bg-card border border-border rounded-lg p-6">
-      <h3 className="text-lg font-semibold mb-4">{title}</h3>
-      <div className="h-64 flex items-center justify-center">
+    <div className="bg-card border border-border rounded-lg p-3 lg:p-6">
+      <h3 className="text-sm lg:text-lg font-semibold mb-3 lg:mb-4">{title}</h3>
+      <div className="h-48 lg:h-64 flex items-center justify-center">
         {type === 'line' && <LineChart data={data} />}
         {type === 'bar' && <BarChart data={data} />}
         {type === 'pie' && <CustomPieChart data={data} />}
@@ -348,14 +348,14 @@ interface TableCardProps {
 
 function TableCard({ title, data, columns }: TableCardProps) {
   return (
-    <div className="bg-card border border-border rounded-lg p-6">
-      <h3 className="text-lg font-semibold mb-4">{title}</h3>
+    <div className="bg-card border border-border rounded-lg p-3 lg:p-6">
+      <h3 className="text-sm lg:text-lg font-semibold mb-3 lg:mb-4">{title}</h3>
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
             <tr className="border-b border-border">
               {columns.map((column) => (
-                <th key={column.key} className="text-left py-2 px-3 text-sm font-medium text-muted-foreground">
+                <th key={column.key} className="text-left py-2 px-2 lg:px-3 text-xs lg:text-sm font-medium text-muted-foreground">
                   {column.label}
                 </th>
               ))}
@@ -365,7 +365,7 @@ function TableCard({ title, data, columns }: TableCardProps) {
             {data.map((row, index) => (
               <tr key={index} className="border-b border-border/50">
                 {columns.map((column) => (
-                  <td key={column.key} className="py-3 px-3 text-sm">
+                  <td key={column.key} className="py-2 lg:py-3 px-2 lg:px-3 text-xs lg:text-sm">
                     {column.render(row[column.key])}
                   </td>
                 ))}
