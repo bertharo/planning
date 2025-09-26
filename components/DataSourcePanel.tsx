@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { googleSheetsService } from '@/lib/googleSheets'
 import { 
   Database, 
   Users, 
@@ -13,7 +14,8 @@ import {
   Check,
   X,
   Save,
-  AlertCircle
+  AlertCircle,
+  TestTube
 } from 'lucide-react'
 
 interface DataSource {
@@ -60,6 +62,8 @@ export function DataSourcePanel({ dataSources, setDataSources }: DataSourcePanel
   const [configForm, setConfigForm] = useState<DataSourceConfig>({})
   const [isSaving, setIsSaving] = useState(false)
   const [saveStatus, setSaveStatus] = useState<'idle' | 'success' | 'error'>('idle')
+  const [isTestingConnection, setIsTestingConnection] = useState(false)
+  const [testResult, setTestResult] = useState<{ success: boolean; message: string; data?: any } | null>(null)
 
   // Load saved configurations from localStorage on mount
   useEffect(() => {
@@ -170,6 +174,28 @@ export function DataSourcePanel({ dataSources, setDataSources }: DataSourcePanel
       setSaveStatus('error')
     } finally {
       setIsSaving(false)
+    }
+  }
+
+  const testConnection = async (sourceId: string) => {
+    if (sourceId !== 'google-sheets') {
+      setTestResult({ success: false, message: 'Test connection only available for Google Sheets' })
+      return
+    }
+
+    setIsTestingConnection(true)
+    setTestResult(null)
+
+    try {
+      const result = await googleSheetsService.testConnection(configForm)
+      setTestResult(result)
+    } catch (error) {
+      setTestResult({ 
+        success: false, 
+        message: `Test failed: ${error instanceof Error ? error.message : 'Unknown error'}` 
+      })
+    } finally {
+      setIsTestingConnection(false)
     }
   }
 
@@ -367,45 +393,87 @@ export function DataSourcePanel({ dataSources, setDataSources }: DataSourcePanel
                       </>
                     )}
                     
-                    <div className="space-y-2">
-                      {saveStatus === 'error' && (
-                        <div className="flex items-center space-x-2 text-sm text-destructive bg-destructive/10 p-2 rounded">
-                          <AlertCircle className="w-4 h-4" />
-                          <span>Error saving configuration. Please try again.</span>
-                        </div>
-                      )}
-                      
-                      {saveStatus === 'success' && (
-                        <div className="flex items-center space-x-2 text-sm text-green-600 bg-green-50 p-2 rounded">
-                          <Check className="w-4 h-4" />
-                          <span>Configuration saved successfully!</span>
-                        </div>
-                      )}
-                      
-                      <button 
-                        onClick={() => saveConfiguration(source.id)}
-                        disabled={isSaving || Object.keys(configForm).length === 0}
-                        className="w-full px-3 py-2 bg-primary text-primary-foreground rounded-md text-sm hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
-                      >
-                        {isSaving ? (
-                          <>
-                            <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
-                            <span>Saving...</span>
-                          </>
-                        ) : (
-                          <>
-                            <Save className="w-4 h-4" />
-                            <span>{saveStatus === 'success' ? 'Saved!' : 'Save Configuration'}</span>
-                          </>
-                        )}
-                      </button>
-                      
-                      {Object.keys(configForm).length === 0 && (
-                        <p className="text-xs text-muted-foreground text-center">
-                          Fill in at least one field to save
-                        </p>
-                      )}
-                    </div>
+                           <div className="space-y-2">
+                             {saveStatus === 'error' && (
+                               <div className="flex items-center space-x-2 text-sm text-destructive bg-destructive/10 p-2 rounded">
+                                 <AlertCircle className="w-4 h-4" />
+                                 <span>Error saving configuration. Please try again.</span>
+                               </div>
+                             )}
+
+                             {saveStatus === 'success' && (
+                               <div className="flex items-center space-x-2 text-sm text-green-600 bg-green-50 p-2 rounded">
+                                 <Check className="w-4 h-4" />
+                                 <span>Configuration saved successfully!</span>
+                               </div>
+                             )}
+
+                             {testResult && (
+                               <div className={`flex items-center space-x-2 text-sm p-2 rounded ${
+                                 testResult.success 
+                                   ? 'text-green-600 bg-green-50' 
+                                   : 'text-destructive bg-destructive/10'
+                               }`}>
+                                 {testResult.success ? <Check className="w-4 h-4" /> : <AlertCircle className="w-4 h-4" />}
+                                 <div>
+                                   <div className="font-medium">{testResult.success ? 'Connection Successful!' : 'Connection Failed'}</div>
+                                   <div className="text-xs">{testResult.message}</div>
+                                   {testResult.data && (
+                                     <div className="text-xs mt-1">
+                                       Found {testResult.data.rowCount} rows, {testResult.data.columnCount} columns
+                                       {testResult.data.headers.length > 0 && (
+                                         <div>Headers: {testResult.data.headers.join(', ')}</div>
+                                       )}
+                                     </div>
+                                   )}
+                                 </div>
+                               </div>
+                             )}
+
+                             {source.id === 'google-sheets' && (
+                               <button
+                                 onClick={() => testConnection(source.id)}
+                                 disabled={isTestingConnection || !configForm.apiKey || !configForm.sheetsUrl}
+                                 className="w-full px-3 py-2 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2 mb-2"
+                               >
+                                 {isTestingConnection ? (
+                                   <>
+                                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                     <span>Testing...</span>
+                                   </>
+                                 ) : (
+                                   <>
+                                     <TestTube className="w-4 h-4" />
+                                     <span>Test Connection</span>
+                                   </>
+                                 )}
+                               </button>
+                             )}
+
+                             <button
+                               onClick={() => saveConfiguration(source.id)}
+                               disabled={isSaving || Object.keys(configForm).length === 0}
+                               className="w-full px-3 py-2 bg-primary text-primary-foreground rounded-md text-sm hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+                             >
+                               {isSaving ? (
+                                 <>
+                                   <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
+                                   <span>Saving...</span>
+                                 </>
+                               ) : (
+                                 <>
+                                   <Save className="w-4 h-4" />
+                                   <span>{saveStatus === 'success' ? 'Saved!' : 'Save Configuration'}</span>
+                                 </>
+                               )}
+                             </button>
+
+                             {Object.keys(configForm).length === 0 && (
+                               <p className="text-xs text-muted-foreground text-center">
+                                 Fill in at least one field to save
+                               </p>
+                             )}
+                           </div>
                   </div>
                 </div>
               )}
