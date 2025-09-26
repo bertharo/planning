@@ -111,10 +111,29 @@ export function DataSourcePanel({ dataSources, setDataSources }: DataSourcePanel
   }
 
   const saveConfiguration = async (sourceId: string) => {
+    console.log('Save button clicked for:', sourceId)
+    console.log('Current config form:', configForm)
+    
+    // Check if localStorage is available
+    if (typeof window === 'undefined' || !window.localStorage) {
+      console.error('localStorage not available')
+      setSaveStatus('error')
+      return
+    }
+
+    // Validate that we have some configuration data
+    if (Object.keys(configForm).length === 0) {
+      console.warn('No configuration data to save')
+      setSaveStatus('error')
+      return
+    }
+
     setIsSaving(true)
     setSaveStatus('idle')
 
     try {
+      console.log('Starting save process...')
+      
       // Simulate API call delay
       await new Promise(resolve => setTimeout(resolve, 1000))
 
@@ -122,6 +141,8 @@ export function DataSourcePanel({ dataSources, setDataSources }: DataSourcePanel
       const savedConfigs = JSON.parse(localStorage.getItem('dataSourceConfigs') || '{}')
       savedConfigs[sourceId] = configForm
       localStorage.setItem('dataSourceConfigs', JSON.stringify(savedConfigs))
+      
+      console.log('Saved to localStorage:', savedConfigs)
 
       // Update the data source
       setDataSources((prev: DataSource[]) =>
@@ -136,7 +157,9 @@ export function DataSourcePanel({ dataSources, setDataSources }: DataSourcePanel
         )
       )
 
+      console.log('Updated data sources state')
       setSaveStatus('success')
+      
       setTimeout(() => {
         setShowConfig(null)
         setConfigForm({})
@@ -343,15 +366,22 @@ export function DataSourcePanel({ dataSources, setDataSources }: DataSourcePanel
                     
                     <div className="space-y-2">
                       {saveStatus === 'error' && (
-                        <div className="flex items-center space-x-2 text-sm text-destructive">
+                        <div className="flex items-center space-x-2 text-sm text-destructive bg-destructive/10 p-2 rounded">
                           <AlertCircle className="w-4 h-4" />
                           <span>Error saving configuration. Please try again.</span>
                         </div>
                       )}
                       
+                      {saveStatus === 'success' && (
+                        <div className="flex items-center space-x-2 text-sm text-green-600 bg-green-50 p-2 rounded">
+                          <Check className="w-4 h-4" />
+                          <span>Configuration saved successfully!</span>
+                        </div>
+                      )}
+                      
                       <button 
                         onClick={() => saveConfiguration(source.id)}
-                        disabled={isSaving}
+                        disabled={isSaving || Object.keys(configForm).length === 0}
                         className="w-full px-3 py-2 bg-primary text-primary-foreground rounded-md text-sm hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
                       >
                         {isSaving ? (
@@ -366,6 +396,12 @@ export function DataSourcePanel({ dataSources, setDataSources }: DataSourcePanel
                           </>
                         )}
                       </button>
+                      
+                      {Object.keys(configForm).length === 0 && (
+                        <p className="text-xs text-muted-foreground text-center">
+                          Fill in at least one field to save
+                        </p>
+                      )}
                     </div>
                   </div>
                 </div>
