@@ -155,6 +155,8 @@ export function NaturalLanguageInterface() {
 
              if (shouldCreateModel) {
                await handleModelCreation(input)
+             } else if (isBreakdownQuery(input)) {
+               await handleBreakdownQuery(input)
              } else if (isAggregationQuery(input)) {
                await handleAggregationQuery(input)
              } else if (isAnalyticalQuestion) {
@@ -239,6 +241,178 @@ export function NaturalLanguageInterface() {
              lowerInput.includes('max') ||
              lowerInput.includes('min')
            )
+         }
+
+         const isBreakdownQuery = (input: string): boolean => {
+           const lowerInput = input.toLowerCase()
+           return (
+             lowerInput.includes('breakdown') ||
+             lowerInput.includes('by category') ||
+             lowerInput.includes('grouped by') ||
+             lowerInput.includes('arr category') ||
+             lowerInput.includes('deal type') ||
+             lowerInput.includes('grand total') ||
+             (lowerInput.includes('sum') && (lowerInput.includes('category') || lowerInput.includes('type')))
+           )
+         }
+
+         const handleBreakdownQuery = async (userInput: string) => {
+           try {
+             console.log('Processing breakdown query:', userInput)
+             
+             // Check if we have Google Sheets connected
+             const googleSheets = connectedDataSources.find(ds => ds.id === 'google-sheets')
+             
+             if (!googleSheets || !googleSheets.config) {
+               const errorMessage: Message = {
+                 id: (Date.now() + 1).toString(),
+                 type: 'assistant',
+                 content: 'To calculate breakdowns, I need access to your data. Please connect your Google Sheets first in the Data Sources panel.',
+                 timestamp: new Date()
+               }
+               setMessages(prev => [...prev, errorMessage])
+               setIsLoading(false)
+               return
+             }
+
+             // Parse the breakdown query
+             const breakdownQuery = parseBreakdownQuery(userInput)
+             console.log('Parsed breakdown query:', breakdownQuery)
+
+             // Calculate the grouped analysis using the Google Sheets service
+             const result = await googleSheetsService.calculateGroupedAnalysis(googleSheets.config, breakdownQuery)
+             console.log('Breakdown result:', result)
+
+             // Generate response
+             const response = generateBreakdownResponse(result, userInput, breakdownQuery)
+             
+             const assistantMessage: Message = {
+               id: (Date.now() + 1).toString(),
+               type: 'assistant',
+               content: response,
+               timestamp: new Date()
+             }
+             setMessages(prev => [...prev, assistantMessage])
+
+           } catch (error) {
+             console.error('Error processing breakdown query:', error)
+             const errorMessage: Message = {
+               id: (Date.now() + 1).toString(),
+               type: 'assistant',
+               content: `I encountered an error while calculating the breakdown: ${error instanceof Error ? error.message : 'Unknown error'}. Please check your data format and try again.`,
+               timestamp: new Date()
+             }
+             setMessages(prev => [...prev, errorMessage])
+           } finally {
+             setIsLoading(false)
+           }
+         }
+
+         const parseBreakdownQuery = (query: string) => {
+           const lowerQuery = query.toLowerCase()
+           
+           // Determine group by column
+           let groupByColumn = 'arr_category'
+           if (lowerQuery.includes('deal type') || lowerQuery.includes('deal_type')) {
+             groupByColumn = 'deal_type'
+           } else if (lowerQuery.includes('product')) {
+             groupByColumn = 'product'
+           } else if (lowerQuery.includes('region')) {
+             groupByColumn = 'region'
+           }
+
+           // Determine value column
+           let valueColumn = 'arr_usd'
+           if (lowerQuery.includes('revenue')) {
+             valueColumn = 'revenue'
+           } else if (lowerQuery.includes('customers')) {
+             valueColumn = 'customers'
+           }
+
+           // Parse filters
+           const filters: any = {}
+
+           // Product filter
+           if (lowerQuery.includes('product')) {
+             const productMatch = lowerQuery.match(/product\s+(\w+)/)
+             if (productMatch) {
+               filters.product = productMatch[1]
+             }
+           }
+
+           // Region filter
+           const regions = ['australia', 'us', 'europe', 'asia', 'canada', 'uk']
+           const foundRegion = regions.find(region => lowerQuery.includes(region))
+           if (foundRegion) {
+             filters.region = foundRegion
+           }
+
+           // Segment filter
+           const segments = ['finance', 'healthcare', 'retail', 'technology', 'manufacturing', 'financial services']
+           const foundSegment = segments.find(segment => lowerQuery.includes(segment))
+           if (foundSegment) {
+             filters.segment = foundSegment
+           }
+
+           // Time period filter
+           if (lowerQuery.includes('q1')) filters.timePeriod = 'Q1'
+           if (lowerQuery.includes('q2')) filters.timePeriod = 'Q2'
+           if (lowerQuery.includes('q3')) filters.timePeriod = 'Q3'
+           if (lowerQuery.includes('q4')) filters.timePeriod = 'Q4'
+           if (lowerQuery.includes('fy25')) filters.timePeriod = 'FY25'
+           if (lowerQuery.includes('fy24')) filters.timePeriod = 'FY24'
+
+           return {
+             groupByColumn,
+             valueColumn,
+             filters: Object.keys(filters).length > 0 ? filters : undefined
+           }
+         }
+
+         const generateBreakdownResponse = (result: any, originalQuery: string, query: any) => {
+           const formatCurrency = (value: number) => {
+             return new Intl.NumberFormat('en-US', {
+               style: 'currency',
+               currency: 'USD',
+               minimumFractionDigits: 2,
+               maximumFractionDigits: 2,
+             }).format(value)
+           }
+
+           let response = `📊 **Breakdown Analysis Results**
+
+**Query:** "${originalQuery}"
+**Grouped by:** ${query.groupByColumn.replace('_', ' ').toUpperCase()}
+**Value Column:** ${query.valueColumn.replace('_', ' ').toUpperCase()}
+**Rows Analyzed:** ${result.rowCount}
+
+**📈 Breakdown by Category:**`
+
+           // Format each category with proper alignment
+           result.groups.forEach((group: any) => {
+             const valueStr = formatCurrency(group.value)
+             const padding = Math.max(0, 20 - group.category.length)
+             response += `\n${group.category}${' '.repeat(padding)}${valueStr}`
+           })
+
+           response += `\n${'='.repeat(40)}`
+           response += `\nGrand Total${' '.repeat(9)}${formatCurrency(result.grandTotal)}`
+
+           if (query.filters) {
+             response += `\n\n**🔍 Filters Applied:**`
+             if (query.filters.product) response += `\n• Product: ${query.filters.product}`
+             if (query.filters.region) response += `\n• Region: ${query.filters.region}`
+             if (query.filters.segment) response += `\n• Segment: ${query.filters.segment}`
+             if (query.filters.timePeriod) response += `\n• Time Period: ${query.filters.timePeriod}`
+           }
+
+           if (result.groups.length === 0) {
+             response += `\n\n⚠️ **Note:** No data found matching your criteria. Please check your filters or data format.`
+           }
+
+           response += `\n\n✅ **Data Source:** Google Sheets (Live Data)`
+
+           return response
          }
 
          const handleAggregationQuery = async (userInput: string) => {

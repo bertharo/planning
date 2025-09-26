@@ -544,6 +544,103 @@ export class GoogleSheetsService {
       })
       .filter(num => num > 0) // Only include positive values
   }
+
+  // New method for grouped analysis by category
+  async calculateGroupedAnalysis(
+    config: SheetConfig,
+    query: {
+      groupByColumn: string
+      valueColumn: string
+      filters?: {
+        product?: string
+        region?: string
+        segment?: string
+        timePeriod?: string
+      }
+    }
+  ): Promise<{
+    groups: Array<{ category: string; value: number }>
+    grandTotal: number
+    details: any
+    rowCount: number
+  }> {
+    
+    try {
+      console.log('Calculating grouped analysis:', query)
+      
+      // Get sheet data
+      const sheetData = await this.getSheetData(config)
+      if (!sheetData || !sheetData.values.length) {
+        return { groups: [], grandTotal: 0, details: {}, rowCount: 0 }
+      }
+
+      const headers = sheetData.values[0]
+      const rows = sheetData.values.slice(1)
+      
+      console.log('Headers found:', headers)
+      console.log('Total rows:', rows.length)
+
+      // Find the group by column (e.g., arr_category, deal_type)
+      const groupByColumnIndex = this.findColumnIndex(headers, [query.groupByColumn.toLowerCase(), 'arr_category', 'deal_type', 'category', 'type'])
+      
+      // Find the value column (e.g., arr_usd)
+      const valueColumnIndex = this.findColumnIndex(headers, [query.valueColumn.toLowerCase(), 'arr_usd', 'value', 'amount'])
+      
+      if (groupByColumnIndex === -1 || valueColumnIndex === -1) {
+        console.log('Required columns not found:', { groupByColumn: query.groupByColumn, valueColumn: query.valueColumn })
+        return { groups: [], grandTotal: 0, details: {}, rowCount: 0 }
+      }
+
+      // Apply filters
+      const filteredRows = this.applyFilters(rows, headers, query.filters)
+      
+      // Group by category and sum values
+      const groupTotals = new Map<string, number>()
+      let grandTotal = 0
+      
+      filteredRows.forEach(row => {
+        const category = row[groupByColumnIndex]?.toString().trim() || 'Unknown'
+        const value = this.parseNumericValue(row[valueColumnIndex])
+        
+        if (category && !isNaN(value)) {
+          groupTotals.set(category, (groupTotals.get(category) || 0) + value)
+          grandTotal += value
+        }
+      })
+
+      // Convert to array and sort
+      const groups = Array.from(groupTotals.entries())
+        .map(([category, value]) => ({ category, value }))
+        .sort((a, b) => Math.abs(b.value) - Math.abs(a.value)) // Sort by absolute value descending
+
+      console.log('Grouped analysis result:', { groups, grandTotal })
+
+      return {
+        groups,
+        grandTotal,
+        details: {
+          groupByColumn: query.groupByColumn,
+          valueColumn: query.valueColumn,
+          filters: query.filters,
+          totalGroups: groups.length
+        },
+        rowCount: filteredRows.length
+      }
+
+    } catch (error) {
+      console.error('Error calculating grouped analysis:', error)
+      return { groups: [], grandTotal: 0, details: { error: error instanceof Error ? error.message : 'Unknown error' }, rowCount: 0 }
+    }
+  }
+
+  private parseNumericValue(value: string): number {
+    if (!value || value === '') return 0
+    
+    // Clean the value (remove commas, currency symbols, etc.)
+    const cleaned = value.toString().replace(/[,$%]/g, '')
+    const num = parseFloat(cleaned)
+    return isNaN(num) ? 0 : num
+  }
 }
 
 // Create a singleton instance
