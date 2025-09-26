@@ -198,28 +198,69 @@ export class GoogleSheetsService {
         return { success: false, message: 'Invalid Google Sheets URL format' }
       }
 
-      // Try to read a small range to test the connection
-      const testRange = config.sheetName ? `${config.sheetName}!A1:Z10` : 'Sheet1!A1:Z10'
-      const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${encodeURIComponent(testRange)}?key=${config.apiKey}`
+      // Try multiple approaches to connect to the sheet
+      const testRanges = [
+        'A1:Z10', // Default sheet, no sheet name
+        'Sheet1!A1:Z10', // Explicit Sheet1
+        'Dummy ARR Data!A1:Z10', // Based on the actual tab name from the sheet
+        'A1:E10' // Smaller range
+      ]
       
-      const response = await fetch(url)
+      let lastError = null
       
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}))
-        let errorMessage = `API Error ${response.status}: ${errorData.error?.message || response.statusText}`
+      for (const testRange of testRanges) {
+        try {
+          const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${encodeURIComponent(testRange)}?key=${config.apiKey}`
+          
+          const response = await fetch(url)
+          
+          if (response.ok) {
+            const data = await response.json()
+            const values = data.values || []
+            
+            return {
+              success: true,
+              message: `Successfully connected! Found ${values.length} rows of data using range: ${testRange}`,
+              data: {
+                rowCount: values.length,
+                columnCount: values[0]?.length || 0,
+                headers: values[0] || [],
+                sampleData: values.slice(0, 3), // First 3 rows as sample
+                workingRange: testRange
+              }
+            }
+          } else {
+            const errorData = await response.json().catch(() => ({}))
+            lastError = {
+              status: response.status,
+              message: errorData.error?.message || response.statusText,
+              range: testRange
+            }
+          }
+        } catch (error) {
+          lastError = {
+            status: 'NETWORK_ERROR',
+            message: error instanceof Error ? error.message : 'Network error',
+            range: testRange
+          }
+        }
+      }
+      
+      // If all attempts failed, return the most helpful error message
+      if (lastError) {
+        let errorMessage = `Connection failed after trying multiple approaches. Last error: ${lastError.message}`
         
-        // Provide more helpful error messages
-        if (response.status === 400) {
-          if (errorData.error?.message?.includes('API key not valid')) {
+        if (lastError.status === 400) {
+          if (lastError.message.includes('API key not valid')) {
             errorMessage = `Invalid API Key: Please check your Google Sheets API key. Make sure it's correctly copied and has Google Sheets API enabled.`
-          } else if (errorData.error?.message?.includes('API key not found')) {
+          } else if (lastError.message.includes('API key not found')) {
             errorMessage = `API Key Not Found: The API key appears to be empty or incorrectly formatted.`
           } else {
-            errorMessage = `Bad Request: ${errorData.error?.message || 'Check your API key and sheet URL.'}`
+            errorMessage = `Bad Request: ${lastError.message}. This might be due to sheet format issues or permissions.`
           }
-        } else if (response.status === 403) {
+        } else if (lastError.status === 403) {
           errorMessage = `Access Forbidden: Your API key doesn't have permission to access Google Sheets. Make sure Google Sheets API is enabled in Google Cloud Console.`
-        } else if (response.status === 404) {
+        } else if (lastError.status === 404) {
           errorMessage = `Sheet Not Found: The spreadsheet ID or sheet name doesn't exist. Check your Google Sheets URL.`
         }
         
@@ -227,25 +268,17 @@ export class GoogleSheetsService {
           success: false, 
           message: errorMessage,
           errorDetails: {
-            status: response.status,
-            originalError: errorData.error?.message || response.statusText,
-            statusText: response.statusText
+            status: lastError.status,
+            originalError: lastError.message,
+            lastAttemptedRange: lastError.range
           }
         }
       }
-
-      const data = await response.json()
-      const values = data.values || []
       
-      return {
-        success: true,
-        message: `Successfully connected! Found ${values.length} rows of data.`,
-        data: {
-          rowCount: values.length,
-          columnCount: values[0]?.length || 0,
-          headers: values[0] || [],
-          sampleData: values.slice(0, 3) // First 3 rows as sample
-        }
+      // This should never be reached, but just in case
+      return { 
+        success: false, 
+        message: 'Unexpected error: No connection method worked' 
       }
     } catch (error) {
       return { 
