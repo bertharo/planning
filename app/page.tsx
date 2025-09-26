@@ -5,10 +5,11 @@ import { DataSourcePanel } from '@/components/DataSourcePanel'
 import { NaturalLanguageInterface } from '@/components/NaturalLanguageInterface'
 import { ModelsSection } from '@/components/ModelsSection'
 import { ScenariosSection } from '@/components/ScenariosSection'
+import { DashboardSection } from '@/components/DashboardSection'
 import { Header } from '@/components/Header'
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<'models' | 'scenarios'>('models')
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'models' | 'scenarios'>('dashboard')
   const [dataSources, setDataSources] = useState([
     { id: 'workday', name: 'Workday', type: 'HR', connected: false },
     { id: 'salesforce', name: 'Salesforce', type: 'CRM', connected: false },
@@ -40,6 +41,7 @@ export default function Home() {
 
           {/* Content Area */}
           <div className="flex-1 p-6">
+            {activeTab === 'dashboard' && <DashboardSection />}
             {activeTab === 'models' && <ModelsSection />}
             {activeTab === 'scenarios' && <ScenariosSection />}
           </div>

@@ -1,10 +1,10 @@
 'use client'
 
-import { BarChart3, GitBranch } from 'lucide-react'
+import { BarChart3, GitBranch, LayoutDashboard } from 'lucide-react'
 
 interface HeaderProps {
-  activeTab: 'models' | 'scenarios'
-  setActiveTab: (tab: 'models' | 'scenarios') => void
+  activeTab: 'dashboard' | 'models' | 'scenarios'
+  setActiveTab: (tab: 'dashboard' | 'models' | 'scenarios') => void
 }
 
 export function Header({ activeTab, setActiveTab }: HeaderProps) {
@@ -15,6 +15,18 @@ export function Header({ activeTab, setActiveTab }: HeaderProps) {
           <h1 className="text-2xl font-bold text-foreground">SaaS Planning Platform</h1>
           
           <nav className="flex space-x-6">
+            <button
+              onClick={() => setActiveTab('dashboard')}
+              className={`flex items-center space-x-2 px-3 py-2 rounded-md transition-colors ${
+                activeTab === 'dashboard'
+                  ? 'bg-primary text-primary-foreground'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-accent'
+              }`}
+            >
+              <LayoutDashboard className="w-4 h-4" />
+              <span>Dashboard</span>
+            </button>
+            
             <button
               onClick={() => setActiveTab('models')}
               className={`flex items-center space-x-2 px-3 py-2 rounded-md transition-colors ${
