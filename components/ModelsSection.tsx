@@ -10,22 +10,27 @@ import {
   Edit,
   Trash2,
   Download,
-  Eye
+  Eye,
+  TrendingUp
 } from 'lucide-react'
+import { ForecastVisualization } from './ForecastVisualization'
 
 interface Model {
   id: string
   name: string
-  type: 'Revenue' | 'CapEx' | 'Personnel'
+  type: 'Revenue' | 'CapEx' | 'Personnel' | 'Forecast'
   description: string
   lastModified: Date
   createdBy: string
+  data?: any // For forecast models
+  config?: any // For forecast models
 }
 
 const modelIcons = {
   Revenue: DollarSign,
   CapEx: BarChart3,
   Personnel: Users,
+  Forecast: TrendingUp,
 }
 
 const mockModels: Model[] = [
@@ -59,6 +64,7 @@ export function ModelsSection() {
   const [models, setModels] = useState<Model[]>(mockModels)
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [selectedType, setSelectedType] = useState<'Revenue' | 'CapEx' | 'Personnel'>('Revenue')
+  const [selectedModel, setSelectedModel] = useState<Model | null>(null)
 
   // Load AI-generated models from localStorage
   useEffect(() => {
@@ -73,7 +79,9 @@ export function ModelsSection() {
             type: aiModel.type,
             description: aiModel.description,
             lastModified: new Date(aiModel.lastModified),
-            createdBy: aiModel.createdBy
+            createdBy: aiModel.createdBy,
+            data: aiModel.data,
+            config: aiModel.config
           }))
           
           // Add AI models to the beginning of the list
@@ -153,7 +161,10 @@ export function ModelsSection() {
                   
                   <div className="absolute right-0 top-8 w-48 bg-popover border border-border rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-10">
                     <div className="p-1">
-                      <button className="w-full flex items-center space-x-2 px-3 py-2 text-sm hover:bg-accent rounded">
+                      <button 
+                        onClick={() => setSelectedModel(model)}
+                        className="w-full flex items-center space-x-2 px-3 py-2 text-sm hover:bg-accent rounded"
+                      >
                         <Eye className="w-4 h-4" />
                         <span>View</span>
                       </button>
@@ -232,6 +243,34 @@ export function ModelsSection() {
                   Create Model
                 </button>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Forecast Model Viewer Modal */}
+      {selectedModel && selectedModel.type === 'Forecast' && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-card border border-border rounded-lg w-full max-w-6xl max-h-[90vh] overflow-auto">
+            <div className="p-6 border-b border-border">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-xl font-semibold">{selectedModel.name}</h3>
+                  <p className="text-sm text-muted-foreground">{selectedModel.description}</p>
+                </div>
+                <button
+                  onClick={() => setSelectedModel(null)}
+                  className="p-2 hover:bg-accent rounded-md"
+                >
+                  ×
+                </button>
+              </div>
+            </div>
+            
+            <div className="p-6">
+              {selectedModel.data && (
+                <ForecastVisualization forecastData={selectedModel.data} />
+              )}
             </div>
           </div>
         </div>

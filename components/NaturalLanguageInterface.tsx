@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { Send, Bot, User, Loader2 } from 'lucide-react'
 import { googleSheetsService } from '@/lib/googleSheets'
+import { forecastService } from '@/lib/forecastService'
 
 interface Message {
   id: string
@@ -120,12 +121,13 @@ export function NaturalLanguageInterface() {
     setIsLoading(true)
 
     try {
-      // Check if this is a model creation request
-      const shouldCreateModel = input.toLowerCase().includes('create') && 
-        (input.toLowerCase().includes('model') || 
-         input.toLowerCase().includes('revenue') || 
-         input.toLowerCase().includes('capex') || 
-         input.toLowerCase().includes('personnel'))
+             // Check if this is a model creation request
+             const shouldCreateModel = input.toLowerCase().includes('create') &&
+               (input.toLowerCase().includes('model') ||
+                input.toLowerCase().includes('revenue') ||
+                input.toLowerCase().includes('capex') ||
+                input.toLowerCase().includes('personnel') ||
+                input.toLowerCase().includes('forecast'))
 
       // Check if this is an analytical question
       const isAnalyticalQuestion = (
@@ -147,11 +149,13 @@ export function NaturalLanguageInterface() {
         input.toLowerCase().includes('segment')
       )
 
-      if (shouldCreateModel) {
-        await handleModelCreation(input)
-      } else if (isAnalyticalQuestion) {
-        await handleAnalyticalQuestion(input)
-      } else {
+             if (shouldCreateModel) {
+               await handleModelCreation(input)
+             } else if (isAnalyticalQuestion) {
+               await handleAnalyticalQuestion(input)
+             } else if (input.toLowerCase().includes('forecast') || input.toLowerCase().includes('monte carlo')) {
+               await handleForecastCreation(input)
+             } else {
         // Regular response
         setTimeout(() => {
           const assistantMessage: Message = {
@@ -217,7 +221,79 @@ export function NaturalLanguageInterface() {
     }
   }
 
-  const handleAnalyticalQuestion = async (userInput: string) => {
+         const handleForecastCreation = async (userInput: string) => {
+           try {
+             console.log('Creating forecast model from user input:', userInput)
+             
+             // Check if we have Google Sheets connected
+             const googleSheets = connectedDataSources.find(ds => ds.id === 'google-sheets')
+             
+             if (!googleSheets || !googleSheets.config) {
+               const errorMessage: Message = {
+                 id: (Date.now() + 1).toString(),
+                 type: 'assistant',
+                 content: 'To create forecast models, I need access to your historical data. Please connect your Google Sheets first in the Data Sources panel.',
+                 timestamp: new Date()
+               }
+               setMessages(prev => [...prev, errorMessage])
+               setIsLoading(false)
+               return
+             }
+
+             // Get sheet data
+             const sheetData = await googleSheetsService.getSheetData(googleSheets.config)
+             
+             if (!sheetData || !sheetData.values.length) {
+               const errorMessage: Message = {
+                 id: (Date.now() + 1).toString(),
+                 type: 'assistant',
+                 content: 'I couldn\'t retrieve data from your Google Sheet. Please check your configuration and try again.',
+                 timestamp: new Date()
+               }
+               setMessages(prev => [...prev, errorMessage])
+               setIsLoading(false)
+               return
+             }
+
+             // Parse user input to determine forecast parameters
+             const forecastConfig = parseForecastRequest(userInput, sheetData.values[0])
+             
+             // Create forecast model
+             const forecastResult = await forecastService.createForecastModel(
+               sheetData.values,
+               sheetData.values[0],
+               forecastConfig
+             )
+
+             // Generate response
+             const response = generateForecastResponse(forecastResult, forecastConfig)
+             
+             const assistantMessage: Message = {
+               id: (Date.now() + 1).toString(),
+               type: 'assistant',
+               content: response,
+               timestamp: new Date()
+             }
+             setMessages(prev => [...prev, assistantMessage])
+
+             // Save forecast model to localStorage
+             saveForecastModel(forecastResult, forecastConfig)
+
+           } catch (error) {
+             console.error('Error creating forecast model:', error)
+             const errorMessage: Message = {
+               id: (Date.now() + 1).toString(),
+               type: 'assistant',
+               content: `I encountered an error while creating your forecast model: ${error instanceof Error ? error.message : 'Unknown error'}. Please check your data format and try again.`,
+               timestamp: new Date()
+             }
+             setMessages(prev => [...prev, errorMessage])
+           } finally {
+             setIsLoading(false)
+           }
+         }
+
+         const handleAnalyticalQuestion = async (userInput: string) => {
     try {
       console.log('Processing analytical question:', userInput)
       
@@ -755,8 +831,137 @@ The model has been saved and is now available in your Models section. You can us
       return `I can help you with financial planning using your connected data sources: ${connectedSourceNames}. I can create models, analyze data, build scenarios, or answer specific questions about your data. What would you like to work on?`
     }
     
-    return 'I understand you want to work with financial planning. I can help you create models, analyze data from your connected sources, or build scenarios. First, I recommend connecting your data sources (Google Sheets, Excel, etc.) so I can provide more accurate analysis. What would you like to accomplish?'
-  }
+           return 'I understand you want to work with financial planning. I can help you create models, analyze data from your connected sources, build scenarios, or create forecast models with Monte Carlo simulation. First, I recommend connecting your data sources (Google Sheets, Excel, etc.) so I can provide more accurate analysis. What would you like to accomplish?'
+         }
+
+         const parseForecastRequest = (userInput: string, headers: string[]) => {
+           const lowerInput = userInput.toLowerCase()
+           
+           // Determine algorithm
+           let algorithm: 'linear' | 'exponential' | 'seasonal' | 'moving_average' = 'linear'
+           if (lowerInput.includes('seasonal') || lowerInput.includes('quarterly')) {
+             algorithm = 'seasonal'
+           } else if (lowerInput.includes('exponential') || lowerInput.includes('smoothing')) {
+             algorithm = 'exponential'
+           } else if (lowerInput.includes('moving average') || lowerInput.includes('average')) {
+             algorithm = 'moving_average'
+           }
+
+           // Determine forecast periods
+           let forecastPeriods = 4 // Default to 4 quarters
+           if (lowerInput.includes('year') || lowerInput.includes('12 months')) {
+             forecastPeriods = 12
+           } else if (lowerInput.includes('quarter') || lowerInput.includes('3 months')) {
+             forecastPeriods = 4
+           } else if (lowerInput.includes('month') && !lowerInput.includes('12')) {
+             forecastPeriods = 6
+           }
+
+           // Determine target column
+           let targetColumn = 'arr_usd'
+           if (lowerInput.includes('revenue')) targetColumn = 'revenue'
+           if (lowerInput.includes('customers') || lowerInput.includes('customer')) targetColumn = 'customers'
+           if (lowerInput.includes('arr')) targetColumn = 'arr_usd'
+
+           // Determine time column
+           let timeColumn = 'fiscal_quarter'
+           if (lowerInput.includes('month')) timeColumn = 'month'
+           if (lowerInput.includes('year')) timeColumn = 'year'
+
+           // Check for Monte Carlo simulation
+           const monteCarloEnabled = lowerInput.includes('monte carlo') || lowerInput.includes('risk') || lowerInput.includes('simulation')
+
+           return {
+             targetColumn,
+             timeColumn,
+             forecastPeriods,
+             algorithm,
+             monteCarlo: monteCarloEnabled ? {
+               enabled: true,
+               simulations: 1000,
+               volatilityFactor: 1.0,
+               driftFactor: 1.0
+             } : undefined
+           }
+         }
+
+         const generateForecastResponse = (forecastResult: any, config: any) => {
+           const formatCurrency = (value: number) => {
+             return new Intl.NumberFormat('en-US', {
+               style: 'currency',
+               currency: 'USD',
+               minimumFractionDigits: 0,
+               maximumFractionDigits: 0,
+             }).format(value)
+           }
+
+           let response = `🎯 **Forecast Model Created Successfully!**
+
+**Algorithm:** ${config.algorithm.charAt(0).toUpperCase() + config.algorithm.slice(1).replace('_', ' ')} Regression
+**Forecast Periods:** ${config.forecastPeriods}
+**Target Metric:** ${config.targetColumn}
+**Confidence Level:** ${forecastResult.confidence.toFixed(1)}%
+
+**📊 Model Performance:**
+• R² Score: ${(forecastResult.metrics.r2 * 100).toFixed(1)}%
+• Mean Absolute Percentage Error: ${forecastResult.metrics.mape.toFixed(1)}%
+• Trend: ${forecastResult.metrics.trend > 0 ? '+' : ''}${(forecastResult.metrics.trend * 100).toFixed(1)}% per period
+${forecastResult.metrics.seasonality > 0 ? `• Seasonality Factor: ${(forecastResult.metrics.seasonality * 100).toFixed(1)}%` : ''}
+
+**🔮 Forecast Predictions:**
+${forecastResult.predictions.slice(0, 6).map((pred: any, i: number) => 
+  `${pred.period}: ${formatCurrency(pred.value)}`
+).join('\n')}
+${forecastResult.predictions.length > 6 ? `... and ${forecastResult.predictions.length - 6} more periods` : ''}`
+
+           if (forecastResult.monteCarlo) {
+             const mc = forecastResult.monteCarlo
+             response += `
+
+**🎲 Monte Carlo Simulation Results (${mc.simulations.toLocaleString()} simulations):**
+
+**Risk Metrics:**
+• Value at Risk (95%): ${(mc.riskMetrics.valueAtRisk95 * 100).toFixed(1)}%
+• Expected Shortfall: ${(mc.riskMetrics.expectedShortfall * 100).toFixed(1)}%
+• Probability of Loss: ${(mc.riskMetrics.probabilityOfLoss * 100).toFixed(1)}%
+• Maximum Drawdown: ${(mc.riskMetrics.maxDrawdown * 100).toFixed(1)}%
+
+**📈 Scenario Analysis:**
+• **Optimistic (90th percentile):** ${formatCurrency(mc.scenarios.optimistic[mc.scenarios.optimistic.length - 1]?.value || 0)}
+• **Realistic (50th percentile):** ${formatCurrency(mc.scenarios.realistic[mc.scenarios.realistic.length - 1]?.value || 0)}
+• **Pessimistic (10th percentile):** ${formatCurrency(mc.scenarios.pessimistic[mc.scenarios.pessimistic.length - 1]?.value || 0)}`
+           }
+
+           response += `
+
+**💡 Key Insights:**
+${forecastResult.insights.map((insight: string) => `• ${insight}`).join('\n')}
+
+The forecast model has been saved and is available in your Models section. You can use these predictions for budgeting, planning, and scenario analysis.`
+
+           return response
+         }
+
+         const saveForecastModel = (forecastResult: any, config: any) => {
+           try {
+             const forecastModel = {
+               id: Date.now().toString(),
+               name: `${config.algorithm.charAt(0).toUpperCase() + config.algorithm.slice(1)} Forecast - ${new Date().toLocaleDateString()}`,
+               type: 'Forecast',
+               description: `Forecast model using ${config.algorithm} algorithm with ${config.forecastPeriods} periods`,
+               lastModified: new Date(),
+               createdBy: 'AI Assistant',
+               config,
+               data: forecastResult
+             }
+
+             const savedModels = JSON.parse(localStorage.getItem('savedModels') || '[]')
+             savedModels.push(forecastModel)
+             localStorage.setItem('savedModels', JSON.stringify(savedModels))
+           } catch (error) {
+             console.error('Error saving forecast model:', error)
+           }
+         }
 
   return (
     <div className="h-full flex flex-col max-h-screen lg:max-h-none">
