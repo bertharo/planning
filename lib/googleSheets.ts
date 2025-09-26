@@ -362,7 +362,7 @@ export class GoogleSheetsService {
 
       const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}?key=${config.apiKey}`
       const response = await fetch(url)
-      
+
       if (!response.ok) {
         return []
       }
@@ -373,6 +373,176 @@ export class GoogleSheetsService {
       console.error('Error getting sheet names:', error)
       return []
     }
+  }
+
+  // New method for data aggregation and calculations
+  async calculateAggregation(
+    config: SheetConfig, 
+    query: {
+      operation: 'sum' | 'average' | 'count' | 'max' | 'min'
+      column: string
+      filters?: {
+        product?: string
+        region?: string
+        segment?: string
+        timePeriod?: string
+        dealType?: string
+        arrCategory?: string
+      }
+    }
+  ): Promise<{ value: number; details: any; rowCount: number }> {
+    
+    try {
+      console.log('Calculating aggregation:', query)
+      
+      // Get sheet data
+      const sheetData = await this.getSheetData(config)
+      if (!sheetData || !sheetData.values.length) {
+        return { value: 0, details: {}, rowCount: 0 }
+      }
+
+      const headers = sheetData.values[0]
+      const rows = sheetData.values.slice(1) // Skip header row
+      
+      console.log('Headers found:', headers)
+      console.log('Total rows:', rows.length)
+
+      // Find the target column
+      const targetColumnIndex = this.findColumnIndex(headers, [query.column.toLowerCase(), 'arr_usd', 'value', 'amount'])
+      
+      if (targetColumnIndex === -1) {
+        console.log('Target column not found:', query.column)
+        return { value: 0, details: {}, rowCount: 0 }
+      }
+
+      // Apply filters and extract values
+      const filteredRows = this.applyFilters(rows, headers, query.filters)
+      const values = this.extractNumericValues(filteredRows, targetColumnIndex)
+      
+      console.log('Filtered rows:', filteredRows.length)
+      console.log('Extracted values:', values.length)
+
+      // Calculate the aggregation
+      let result = 0
+      switch (query.operation) {
+        case 'sum':
+          result = values.reduce((sum, val) => sum + val, 0)
+          break
+        case 'average':
+          result = values.length > 0 ? values.reduce((sum, val) => sum + val, 0) / values.length : 0
+          break
+        case 'count':
+          result = values.length
+          break
+        case 'max':
+          result = values.length > 0 ? Math.max(...values) : 0
+          break
+        case 'min':
+          result = values.length > 0 ? Math.min(...values) : 0
+          break
+      }
+
+      console.log('Calculation result:', result)
+
+      return {
+        value: result,
+        details: {
+          operation: query.operation,
+          column: query.column,
+          filters: query.filters,
+          sampleValues: values.slice(0, 5), // First 5 values for debugging
+          allValues: values // All values for verification
+        },
+        rowCount: filteredRows.length
+      }
+
+    } catch (error) {
+      console.error('Error calculating aggregation:', error)
+      return { value: 0, details: { error: error instanceof Error ? error.message : 'Unknown error' }, rowCount: 0 }
+    }
+  }
+
+  private applyFilters(
+    rows: string[][], 
+    headers: string[], 
+    filters?: {
+      product?: string
+      region?: string
+      segment?: string
+      timePeriod?: string
+      dealType?: string
+      arrCategory?: string
+    }
+  ): string[][] {
+    
+    if (!filters) {
+      return rows
+    }
+
+    return rows.filter(row => {
+      // Check product filter
+      if (filters.product && filters.product !== 'All Products') {
+        const productCol = this.findColumnIndex(headers, ['product'])
+        if (productCol !== -1 && !row[productCol]?.toLowerCase().includes(filters.product.toLowerCase())) {
+          return false
+        }
+      }
+
+      // Check region filter
+      if (filters.region && filters.region !== 'Global') {
+        const regionCol = this.findColumnIndex(headers, ['geo', 'region'])
+        if (regionCol !== -1 && !row[regionCol]?.toLowerCase().includes(filters.region.toLowerCase())) {
+          return false
+        }
+      }
+
+      // Check segment filter
+      if (filters.segment && filters.segment !== 'All Segments') {
+        const segmentCol = this.findColumnIndex(headers, ['industry', 'segment'])
+        if (segmentCol !== -1 && !row[segmentCol]?.toLowerCase().includes(filters.segment.toLowerCase())) {
+          return false
+        }
+      }
+
+      // Check time period filter
+      if (filters.timePeriod) {
+        const timeCol = this.findColumnIndex(headers, ['fiscal_quarter', 'quarter', 'fiscal_year', 'year'])
+        if (timeCol !== -1 && !row[timeCol]?.toLowerCase().includes(filters.timePeriod.toLowerCase())) {
+          return false
+        }
+      }
+
+      // Check deal type filter (for "net new")
+      if (filters.dealType) {
+        const dealTypeCol = this.findColumnIndex(headers, ['deal_type', 'type'])
+        if (dealTypeCol !== -1 && !row[dealTypeCol]?.toLowerCase().includes(filters.dealType.toLowerCase())) {
+          return false
+        }
+      }
+
+      // Check ARR category filter (for "platform")
+      if (filters.arrCategory) {
+        const arrCategoryCol = this.findColumnIndex(headers, ['arr_category', 'category'])
+        if (arrCategoryCol !== -1 && !row[arrCategoryCol]?.toLowerCase().includes(filters.arrCategory.toLowerCase())) {
+          return false
+        }
+      }
+
+      return true
+    })
+  }
+
+  private extractNumericValues(rows: string[][], columnIndex: number): number[] {
+    return rows
+      .map(row => row[columnIndex])
+      .filter(value => value && value !== '')
+      .map(value => {
+        // Clean the value (remove commas, currency symbols, etc.)
+        const cleaned = value.toString().replace(/[,$%]/g, '')
+        const num = parseFloat(cleaned)
+        return isNaN(num) ? 0 : num
+      })
+      .filter(num => num > 0) // Only include positive values
   }
 }
 

@@ -129,28 +129,34 @@ export function NaturalLanguageInterface() {
                 input.toLowerCase().includes('personnel') ||
                 input.toLowerCase().includes('forecast'))
 
-      // Check if this is an analytical question
-      const isAnalyticalQuestion = (
-        input.toLowerCase().includes('how much') ||
-        input.toLowerCase().includes('what is') ||
-        input.toLowerCase().includes('show me') ||
-        input.toLowerCase().includes('calculate') ||
-        input.toLowerCase().includes('analyze') ||
-        input.toLowerCase().includes('arr') ||
-        input.toLowerCase().includes('revenue') ||
-        input.toLowerCase().includes('sales') ||
-        input.toLowerCase().includes('q1') ||
-        input.toLowerCase().includes('q2') ||
-        input.toLowerCase().includes('q3') ||
-        input.toLowerCase().includes('q4') ||
-        input.toLowerCase().includes('fy') ||
-        input.toLowerCase().includes('product') ||
-        input.toLowerCase().includes('region') ||
-        input.toLowerCase().includes('segment')
-      )
+             // Check if this is an analytical question
+             const isAnalyticalQuestion = (
+               input.toLowerCase().includes('how much') ||
+               input.toLowerCase().includes('what is') ||
+               input.toLowerCase().includes('show me') ||
+               input.toLowerCase().includes('calculate') ||
+               input.toLowerCase().includes('analyze') ||
+               input.toLowerCase().includes('arr') ||
+               input.toLowerCase().includes('revenue') ||
+               input.toLowerCase().includes('sales') ||
+               input.toLowerCase().includes('q1') ||
+               input.toLowerCase().includes('q2') ||
+               input.toLowerCase().includes('q3') ||
+               input.toLowerCase().includes('q4') ||
+               input.toLowerCase().includes('fy') ||
+               input.toLowerCase().includes('product') ||
+               input.toLowerCase().includes('region') ||
+               input.toLowerCase().includes('segment') ||
+               input.toLowerCase().includes('sum of') ||
+               input.toLowerCase().includes('total') ||
+               input.toLowerCase().includes('average') ||
+               input.toLowerCase().includes('count')
+             )
 
              if (shouldCreateModel) {
                await handleModelCreation(input)
+             } else if (isAggregationQuery(input)) {
+               await handleAggregationQuery(input)
              } else if (isAnalyticalQuestion) {
                await handleAnalyticalQuestion(input)
              } else if (input.toLowerCase().includes('forecast') || input.toLowerCase().includes('monte carlo')) {
@@ -220,6 +226,209 @@ export function NaturalLanguageInterface() {
       setIsLoading(false)
     }
   }
+
+         const isAggregationQuery = (input: string): boolean => {
+           const lowerInput = input.toLowerCase()
+           return (
+             lowerInput.includes('sum of') ||
+             lowerInput.includes('total') ||
+             lowerInput.includes('average') ||
+             lowerInput.includes('count') ||
+             lowerInput.includes('maximum') ||
+             lowerInput.includes('minimum') ||
+             lowerInput.includes('max') ||
+             lowerInput.includes('min')
+           )
+         }
+
+         const handleAggregationQuery = async (userInput: string) => {
+           try {
+             console.log('Processing aggregation query:', userInput)
+             
+             // Check if we have Google Sheets connected
+             const googleSheets = connectedDataSources.find(ds => ds.id === 'google-sheets')
+             
+             if (!googleSheets || !googleSheets.config) {
+               const errorMessage: Message = {
+                 id: (Date.now() + 1).toString(),
+                 type: 'assistant',
+                 content: 'To calculate aggregations, I need access to your data. Please connect your Google Sheets first in the Data Sources panel.',
+                 timestamp: new Date()
+               }
+               setMessages(prev => [...prev, errorMessage])
+               setIsLoading(false)
+               return
+             }
+
+             // Parse the aggregation query
+             const aggregationQuery = parseAggregationQuery(userInput)
+             console.log('Parsed aggregation query:', aggregationQuery)
+
+             // Calculate the aggregation using the Google Sheets service
+             const result = await googleSheetsService.calculateAggregation(googleSheets.config, aggregationQuery)
+             console.log('Aggregation result:', result)
+
+             // Generate response
+             const response = generateAggregationResponse(result, userInput, aggregationQuery)
+             
+             const assistantMessage: Message = {
+               id: (Date.now() + 1).toString(),
+               type: 'assistant',
+               content: response,
+               timestamp: new Date()
+             }
+             setMessages(prev => [...prev, assistantMessage])
+
+           } catch (error) {
+             console.error('Error processing aggregation query:', error)
+             const errorMessage: Message = {
+               id: (Date.now() + 1).toString(),
+               type: 'assistant',
+               content: `I encountered an error while calculating the aggregation: ${error instanceof Error ? error.message : 'Unknown error'}. Please check your data format and try again.`,
+               timestamp: new Date()
+             }
+             setMessages(prev => [...prev, errorMessage])
+           } finally {
+             setIsLoading(false)
+           }
+         }
+
+         const parseAggregationQuery = (query: string) => {
+           const lowerQuery = query.toLowerCase()
+           
+           // Determine operation
+           let operation: 'sum' | 'average' | 'count' | 'max' | 'min' = 'sum'
+           if (lowerQuery.includes('average') || lowerQuery.includes('mean')) {
+             operation = 'average'
+           } else if (lowerQuery.includes('count') || lowerQuery.includes('number of')) {
+             operation = 'count'
+           } else if (lowerQuery.includes('maximum') || lowerQuery.includes('max')) {
+             operation = 'max'
+           } else if (lowerQuery.includes('minimum') || lowerQuery.includes('min')) {
+             operation = 'min'
+           } else if (lowerQuery.includes('sum') || lowerQuery.includes('total')) {
+             operation = 'sum'
+           }
+
+           // Determine target column
+           let column = 'arr_usd'
+           if (lowerQuery.includes('arr')) {
+             column = 'arr_usd'
+           } else if (lowerQuery.includes('revenue')) {
+             column = 'revenue'
+           } else if (lowerQuery.includes('customers')) {
+             column = 'customers'
+           }
+
+           // Parse filters
+           const filters: any = {}
+
+           // Product filter
+           if (lowerQuery.includes('product')) {
+             const productMatch = lowerQuery.match(/product\s+(\w+)/)
+             if (productMatch) {
+               filters.product = productMatch[1]
+             } else if (!lowerQuery.includes('all products')) {
+               filters.product = 'All Products' // Default to all products if not specified
+             }
+           }
+
+           // Region filter
+           const regions = ['australia', 'us', 'europe', 'asia', 'canada', 'uk']
+           const foundRegion = regions.find(region => lowerQuery.includes(region))
+           if (foundRegion) {
+             filters.region = foundRegion
+           }
+
+           // Segment filter
+           const segments = ['finance', 'healthcare', 'retail', 'technology', 'manufacturing', 'financial services']
+           const foundSegment = segments.find(segment => lowerQuery.includes(segment))
+           if (foundSegment) {
+             filters.segment = foundSegment
+           }
+
+           // Time period filter
+           if (lowerQuery.includes('q1')) filters.timePeriod = 'Q1'
+           if (lowerQuery.includes('q2')) filters.timePeriod = 'Q2'
+           if (lowerQuery.includes('q3')) filters.timePeriod = 'Q3'
+           if (lowerQuery.includes('q4')) filters.timePeriod = 'Q4'
+           if (lowerQuery.includes('fy25')) filters.timePeriod = 'FY25'
+           if (lowerQuery.includes('fy24')) filters.timePeriod = 'FY24'
+
+           // Deal type filter (for "net new")
+           if (lowerQuery.includes('net new')) {
+             filters.dealType = 'net new'
+           }
+
+           // ARR category filter (for "platform")
+           if (lowerQuery.includes('platform')) {
+             filters.arrCategory = 'platform'
+           }
+
+           return {
+             operation,
+             column,
+             filters: Object.keys(filters).length > 0 ? filters : undefined
+           }
+         }
+
+         const generateAggregationResponse = (result: any, originalQuery: string, query: any) => {
+           const formatCurrency = (value: number) => {
+             return new Intl.NumberFormat('en-US', {
+               style: 'currency',
+               currency: 'USD',
+               minimumFractionDigits: 0,
+               maximumFractionDigits: 0,
+             }).format(value)
+           }
+
+           const formatNumber = (value: number) => {
+             return new Intl.NumberFormat('en-US').format(value)
+           }
+
+           let operationText = query.operation
+           switch (query.operation) {
+             case 'sum': operationText = 'Sum'; break
+             case 'average': operationText = 'Average'; break
+             case 'count': operationText = 'Count'; break
+             case 'max': operationText = 'Maximum'; break
+             case 'min': operationText = 'Minimum'; break
+           }
+
+           let response = `📊 **${operationText} Calculation Results**
+
+**Query:** "${originalQuery}"
+**Operation:** ${operationText} of ${query.column.toUpperCase()}
+**Result:** ${query.operation === 'count' ? formatNumber(result.value) : formatCurrency(result.value)}
+**Rows Analyzed:** ${result.rowCount}
+
+**🔍 Analysis Details:**
+• **Data Source:** Google Sheets (Live Data)
+• **Column:** ${query.column.toUpperCase()}
+• **Calculation Method:** ${query.operation.charAt(0).toUpperCase() + query.operation.slice(1)} aggregation`
+
+           if (query.filters) {
+             response += `\n• **Filters Applied:**`
+             if (query.filters.product) response += `\n  - Product: ${query.filters.product}`
+             if (query.filters.region) response += `\n  - Region: ${query.filters.region}`
+             if (query.filters.segment) response += `\n  - Segment: ${query.filters.segment}`
+             if (query.filters.timePeriod) response += `\n  - Time Period: ${query.filters.timePeriod}`
+             if (query.filters.dealType) response += `\n  - Deal Type: ${query.filters.dealType}`
+             if (query.filters.arrCategory) response += `\n  - ARR Category: ${query.filters.arrCategory}`
+           }
+
+           if (result.details.sampleValues && result.details.sampleValues.length > 0) {
+             response += `\n\n**📈 Sample Values:** ${result.details.sampleValues.map((v: number) => formatCurrency(v)).join(', ')}`
+           }
+
+           if (result.rowCount === 0) {
+             response += `\n\n⚠️ **Note:** No data found matching your criteria. Please check your filters or data format.`
+           }
+
+           response += `\n\n✅ **Data Quality:** This calculation uses real data from your connected Google Sheets.`
+
+           return response
+         }
 
          const handleForecastCreation = async (userInput: string) => {
            try {
