@@ -228,12 +228,12 @@ export function ForecastVisualization({ forecastData }: ForecastVisualizationPro
 
             {/* Confidence Intervals Chart */}
             <div className="h-64 flex items-end justify-between space-x-1">
-              {forecastData.monteCarlo.percentiles.p50.map((point, index) => {
-                const p90Height = range > 0 ? ((forecastData.monteCarlo.percentiles.p90[index].value - minValue) / range) * 100 : 50
-                const p75Height = range > 0 ? ((forecastData.monteCarlo.percentiles.p75[index].value - minValue) / range) * 100 : 50
+              {forecastData.monteCarlo?.percentiles.p50.map((point, index) => {
+                const p90Height = range > 0 ? (((forecastData.monteCarlo?.percentiles.p90[index]?.value || 0) - minValue) / range) * 100 : 50
+                const p75Height = range > 0 ? (((forecastData.monteCarlo?.percentiles.p75[index]?.value || 0) - minValue) / range) * 100 : 50
                 const p50Height = range > 0 ? ((point.value - minValue) / range) * 100 : 50
-                const p25Height = range > 0 ? ((forecastData.monteCarlo.percentiles.p25[index].value - minValue) / range) * 100 : 50
-                const p10Height = range > 0 ? ((forecastData.monteCarlo.percentiles.p10[index].value - minValue) / range) * 100 : 50
+                const p25Height = range > 0 ? (((forecastData.monteCarlo?.percentiles.p25[index]?.value || 0) - minValue) / range) * 100 : 50
+                const p10Height = range > 0 ? (((forecastData.monteCarlo?.percentiles.p10[index]?.value || 0) - minValue) / range) * 100 : 50
                 
                 return (
                   <div key={index} className="flex flex-col items-center flex-1 relative">
@@ -295,10 +295,10 @@ export function ForecastVisualization({ forecastData }: ForecastVisualizationPro
             <h4 className="text-lg font-semibold mb-4">Scenario Analysis</h4>
             
             <div className="h-64 flex items-end justify-between space-x-1">
-              {forecastData.monteCarlo.scenarios.realistic.map((point, index) => {
-                const optimisticHeight = range > 0 ? ((forecastData.monteCarlo.scenarios.optimistic[index].value - minValue) / range) * 100 : 50
+              {forecastData.monteCarlo?.scenarios.realistic.map((point, index) => {
+                const optimisticHeight = range > 0 ? (((forecastData.monteCarlo?.scenarios.optimistic[index]?.value || 0) - minValue) / range) * 100 : 50
                 const realisticHeight = range > 0 ? ((point.value - minValue) / range) * 100 : 50
-                const pessimisticHeight = range > 0 ? ((forecastData.monteCarlo.scenarios.pessimistic[index].value - minValue) / range) * 100 : 50
+                const pessimisticHeight = range > 0 ? (((forecastData.monteCarlo?.scenarios.pessimistic[index]?.value || 0) - minValue) / range) * 100 : 50
                 
                 return (
                   <div key={index} className="flex flex-col items-center flex-1 space-y-1">
@@ -306,7 +306,7 @@ export function ForecastVisualization({ forecastData }: ForecastVisualizationPro
                     <div
                       className="w-full bg-green-500 rounded-t"
                       style={{ height: `${optimisticHeight * 0.3}%`, minHeight: '2px' }}
-                      title={`Optimistic: ${formatCurrency(forecastData.monteCarlo.scenarios.optimistic[index].value)}`}
+                      title={`Optimistic: ${formatCurrency(forecastData.monteCarlo?.scenarios.optimistic[index].value || 0)}`}
                     />
                     {/* Realistic */}
                     <div
@@ -318,7 +318,7 @@ export function ForecastVisualization({ forecastData }: ForecastVisualizationPro
                     <div
                       className="w-full bg-red-500 rounded-t"
                       style={{ height: `${pessimisticHeight * 0.3}%`, minHeight: '2px' }}
-                      title={`Pessimistic: ${formatCurrency(forecastData.monteCarlo.scenarios.pessimistic[index].value)}`}
+                      title={`Pessimistic: ${formatCurrency(forecastData.monteCarlo?.scenarios.pessimistic[index].value || 0)}`}
                     />
                     
                     <span className="text-xs text-muted-foreground mt-1 transform -rotate-45 origin-top">
