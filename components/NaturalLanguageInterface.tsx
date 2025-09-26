@@ -118,17 +118,156 @@ export function NaturalLanguageInterface() {
     setInput('')
     setIsLoading(true)
 
-    // Simulate AI response
-    setTimeout(() => {
+    try {
+      // Check if this is a model creation request
+      const shouldCreateModel = input.toLowerCase().includes('create') && 
+        (input.toLowerCase().includes('model') || 
+         input.toLowerCase().includes('revenue') || 
+         input.toLowerCase().includes('capex') || 
+         input.toLowerCase().includes('personnel'))
+
+      if (shouldCreateModel) {
+        await handleModelCreation(input)
+      } else {
+        // Regular response
+        setTimeout(() => {
+          const assistantMessage: Message = {
+            id: (Date.now() + 1).toString(),
+            type: 'assistant',
+            content: generateResponse(input),
+            timestamp: new Date()
+          }
+          setMessages(prev => [...prev, assistantMessage])
+          setIsLoading(false)
+        }, 1000)
+      }
+    } catch (error) {
+      console.error('Error handling request:', error)
+      setIsLoading(false)
+    }
+  }
+
+  const handleModelCreation = async (userInput: string) => {
+    try {
+      // Determine model type
+      let modelType = 'Revenue'
+      if (userInput.toLowerCase().includes('capex') || userInput.toLowerCase().includes('capital')) {
+        modelType = 'CapEx'
+      } else if (userInput.toLowerCase().includes('personnel') || userInput.toLowerCase().includes('headcount')) {
+        modelType = 'Personnel'
+      }
+
+      // Generate model data based on connected sources
+      const modelData = await generateModelData(modelType, connectedDataSources)
+      
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         type: 'assistant',
-        content: generateResponse(input),
+        content: modelData.response,
         timestamp: new Date()
       }
+      
       setMessages(prev => [...prev, assistantMessage])
+      
+      // If we have actual model data, show it
+      if (modelData.model) {
+        const modelMessage: Message = {
+          id: (Date.now() + 2).toString(),
+          type: 'assistant',
+          content: `📊 **${modelType} Model Created!**\n\nHere's your model data:\n\`\`\`\n${JSON.stringify(modelData.model, null, 2)}\n\`\`\`\n\nThis model has been saved to your Models section. You can now use it for scenario planning and analysis.`,
+          timestamp: new Date()
+        }
+        setMessages(prev => [...prev, modelMessage])
+      }
+      
+    } catch (error) {
+      console.error('Error creating model:', error)
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        type: 'assistant',
+        content: 'I encountered an error while creating your model. Please try again or check your data source configuration.',
+        timestamp: new Date()
+      }
+      setMessages(prev => [...prev, errorMessage])
+    } finally {
       setIsLoading(false)
-    }, 1000)
+    }
+  }
+
+  const generateModelData = async (modelType: string, dataSources: DataSource[]) => {
+    // Simulate data pulling and model generation
+    await new Promise(resolve => setTimeout(resolve, 2000))
+
+    const modelId = Date.now().toString()
+    const baseModel = {
+      id: modelId,
+      name: `${modelType} Model - ${new Date().toLocaleDateString()}`,
+      type: modelType,
+      description: `Generated ${modelType} model using connected data sources`,
+      lastModified: new Date(),
+      createdBy: 'AI Assistant',
+      data: {}
+    }
+
+    // Generate model data based on type and connected sources
+    if (modelType === 'Revenue') {
+      baseModel.data = {
+        monthlyRecurringRevenue: [10000, 12000, 15000, 18000, 22000],
+        newCustomers: [50, 60, 75, 90, 110],
+        churnRate: 0.05,
+        averageRevenuePerUser: 100,
+        growthRate: 0.2,
+        dataSource: dataSources.find(ds => ds.id === 'google-sheets')?.name || 'Manual Input'
+      }
+    } else if (modelType === 'CapEx') {
+      baseModel.data = {
+        equipment: 50000,
+        software: 15000,
+        infrastructure: 25000,
+        totalCapEx: 90000,
+        monthlyDepreciation: 7500,
+        dataSource: dataSources.find(ds => ds.id === 'google-sheets')?.name || 'Manual Input'
+      }
+    } else if (modelType === 'Personnel') {
+      baseModel.data = {
+        currentHeadcount: 25,
+        plannedHires: 15,
+        averageSalary: 120000,
+        benefits: 18000,
+        totalPersonnelCost: 3450000,
+        dataSource: dataSources.find(ds => ds.id === 'google-sheets')?.name || 'Manual Input'
+      }
+    }
+
+    // Save to localStorage (simulate saving to models)
+    try {
+      const savedModels = JSON.parse(localStorage.getItem('savedModels') || '[]')
+      savedModels.push(baseModel)
+      localStorage.setItem('savedModels', JSON.stringify(savedModels))
+    } catch (error) {
+      console.error('Error saving model:', error)
+    }
+
+    const response = `✅ **${modelType} Model Created Successfully!**
+
+I've analyzed your connected data sources and created a comprehensive ${modelType} model. Here's what I found:
+
+**Data Sources Used:** ${dataSources.map(ds => ds.name).join(', ') || 'Default assumptions'}
+
+**Model Features:**
+${modelType === 'Revenue' ? 
+  '• Monthly Recurring Revenue projections\n• Customer growth analysis\n• Churn rate calculations\n• ARPU trends' :
+  modelType === 'CapEx' ?
+  '• Equipment and software costs\n• Infrastructure investments\n• Depreciation schedules\n• Capital allocation' :
+  '• Headcount projections\n• Salary and benefits analysis\n• Hiring timeline\n• Total personnel costs'
+}
+
+The model has been saved and is now available in your Models section. You can use it for scenario planning and further analysis.`
+
+    return {
+      response,
+      model: baseModel
+    }
   }
 
   const generateResponse = (userInput: string): string => {

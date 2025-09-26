@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { 
   Plus, 
   BarChart3, 
@@ -59,6 +59,42 @@ export function ModelsSection() {
   const [models, setModels] = useState<Model[]>(mockModels)
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [selectedType, setSelectedType] = useState<'Revenue' | 'CapEx' | 'Personnel'>('Revenue')
+
+  // Load AI-generated models from localStorage
+  useEffect(() => {
+    const loadAIGeneratedModels = () => {
+      try {
+        const savedModels = localStorage.getItem('savedModels')
+        if (savedModels) {
+          const aiModels = JSON.parse(savedModels)
+          const formattedModels = aiModels.map((aiModel: any) => ({
+            id: aiModel.id,
+            name: aiModel.name,
+            type: aiModel.type,
+            description: aiModel.description,
+            lastModified: new Date(aiModel.lastModified),
+            createdBy: aiModel.createdBy
+          }))
+          
+          // Add AI models to the beginning of the list
+          setModels(prev => {
+            const existingIds = new Set(prev.map(m => m.id))
+            const newAiModels = formattedModels.filter((m: any) => !existingIds.has(m.id))
+            return [...newAiModels, ...prev]
+          })
+        }
+      } catch (error) {
+        console.error('Error loading AI-generated models:', error)
+      }
+    }
+
+    loadAIGeneratedModels()
+    
+    // Check for new AI models periodically
+    const interval = setInterval(loadAIGeneratedModels, 3000)
+    
+    return () => clearInterval(interval)
+  }, [])
 
   const handleCreateModel = () => {
     const newModel: Model = {
