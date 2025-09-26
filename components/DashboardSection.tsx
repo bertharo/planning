@@ -7,7 +7,6 @@ import {
   DollarSign, 
   Users, 
   BarChart3,
-  PieChart,
   Activity,
   RefreshCw,
   Download,
@@ -335,7 +334,7 @@ function ChartCard({ title, data, type }: ChartCardProps) {
       <div className="h-64 flex items-center justify-center">
         {type === 'line' && <LineChart data={data} />}
         {type === 'bar' && <BarChart data={data} />}
-        {type === 'pie' && <PieChart data={data} />}
+        {type === 'pie' && <CustomPieChart data={data} />}
       </div>
     </div>
   )
@@ -424,7 +423,7 @@ function BarChart({ data }: { data: Array<{ month: string; value: number }> }) {
   )
 }
 
-function PieChart({ data }: { data: Array<{ product?: string; region?: string; value: number; color: string }> }) {
+function CustomPieChart({ data }: { data: Array<{ product?: string; region?: string; value: number; color: string }> }) {
   const total = data.reduce((sum, item) => sum + item.value, 0)
   let cumulativePercentage = 0
 
