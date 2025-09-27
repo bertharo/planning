@@ -202,11 +202,11 @@ export function DataSourcePanel({ dataSources, setDataSources }: DataSourcePanel
   }
 
   return (
-    <div className="h-full flex flex-col max-h-screen lg:max-h-none bg-gradient-to-b from-muted to-card">
+    <div className="h-full flex flex-col max-h-screen lg:max-h-none bg-card">
       <div className="p-4 lg:p-6 border-b border-border bg-card">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-green-600 to-blue-600 rounded-xl flex items-center justify-center">
+            <div className="w-10 h-10 bg-accent rounded-xl flex items-center justify-center">
               <Database className="w-6 h-6 text-white" />
             </div>
             <div>

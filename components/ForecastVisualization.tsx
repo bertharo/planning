@@ -167,7 +167,7 @@ export function ForecastVisualization({ forecastData }: ForecastVisualizationPro
                   <div key={index} className="flex flex-col items-center flex-1">
                     <div
                       className={`w-full rounded-t ${
-                        isHistorical ? 'bg-blue-500' : 'bg-green-500'
+                        isHistorical ? 'bg-accent' : 'bg-success'
                       }`}
                       style={{ height: `${height}%`, minHeight: '4px' }}
                       title={`${point.period}: ${formatCurrency(point.value)}`}
@@ -181,7 +181,7 @@ export function ForecastVisualization({ forecastData }: ForecastVisualizationPro
             </div>
             <div className="flex items-center space-x-4 mt-4 text-sm">
               <div className="flex items-center space-x-2">
-                <div className="w-3 h-3 bg-blue-500 rounded"></div>
+                <div className="w-3 h-3 bg-accent rounded"></div>
                 <span>Historical Data</span>
               </div>
               <div className="flex items-center space-x-2">
@@ -249,7 +249,7 @@ export function ForecastVisualization({ forecastData }: ForecastVisualizationPro
                       />
                       {/* 50% confidence interval */}
                       <div
-                        className="w-full bg-blue-200 absolute bottom-0"
+                        className="w-full bg-accent/20 absolute bottom-0"
                         style={{ 
                           height: `${p75Height - p25Height}%`,
                           minHeight: '2px'
@@ -257,7 +257,7 @@ export function ForecastVisualization({ forecastData }: ForecastVisualizationPro
                       />
                       {/* Median line */}
                       <div
-                        className="w-full bg-blue-600 absolute bottom-0"
+                        className="w-full bg-accent absolute bottom-0"
                         style={{ 
                           height: `${p50Height}%`,
                           minHeight: '2px'
@@ -275,11 +275,11 @@ export function ForecastVisualization({ forecastData }: ForecastVisualizationPro
             
             <div className="flex items-center space-x-4 mt-4 text-sm">
               <div className="flex items-center space-x-2">
-                <div className="w-3 h-3 bg-blue-600 rounded"></div>
+                <div className="w-3 h-3 bg-accent rounded"></div>
                 <span>Median (50th percentile)</span>
               </div>
               <div className="flex items-center space-x-2">
-                <div className="w-3 h-3 bg-blue-200 rounded"></div>
+                <div className="w-3 h-3 bg-accent/20 rounded"></div>
                 <span>50% confidence interval</span>
               </div>
               <div className="flex items-center space-x-2">
@@ -310,7 +310,7 @@ export function ForecastVisualization({ forecastData }: ForecastVisualizationPro
                     />
                     {/* Realistic */}
                     <div
-                      className="w-full bg-blue-500 rounded-t"
+                      className="w-full bg-accent rounded-t"
                       style={{ height: `${realisticHeight * 0.3}%`, minHeight: '2px' }}
                       title={`Realistic: ${formatCurrency(point.value)}`}
                     />
@@ -335,7 +335,7 @@ export function ForecastVisualization({ forecastData }: ForecastVisualizationPro
                 <span>Optimistic (90th percentile)</span>
               </div>
               <div className="flex items-center space-x-2">
-                <div className="w-3 h-3 bg-blue-500 rounded"></div>
+                <div className="w-3 h-3 bg-accent rounded"></div>
                 <span>Realistic (50th percentile)</span>
               </div>
               <div className="flex items-center space-x-2">
@@ -351,15 +351,15 @@ export function ForecastVisualization({ forecastData }: ForecastVisualizationPro
                 <p className="text-2xl font-bold text-green-900">
                   {formatCurrency(forecastData.monteCarlo.scenarios.optimistic[forecastData.monteCarlo.scenarios.optimistic.length - 1]?.value || 0)}
                 </p>
-                <p className="text-sm text-green-700">Final period projection</p>
+                <p className="text-sm text-fgMuted">Final period projection</p>
               </div>
               
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <h5 className="font-semibold text-blue-800 mb-2">Realistic Scenario</h5>
-                <p className="text-2xl font-bold text-blue-900">
+              <div className="bg-accent/10 border border-accent/20 rounded-lg p-4">
+                <h5 className="font-semibold text-fg mb-2">Realistic Scenario</h5>
+                <p className="text-2xl font-bold text-fg">
                   {formatCurrency(forecastData.monteCarlo.scenarios.realistic[forecastData.monteCarlo.scenarios.realistic.length - 1]?.value || 0)}
                 </p>
-                <p className="text-sm text-blue-700">Most likely outcome</p>
+                <p className="text-sm text-fgMuted">Most likely outcome</p>
               </div>
               
               <div className="bg-red-50 border border-red-200 rounded-lg p-4">

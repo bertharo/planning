@@ -27,7 +27,7 @@ export function AppShell({ children }: AppShellProps) {
           {/* Logo & Brand */}
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-accent">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent">
                 <TrendingUp className="h-4 w-4 text-primary-fg" />
               </div>
               <div className="flex flex-col">

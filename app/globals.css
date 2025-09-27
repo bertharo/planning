@@ -8,9 +8,9 @@
   /* ==== Modern Light Theme Only ==== */
   :root {
     /* Light backgrounds */
-    --bg: 249 250 251;           /* Very light gray page background */
+    --bg: 255 255 255;           /* Pure white page background */
     --card: 255 255 255;         /* Pure white cards */
-    --muted: 243 244 246;        /* Light gray panels */
+    --muted: 248 250 252;        /* Very light gray panels */
     
     /* Text colors */
     --fg: 17 24 39;              /* Dark gray text */
