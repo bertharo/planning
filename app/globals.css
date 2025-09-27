@@ -48,43 +48,84 @@
     color: black !important;
   }
   
-  /* FORCE ALL CARDS TO BE WHITE */
+  /* SOPHISTICATED CARD DESIGN - Black cards with white text bubbles */
   .card, [class*="card"], [class*="Card"] {
-    background: white !important;
-    color: black !important;
-    border: 1px solid black !important;
+    background: black !important;
+    color: white !important;
+    border: 2px solid #333 !important;
+    border-radius: 12px !important;
+    padding: 20px !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
   }
   
-  /* FORCE ALL PANELS TO BE WHITE */
+  /* White text bubbles within cards */
+  .card p, .card span, .card div, .card h1, .card h2, .card h3, .card h4, .card h5, .card h6 {
+    background: white !important;
+    color: black !important;
+    padding: 8px 12px !important;
+    border-radius: 6px !important;
+    margin: 4px 0 !important;
+    display: inline-block !important;
+    border: 1px solid #ddd !important;
+  }
+  
+  /* PANELS - Black backgrounds with white content areas */
   [class*="panel"], [class*="Panel"], [class*="section"], [class*="Section"] {
-    background: white !important;
-    color: black !important;
+    background: black !important;
+    color: white !important;
+    border: 2px solid #333 !important;
+    border-radius: 12px !important;
+    padding: 16px !important;
   }
   
-  /* FIX CHAT BUBBLES */
+  /* SOPHISTICATED CHAT BUBBLES */
   [class*="chat"], [class*="bubble"], [class*="message"] {
     background: white !important;
     color: black !important;
-    border: 1px solid black !important;
+    border: 2px solid #333 !important;
+    border-radius: 12px !important;
+    padding: 12px 16px !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+    margin: 8px 0 !important;
   }
   
-  /* FORCE ALL TEXT TO BE BLACK */
-  p, span, div, h1, h2, h3, h4, h5, h6 {
+  /* TEXT HIERARCHY - Keep body text black for readability */
+  body {
+    background: white !important;
     color: black !important;
   }
   
-  /* FIX BUTTONS */
+  /* SOPHISTICATED BUTTONS */
   button, [role="button"] {
     background: black !important;
     color: white !important;
-    border: 1px solid black !important;
+    border: 2px solid #333 !important;
+    border-radius: 8px !important;
+    padding: 10px 16px !important;
+    font-weight: 600 !important;
+    transition: all 0.2s ease !important;
   }
   
-  /* FIX INPUTS */
+  button:hover, [role="button"]:hover {
+    background: #333 !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2) !important;
+  }
+  
+  /* ELEGANT INPUTS */
   input, textarea, select {
     background: white !important;
     color: black !important;
-    border: 1px solid black !important;
+    border: 2px solid #ddd !important;
+    border-radius: 8px !important;
+    padding: 12px 16px !important;
+    transition: border-color 0.2s ease !important;
+  }
+  
+  input:focus, textarea:focus, select:focus {
+    border-color: #333 !important;
+    outline: none !important;
+    box-shadow: 0 0 0 3px rgba(0,0,0,0.1) !important;
   }
 
   * {
@@ -170,36 +211,57 @@
     color: black !important;
   }
   
-  /* SPECIFIC FIXES FOR LIVE SITE ISSUES */
-  /* Fix gold header */
+  /* SOPHISTICATED HEADER */
   header, [class*="header"], [class*="Header"] {
     background: white !important;
     color: black !important;
+    border-bottom: 2px solid #333 !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
   }
   
-  /* Fix yellow cards */
+  /* ELEGANT DASHBOARD CARDS */
   [class*="dashboard"], [class*="Dashboard"] {
-    background: white !important;
-    color: black !important;
+    background: black !important;
+    color: white !important;
+    border: 2px solid #333 !important;
+    border-radius: 12px !important;
+    padding: 20px !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
   }
   
-  /* Fix data sources section */
+  /* SOPHISTICATED DATA SOURCES */
   [class*="data"], [class*="Data"] {
-    background: white !important;
-    color: black !important;
+    background: black !important;
+    color: white !important;
+    border: 2px solid #333 !important;
+    border-radius: 12px !important;
+    padding: 16px !important;
   }
   
-  /* Fix orange chat bubbles */
+  /* ELEGANT AI ASSISTANT */
   [class*="assistant"], [class*="Assistant"], [class*="ai"], [class*="AI"] {
-    background: white !important;
-    color: black !important;
+    background: black !important;
+    color: white !important;
+    border: 2px solid #333 !important;
+    border-radius: 12px !important;
+    padding: 16px !important;
   }
   
-  /* Force all buttons to be readable */
+  /* REFINED BUTTONS */
   button, .btn, [class*="btn"], [class*="button"] {
     background: black !important;
     color: white !important;
-    border: 1px solid black !important;
+    border: 2px solid #333 !important;
+    border-radius: 8px !important;
+    padding: 10px 16px !important;
+    font-weight: 600 !important;
+    transition: all 0.2s ease !important;
+  }
+  
+  button:hover, .btn:hover, [class*="btn"]:hover, [class*="button"]:hover {
+    background: #333 !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2) !important;
   }
   
   /* Enhanced card styles */
