@@ -308,7 +308,7 @@ function MetricCard({ title, value, growth, icon, color }: MetricCardProps) {
         <div className={`p-1.5 lg:p-2 rounded-lg border ${colorClasses[color]}`}>
           {icon}
         </div>
-        <div className={`flex items-center space-x-1 text-xs lg:text-sm ${isPositive ? 'text-green-600' : 'text-red-600'}`}>
+        <div className={`flex items-center space-x-1 text-xs lg:text-sm ${isPositive ? 'text-success' : 'text-error'}`}>
           {isPositive ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
           <span>{Math.abs(growth).toFixed(1)}%</span>
         </div>
