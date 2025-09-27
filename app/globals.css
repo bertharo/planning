@@ -68,10 +68,10 @@
     font-feature-settings: "rlig" 1, "calt" 1;
   }
   
-  /* ==== ENSURE PROFESSIONAL COLORS TAKE PRECEDENCE ==== */
+  /* ==== BASE STYLES ==== */
   html, body {
-    background-color: rgb(var(--bg)) !important;
-    color: rgb(var(--fg)) !important;
+    background-color: rgb(var(--bg));
+    color: rgb(var(--fg));
   }
 
   /* ==== FOCUS MANAGEMENT - ACCESSIBILITY ==== */
@@ -217,28 +217,11 @@
     @apply bg-error/10 text-error border-error/20;
   }
   
-  /* ==== OVERRIDE ANY REMAINING GOLD/YELLOW COLORS ==== */
-  * {
-    background-color: rgb(var(--bg)) !important;
-    color: rgb(var(--fg)) !important;
-  }
-  
-  /* Specific overrides for common problematic elements */
-  header, nav, main, section, article, aside, footer {
-    background-color: rgb(var(--bg)) !important;
-    color: rgb(var(--fg)) !important;
-  }
-  
-  div, span, p, h1, h2, h3, h4, h5, h6 {
-    background-color: transparent !important;
-    color: rgb(var(--fg)) !important;
-  }
-  
-  /* Force cards and panels to use professional colors */
+  /* ==== COMPONENT STYLES ==== */
   .card, [class*="card"], [class*="Card"] {
-    background-color: rgb(var(--card)) !important;
-    color: rgb(var(--fg)) !important;
-    border-color: rgb(var(--border)) !important;
+    background-color: rgb(var(--card));
+    color: rgb(var(--fg));
+    border-color: rgb(var(--border));
   }
 }
 

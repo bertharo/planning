@@ -12,21 +12,25 @@ module.exports = {
         sans: ['Inter', 'system-ui', 'sans-serif'],
       },
       colors: {
-        bg:       "rgb(var(--bg) / <alpha-value>)",
-        fg:       "rgb(var(--fg) / <alpha-value>)",
-        muted:    "rgb(var(--muted) / <alpha-value>)",
-        card:     "rgb(var(--card) / <alpha-value>)",
-        border:   "rgb(var(--border) / <alpha-value>)",
-        accent:   {
+        // Semantic color tokens
+        bg: "rgb(var(--bg) / <alpha-value>)",
+        fg: "rgb(var(--fg) / <alpha-value>)",
+        fgMuted: "rgb(var(--fg-muted) / <alpha-value>)",
+        card: "rgb(var(--card) / <alpha-value>)",
+        muted: "rgb(var(--muted) / <alpha-value>)",
+        border: "rgb(var(--border) / <alpha-value>)",
+        
+        accent: {
           DEFAULT: "rgb(var(--accent) / <alpha-value>)",
-          fg:      "rgb(var(--accent-fg) / <alpha-value>)",
+          fg: "rgb(var(--accent-fg) / <alpha-value>)",
         },
-        ring:     "rgb(var(--ring) / <alpha-value>)",
-        success:  "rgb(var(--success) / <alpha-value>)",
-        warning:  "rgb(var(--warning) / <alpha-value>)",
+        ring: "rgb(var(--ring) / <alpha-value>)",
+        
+        success: "rgb(var(--success) / <alpha-value>)",
+        warning: "rgb(var(--warning) / <alpha-value>)",
         error: "rgb(var(--error) / <alpha-value>)",
-        fgMuted:  "rgb(var(--fg-muted) / <alpha-value>)",
-
+        
+        // Chart colors
         ch: {
           1: "rgb(var(--ch1) / <alpha-value>)",
           2: "rgb(var(--ch2) / <alpha-value>)",
@@ -37,6 +41,7 @@ module.exports = {
           7: "rgb(var(--ch7) / <alpha-value>)",
           8: "rgb(var(--ch8) / <alpha-value>)",
         },
+        
         // Legacy mappings for existing components
         background: "rgb(var(--bg) / <alpha-value>)",
         foreground: "rgb(var(--fg) / <alpha-value>)",
