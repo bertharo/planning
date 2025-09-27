@@ -36,6 +36,9 @@ export function NaturalLanguageInterface() {
   // Load connected data sources from localStorage
   useEffect(() => {
     const loadConnectedDataSources = () => {
+      // Check if we're on the client side
+      if (typeof window === 'undefined') return
+      
       try {
         const savedConfigs = localStorage.getItem('dataSourceConfigs')
         if (savedConfigs) {
@@ -1138,9 +1141,11 @@ ${analysisData.insights.map(insight => `• ${insight}`).join('\n')}
 
     // Save to localStorage (simulate saving to models)
     try {
-      const savedModels = JSON.parse(localStorage.getItem('savedModels') || '[]')
-      savedModels.push(baseModel)
-      localStorage.setItem('savedModels', JSON.stringify(savedModels))
+      if (typeof window !== 'undefined') {
+        const savedModels = JSON.parse(localStorage.getItem('savedModels') || '[]')
+        savedModels.push(baseModel)
+        localStorage.setItem('savedModels', JSON.stringify(savedModels))
+      }
     } catch (error) {
       console.error('Error saving model:', error)
     }
@@ -1349,20 +1354,22 @@ The forecast model has been saved and is available in your Models section. You c
 
          const saveForecastModel = (forecastResult: any, config: any) => {
            try {
-             const forecastModel = {
-               id: Date.now().toString(),
-               name: `${config.algorithm.charAt(0).toUpperCase() + config.algorithm.slice(1)} Forecast - ${new Date().toLocaleDateString()}`,
-               type: 'Forecast',
-               description: `Forecast model using ${config.algorithm} algorithm with ${config.forecastPeriods} periods`,
-               lastModified: new Date(),
-               createdBy: 'AI Assistant',
-               config,
-               data: forecastResult
-             }
+             if (typeof window !== 'undefined') {
+               const forecastModel = {
+                 id: Date.now().toString(),
+                 name: `${config.algorithm.charAt(0).toUpperCase() + config.algorithm.slice(1)} Forecast - ${new Date().toLocaleDateString()}`,
+                 type: 'Forecast',
+                 description: `Forecast model using ${config.algorithm} algorithm with ${config.forecastPeriods} periods`,
+                 lastModified: new Date(),
+                 createdBy: 'AI Assistant',
+                 config,
+                 data: forecastResult
+               }
 
-             const savedModels = JSON.parse(localStorage.getItem('savedModels') || '[]')
-             savedModels.push(forecastModel)
-             localStorage.setItem('savedModels', JSON.stringify(savedModels))
+               const savedModels = JSON.parse(localStorage.getItem('savedModels') || '[]')
+               savedModels.push(forecastModel)
+               localStorage.setItem('savedModels', JSON.stringify(savedModels))
+             }
            } catch (error) {
              console.error('Error saving forecast model:', error)
            }

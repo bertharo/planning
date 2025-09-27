@@ -69,6 +69,8 @@ export function ModelsSection() {
   // Load AI-generated models from localStorage
   useEffect(() => {
     const loadAIGeneratedModels = () => {
+      if (typeof window === 'undefined') return
+      
       try {
         const savedModels = localStorage.getItem('savedModels')
         if (savedModels) {

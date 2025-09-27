@@ -67,6 +67,8 @@ export function DataSourcePanel({ dataSources, setDataSources }: DataSourcePanel
 
   // Load saved configurations from localStorage on mount
   useEffect(() => {
+    if (typeof window === 'undefined') return
+    
     const savedConfigs = localStorage.getItem('dataSourceConfigs')
     if (savedConfigs) {
       try {

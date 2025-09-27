@@ -77,11 +77,6 @@ export function ScenarioRunner() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div>
-        <h2 className="text-2xl font-bold">Scenario Runner</h2>
-        <p className="text-muted-foreground">Run financial scenarios using your connected Apps Script model</p>
-      </div>
 
       {/* Input Section */}
       <div className="bg-card border border-border rounded-lg p-6">

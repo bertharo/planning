@@ -261,8 +261,8 @@ export function ScenariosSection() {
             <div className="p-6 border-b border-border">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-xl font-semibold">Scenario Runner</h3>
-                  <p className="text-sm text-muted-foreground">Run financial scenarios using your Apps Script model</p>
+                  <h3 className="text-xl font-semibold">Run Financial Scenarios</h3>
+                  <p className="text-sm text-muted-foreground">Using your Apps Script model</p>
                 </div>
                 <button
                   onClick={() => setShowScenarioRunner(false)}
