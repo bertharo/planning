@@ -19,24 +19,36 @@ module.exports = {
         border:   "rgb(var(--border) / <alpha-value>)",
         accent:   {
           DEFAULT: "rgb(var(--accent) / <alpha-value>)",
-          fg:      "rgb(var(--accent-foreground) / <alpha-value>)",
+          fg:      "rgb(var(--accent-fg) / <alpha-value>)",
         },
         ring:     "rgb(var(--ring) / <alpha-value>)",
         success:  "rgb(var(--success) / <alpha-value>)",
         warning:  "rgb(var(--warning) / <alpha-value>)",
-        destructive: "rgb(var(--destructive) / <alpha-value>)",
+        error: "rgb(var(--error) / <alpha-value>)",
         fgMuted:  "rgb(var(--fg-muted) / <alpha-value>)",
+
+        ch: {
+          1: "rgb(var(--ch1) / <alpha-value>)",
+          2: "rgb(var(--ch2) / <alpha-value>)",
+          3: "rgb(var(--ch3) / <alpha-value>)",
+          4: "rgb(var(--ch4) / <alpha-value>)",
+          5: "rgb(var(--ch5) / <alpha-value>)",
+          6: "rgb(var(--ch6) / <alpha-value>)",
+          7: "rgb(var(--ch7) / <alpha-value>)",
+          8: "rgb(var(--ch8) / <alpha-value>)",
+        },
         // Legacy mappings for existing components
         background: "rgb(var(--bg) / <alpha-value>)",
         foreground: "rgb(var(--fg) / <alpha-value>)",
         primary: {
           DEFAULT: "rgb(var(--accent) / <alpha-value>)",
-          foreground: "rgb(var(--accent-foreground) / <alpha-value>)",
+          foreground: "rgb(var(--accent-fg) / <alpha-value>)",
         },
         secondary: {
           DEFAULT: "rgb(var(--muted) / <alpha-value>)",
           foreground: "rgb(var(--fg) / <alpha-value>)",
         },
+        destructive: "rgb(var(--error) / <alpha-value>)",
       },
       boxShadow: {
         card: "0 1px 2px rgba(0,0,0,0.06), 0 6px 24px rgba(0,0,0,0.06)",

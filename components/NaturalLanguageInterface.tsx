@@ -1376,15 +1376,15 @@ The forecast model has been saved and is available in your Models section. You c
          }
 
   return (
-    <div className="h-full flex flex-col max-h-screen lg:max-h-none bg-gradient-to-b from-slate-50 to-white">
-      <div className="p-4 lg:p-6 border-b border-slate-200 bg-white">
+    <div className="h-full flex flex-col max-h-screen lg:max-h-none bg-gradient-to-b from-muted to-card">
+      <div className="p-4 lg:p-6 border-b border-border bg-card">
         <div className="flex items-center space-x-3 mb-3">
           <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
             <Bot className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h2 className="text-lg lg:text-xl font-bold text-slate-900">AI Assistant</h2>
-            <p className="text-sm text-slate-600">Ask me anything about your financial planning</p>
+            <h2 className="text-lg lg:text-xl font-bold text-fg">AI Assistant</h2>
+            <p className="text-sm text-fgMuted">Ask me anything about your financial planning</p>
           </div>
         </div>
 

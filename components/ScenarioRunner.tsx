@@ -176,15 +176,15 @@ export function ScenarioRunner() {
 
       {/* Error Display */}
       {error && (
-        <Card className="border-destructive bg-destructive/5">
+        <Card className="border-error bg-error/5">
           <CardContent className="pt-6">
             <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-destructive rounded-lg flex items-center justify-center">
-                <AlertCircle className="w-4 h-4 text-destructive-fg" />
+              <div className="w-8 h-8 bg-error rounded-lg flex items-center justify-center">
+                <AlertCircle className="w-4 h-4 text-error-fg" />
               </div>
               <div>
-                <h3 className="font-semibold text-destructive">Analysis Error</h3>
-                <p className="text-sm text-destructive/80 mt-1">{error}</p>
+                <h3 className="font-semibold text-error">Analysis Error</h3>
+                <p className="text-sm text-error/80 mt-1">{error}</p>
               </div>
             </div>
           </CardContent>
@@ -223,13 +223,13 @@ export function ScenarioRunner() {
             <Card className={cn(
               result.arr_delta >= 0 
                 ? "border-success/20 bg-success/5" 
-                : "border-destructive/20 bg-destructive/5"
+                : "border-error/20 bg-error/5"
             )}>
               <CardContent className="p-6">
                 <div className="flex items-center space-x-3 mb-3">
                   <div className={cn(
                     "w-8 h-8 rounded-lg flex items-center justify-center",
-                    result.arr_delta >= 0 ? "bg-success" : "bg-destructive"
+                    result.arr_delta >= 0 ? "bg-success" : "bg-error"
                   )}>
                     <CheckCircle className="w-4 h-4 text-white" />
                   </div>
@@ -237,13 +237,13 @@ export function ScenarioRunner() {
                 </div>
                 <p className={cn(
                   "text-2xl font-bold",
-                  result.arr_delta >= 0 ? "text-success" : "text-destructive"
+                  result.arr_delta >= 0 ? "text-success" : "text-error"
                 )}>
                   {result.arr_delta >= 0 ? '+' : ''}{formatCurrency(result.arr_delta)}
                 </p>
                 <p className={cn(
                   "text-sm",
-                  result.arr_delta >= 0 ? "text-success/80" : "text-destructive/80"
+                  result.arr_delta >= 0 ? "text-success/80" : "text-error/80"
                 )}>
                   {formatPercentage(calculateGrowthRate(result.arr_before, result.arr_after))} growth
                 </p>
@@ -297,7 +297,7 @@ export function ScenarioRunner() {
                         </div>
                         <div className="flex justify-between font-semibold border-t border-border pt-2">
                           <span>Total Change:</span>
-                          <span className={result.arr_delta >= 0 ? 'text-success' : 'text-destructive'}>
+                          <span className={result.arr_delta >= 0 ? 'text-success' : 'text-error'}>
                             {result.arr_delta >= 0 ? '+' : ''}{formatCurrency(result.arr_delta)}
                           </span>
                         </div>
@@ -353,7 +353,7 @@ export function ScenarioRunner() {
                               <td className="py-3 px-4 text-sm text-right font-medium">{formatCurrency(delta.before)}</td>
                               <td className="py-3 px-4 text-sm text-right font-medium">{formatCurrency(delta.after)}</td>
                               <td className={`py-3 px-4 text-sm text-right font-semibold ${
-                                delta.delta >= 0 ? 'text-success' : 'text-destructive'
+                                delta.delta >= 0 ? 'text-success' : 'text-error'
                               }`}>
                                 {delta.delta >= 0 ? '+' : ''}{formatCurrency(delta.delta)}
                               </td>

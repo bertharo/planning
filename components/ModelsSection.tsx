@@ -180,7 +180,7 @@ export function ModelsSection() {
                       </button>
                       <button 
                         onClick={() => handleDeleteModel(model.id)}
-                        className="w-full flex items-center space-x-2 px-3 py-2 text-sm hover:bg-accent rounded text-destructive"
+                        className="w-full flex items-center space-x-2 px-3 py-2 text-sm hover:bg-accent rounded text-error"
                       >
                         <Trash2 className="w-4 h-4" />
                         <span>Delete</span>

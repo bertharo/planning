@@ -13,7 +13,7 @@ const buttonVariants = cva(
         primary: "bg-accent text-accent-fg hover:opacity-95 active:opacity-90 focus-visible:ring-accent",
         secondary: "bg-muted text-fg hover:bg-muted/80 border border-border",
         ghost: "bg-transparent text-fg hover:bg-muted active:bg-muted/80 border border-transparent",
-        destructive: "bg-destructive text-white hover:opacity-95 focus-visible:ring-destructive",
+        destructive: "bg-error text-white hover:opacity-95 focus-visible:ring-error",
         outline: "border border-border bg-card text-fg hover:bg-muted focus-visible:ring-ring",
       },
       size: {

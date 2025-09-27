@@ -202,20 +202,20 @@ export function DataSourcePanel({ dataSources, setDataSources }: DataSourcePanel
   }
 
   return (
-    <div className="h-full flex flex-col max-h-screen lg:max-h-none bg-gradient-to-b from-slate-50 to-white">
-      <div className="p-4 lg:p-6 border-b border-slate-200 bg-white">
+    <div className="h-full flex flex-col max-h-screen lg:max-h-none bg-gradient-to-b from-muted to-card">
+      <div className="p-4 lg:p-6 border-b border-border bg-card">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 bg-gradient-to-br from-green-600 to-blue-600 rounded-xl flex items-center justify-center">
               <Database className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h2 className="text-lg lg:text-xl font-bold text-slate-900">Data Sources</h2>
-              <p className="text-sm text-slate-600">Connect and configure your financial data sources</p>
+              <h2 className="text-lg lg:text-xl font-bold text-fg">Data Sources</h2>
+              <p className="text-sm text-fgMuted">Connect and configure your financial data sources</p>
             </div>
           </div>
-          <button className="p-2.5 hover:bg-slate-100 rounded-xl transition-colors">
-            <Plus className="w-5 h-5 text-slate-600" />
+          <button className="p-2.5 hover:bg-muted rounded-xl transition-colors">
+            <Plus className="w-5 h-5 text-fgMuted" />
           </button>
         </div>
       </div>
@@ -402,7 +402,7 @@ export function DataSourcePanel({ dataSources, setDataSources }: DataSourcePanel
                     
                            <div className="space-y-2">
                              {saveStatus === 'error' && (
-                               <div className="flex items-center space-x-2 text-sm text-destructive bg-destructive/10 p-2 rounded">
+                               <div className="flex items-center space-x-2 text-sm text-error bg-error/10 p-2 rounded">
                                  <AlertCircle className="w-4 h-4" />
                                  <span>Error saving configuration. Please try again.</span>
                                </div>
@@ -419,7 +419,7 @@ export function DataSourcePanel({ dataSources, setDataSources }: DataSourcePanel
                                <div className={`flex items-start space-x-2 text-sm p-2 rounded ${
                                  testResult.success 
                                    ? 'text-green-600 bg-green-50' 
-                                   : 'text-destructive bg-destructive/10'
+                                   : 'text-error bg-error/10'
                                }`}>
                                  {testResult.success ? <Check className="w-4 h-4 mt-0.5" /> : <AlertCircle className="w-4 h-4 mt-0.5" />}
                                  <div className="flex-1">
