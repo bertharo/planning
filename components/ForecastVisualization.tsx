@@ -145,7 +145,7 @@ export function ForecastVisualization({ forecastData }: ForecastVisualizationPro
 
         <div className="bg-card border border-border rounded-lg p-3">
           <div className="flex items-center space-x-2 mb-2">
-            <AlertTriangle className="w-4 h-4 text-orange-600" />
+            <AlertTriangle className="w-4 h-4 text-warning" />
             <span className="text-sm font-medium">Confidence</span>
           </div>
           <p className="text-lg font-bold">{forecastData.confidence.toFixed(1)}%</p>
@@ -206,15 +206,15 @@ export function ForecastVisualization({ forecastData }: ForecastVisualizationPro
                   {formatPercentage(forecastData.monteCarlo.riskMetrics.valueAtRisk95)}
                 </div>
               </div>
-              <div className="bg-orange-50 border border-orange-200 rounded-lg p-3">
-                <div className="text-sm font-medium text-orange-800">Expected Shortfall</div>
-                <div className="text-lg font-bold text-orange-900">
+              <div className="bg-warning/10 border border-warning/20 rounded-lg p-3">
+                <div className="text-sm font-medium text-warning">Expected Shortfall</div>
+                <div className="text-lg font-bold text-warning">
                   {formatPercentage(forecastData.monteCarlo.riskMetrics.expectedShortfall)}
                 </div>
               </div>
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
-                <div className="text-sm font-medium text-yellow-800">Loss Probability</div>
-                <div className="text-lg font-bold text-yellow-900">
+              <div className="bg-warning/10 border border-warning/20 rounded-lg p-3">
+                <div className="text-sm font-medium text-warning">Loss Probability</div>
+                <div className="text-lg font-bold text-warning">
                   {formatPercentage(forecastData.monteCarlo.riskMetrics.probabilityOfLoss)}
                 </div>
               </div>

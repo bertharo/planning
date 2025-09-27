@@ -223,6 +223,46 @@
     color: rgb(var(--fg));
     border-color: rgb(var(--border));
   }
+  
+  /* ==== FORCE PROFESSIONAL COLORS - OVERRIDE YELLOW/ORANGE ==== */
+  * {
+    background-color: rgb(var(--bg)) !important;
+    color: rgb(var(--fg)) !important;
+  }
+  
+  /* Override specific problematic elements */
+  header, nav, main, section, article, aside, footer {
+    background-color: rgb(var(--bg)) !important;
+    color: rgb(var(--fg)) !important;
+  }
+  
+  /* Force all cards and panels to use card colors */
+  .card, [class*="card"], [class*="Card"], [class*="panel"], [class*="Panel"] {
+    background-color: rgb(var(--card)) !important;
+    color: rgb(var(--fg)) !important;
+    border-color: rgb(var(--border)) !important;
+  }
+  
+  /* Force data source cards to use proper colors */
+  [class*="data"], [class*="Data"], [class*="source"], [class*="Source"] {
+    background-color: rgb(var(--card)) !important;
+    color: rgb(var(--fg)) !important;
+    border-color: rgb(var(--border)) !important;
+  }
+  
+  /* Force dashboard cards to use proper colors */
+  [class*="dashboard"], [class*="Dashboard"], [class*="metric"], [class*="Metric"] {
+    background-color: rgb(var(--card)) !important;
+    color: rgb(var(--fg)) !important;
+    border-color: rgb(var(--border)) !important;
+  }
+  
+  /* Force AI assistant to use proper colors */
+  [class*="assistant"], [class*="Assistant"], [class*="ai"], [class*="AI"], [class*="chat"], [class*="Chat"] {
+    background-color: rgb(var(--card)) !important;
+    color: rgb(var(--fg)) !important;
+    border-color: rgb(var(--border)) !important;
+  }
 }
 
 @layer utilities {

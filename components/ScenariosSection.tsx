@@ -110,7 +110,7 @@ export function ScenariosSection() {
         <div className="flex items-center space-x-3">
           <button
             onClick={() => setShowScenarioRunner(true)}
-            className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+            className="flex items-center space-x-2 px-4 py-2 bg-accent text-accent-fg rounded-md hover:opacity-95"
           >
             <Settings className="w-4 h-4" />
             <span>Run Scenario</span>

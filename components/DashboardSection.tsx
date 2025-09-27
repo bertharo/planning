@@ -227,7 +227,7 @@ export function DashboardSection() {
           value={formatCurrency(dashboardData.mrr.current)}
           growth={dashboardData.mrr.growth}
           icon={<Activity className="w-5 h-5" />}
-          color="orange"
+          color="warning"
         />
       </div>
 
@@ -289,7 +289,7 @@ interface MetricCardProps {
   value: string
   growth: number
   icon: React.ReactNode
-  color: 'blue' | 'green' | 'purple' | 'orange'
+  color: 'blue' | 'green' | 'purple' | 'warning'
 }
 
 function MetricCard({ title, value, growth, icon, color }: MetricCardProps) {
@@ -297,7 +297,7 @@ function MetricCard({ title, value, growth, icon, color }: MetricCardProps) {
     blue: 'bg-blue-50 text-blue-600 border-blue-200',
     green: 'bg-green-50 text-green-600 border-green-200',
     purple: 'bg-purple-50 text-purple-600 border-purple-200',
-    orange: 'bg-orange-50 text-orange-600 border-orange-200'
+    warning: 'bg-warning/10 text-warning border-warning/20'
   }
 
   const isPositive = growth >= 0
