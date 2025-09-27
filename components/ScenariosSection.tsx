@@ -110,14 +110,14 @@ export function ScenariosSection() {
         <div className="flex items-center space-x-3">
           <button
             onClick={() => setShowScenarioRunner(true)}
-            className="flex items-center space-x-2 px-4 py-2 bg-accent text-accent-fg rounded-md hover:opacity-95"
+            className="flex items-center space-x-2 px-4 py-2 bg-white text-fg border border-border rounded-md hover:bg-muted"
           >
             <Settings className="w-4 h-4" />
             <span>Run Scenario</span>
           </button>
           <button
             onClick={() => setShowCreateModal(true)}
-            className="flex items-center space-x-2 px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
+            className="flex items-center space-x-2 px-4 py-2 bg-white text-fg border border-border rounded-md hover:bg-muted"
           >
             <Plus className="w-4 h-4" />
             <span>New Scenario</span>
@@ -145,30 +145,30 @@ export function ScenariosSection() {
                 </span>
                 
                 <div className="relative group">
-                  <button className="p-1 hover:bg-accent rounded">
+                  <button className="p-1 hover:bg-muted rounded">
                     <MoreVertical className="w-4 h-4" />
                   </button>
                   
-                  <div className="absolute right-0 top-8 w-48 bg-popover border border-border rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                  <div className="absolute right-0 top-8 w-48 bg-white border border-border rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-10">
                     <div className="p-1">
-                      <button className="w-full flex items-center space-x-2 px-3 py-2 text-sm hover:bg-accent rounded">
+                      <button className="w-full flex items-center space-x-2 px-3 py-2 text-sm hover:bg-muted rounded">
                         <Play className="w-4 h-4" />
                         <span>Run Analysis</span>
                       </button>
-                      <button className="w-full flex items-center space-x-2 px-3 py-2 text-sm hover:bg-accent rounded">
+                      <button className="w-full flex items-center space-x-2 px-3 py-2 text-sm hover:bg-muted rounded">
                         <Edit className="w-4 h-4" />
                         <span>Edit</span>
                       </button>
                       <button 
                         onClick={() => handleDuplicateScenario(scenario)}
-                        className="w-full flex items-center space-x-2 px-3 py-2 text-sm hover:bg-accent rounded"
+                        className="w-full flex items-center space-x-2 px-3 py-2 text-sm hover:bg-muted rounded"
                       >
                         <Copy className="w-4 h-4" />
                         <span>Duplicate</span>
                       </button>
                       <button 
                         onClick={() => handleDeleteScenario(scenario.id)}
-                        className="w-full flex items-center space-x-2 px-3 py-2 text-sm hover:bg-accent rounded text-error"
+                        className="w-full flex items-center space-x-2 px-3 py-2 text-sm hover:bg-muted rounded text-error"
                       >
                         <Trash2 className="w-4 h-4" />
                         <span>Delete</span>
@@ -238,13 +238,13 @@ export function ScenariosSection() {
               <div className="flex space-x-3">
                 <button
                   onClick={() => setShowCreateModal(false)}
-                  className="flex-1 px-4 py-2 border border-border rounded-md hover:bg-accent"
+                  className="flex-1 px-4 py-2 border border-border rounded-md hover:bg-muted"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleCreateScenario}
-                  className="flex-1 px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
+                  className="flex-1 px-4 py-2 bg-white text-fg border border-border rounded-md hover:bg-muted"
                 >
                   Create Scenario
                 </button>
@@ -266,7 +266,7 @@ export function ScenariosSection() {
                 </div>
                 <button
                   onClick={() => setShowScenarioRunner(false)}
-                  className="p-2 hover:bg-accent rounded-md"
+                  className="p-2 hover:bg-muted rounded-md"
                 >
                   ×
                 </button>

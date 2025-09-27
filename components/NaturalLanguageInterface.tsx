@@ -1409,14 +1409,14 @@ The forecast model has been saved and is available in your Models section. You c
         {messages.map((message) => (
           <div key={message.id} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
             <div className={`flex items-start space-x-2 max-w-[90%] lg:max-w-[85%] ${message.type === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
-              <div className={`p-1.5 lg:p-2 rounded-full ${message.type === 'user' ? 'bg-primary text-primary-foreground' : 'bg-secondary'}`}>
+              <div className={`p-1.5 lg:p-2 rounded-full ${message.type === 'user' ? 'bg-white text-fg border border-border' : 'bg-secondary'}`}>
                 {message.type === 'user' ? (
                   <User className="w-3 h-3 lg:w-4 lg:h-4" />
                 ) : (
                   <Bot className="w-3 h-3 lg:w-4 lg:h-4" />
                 )}
               </div>
-              <div className={`rounded-lg p-2 lg:p-3 ${message.type === 'user' ? 'bg-primary text-primary-foreground' : 'bg-secondary'}`}>
+              <div className={`rounded-lg p-2 lg:p-3 ${message.type === 'user' ? 'bg-white text-fg border border-border' : 'bg-secondary'}`}>
                 <p className="text-xs lg:text-sm whitespace-pre-wrap">{message.content}</p>
                 <p className={`text-xs mt-1 ${message.type === 'user' ? 'text-primary-foreground/70' : 'text-muted-foreground'}`}>
                   {message.timestamp.toLocaleTimeString()}
@@ -1456,7 +1456,7 @@ The forecast model has been saved and is available in your Models section. You c
           <button
             type="submit"
             disabled={!input.trim() || isLoading}
-            className="p-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="p-2 bg-white text-fg border border-border rounded-md hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Send className="w-4 h-4" />
           </button>

@@ -192,7 +192,7 @@ export function DashboardSection() {
             <option value="6M">Last 6 Months</option>
             <option value="1Y">Last Year</option>
           </select>
-          <button className="flex items-center justify-center space-x-2 px-3 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90">
+          <button className="flex items-center justify-center space-x-2 px-3 py-2 bg-white text-fg border border-border rounded-md hover:bg-muted">
             <Download className="w-4 h-4" />
             <span className="text-xs lg:text-sm">Export</span>
           </button>

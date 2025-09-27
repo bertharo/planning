@@ -73,7 +73,7 @@ export function ForecastVisualization({ forecastData }: ForecastVisualizationPro
             onClick={() => setSelectedView('forecast')}
             className={`px-3 py-2 rounded-md text-sm transition-colors ${
               selectedView === 'forecast'
-                ? 'bg-primary text-primary-foreground'
+                ? 'bg-white text-fg border border-border'
                 : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
             }`}
           >
@@ -85,7 +85,7 @@ export function ForecastVisualization({ forecastData }: ForecastVisualizationPro
                 onClick={() => setSelectedView('monte-carlo')}
                 className={`px-3 py-2 rounded-md text-sm transition-colors ${
                   selectedView === 'monte-carlo'
-                    ? 'bg-primary text-primary-foreground'
+                    ? 'bg-white text-fg border border-border'
                     : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
                 }`}
               >
@@ -95,7 +95,7 @@ export function ForecastVisualization({ forecastData }: ForecastVisualizationPro
                 onClick={() => setSelectedView('scenarios')}
                 className={`px-3 py-2 rounded-md text-sm transition-colors ${
                   selectedView === 'scenarios'
-                    ? 'bg-primary text-primary-foreground'
+                    ? 'bg-white text-fg border border-border'
                     : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
                 }`}
               >
@@ -110,7 +110,7 @@ export function ForecastVisualization({ forecastData }: ForecastVisualizationPro
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <div className="bg-card border border-border rounded-lg p-3">
           <div className="flex items-center space-x-2 mb-2">
-            <BarChart3 className="w-4 h-4 text-blue-600" />
+            <BarChart3 className="w-4 h-4 text-accent" />
             <span className="text-sm font-medium">R² Score</span>
           </div>
           <p className="text-lg font-bold">{(forecastData.metrics.r2 * 100).toFixed(1)}%</p>
@@ -218,9 +218,9 @@ export function ForecastVisualization({ forecastData }: ForecastVisualizationPro
                   {formatPercentage(forecastData.monteCarlo.riskMetrics.probabilityOfLoss)}
                 </div>
               </div>
-              <div className="bg-purple-50 border border-purple-200 rounded-lg p-3">
-                <div className="text-sm font-medium text-purple-800">Max Drawdown</div>
-                <div className="text-lg font-bold text-purple-900">
+              <div className="bg-accent/10 border border-accent/20 rounded-lg p-3">
+                <div className="text-sm font-medium text-fg">Max Drawdown</div>
+                <div className="text-lg font-bold text-fg">
                   {formatPercentage(forecastData.monteCarlo.riskMetrics.maxDrawdown)}
                 </div>
               </div>

@@ -132,7 +132,7 @@ export function ModelsSection() {
         </div>
         <button
           onClick={() => setShowCreateModal(true)}
-          className="flex items-center space-x-2 px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
+          className="flex items-center space-x-2 px-4 py-2 bg-white text-fg border border-border rounded-md hover:bg-muted"
         >
           <Plus className="w-4 h-4" />
           <span>New Model</span>
@@ -161,7 +161,7 @@ export function ModelsSection() {
                     <MoreVertical className="w-4 h-4" />
                   </button>
                   
-                  <div className="absolute right-0 top-8 w-48 bg-popover border border-border rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                  <div className="absolute right-0 top-8 w-48 bg-white border border-border rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-10">
                     <div className="p-1">
                       <button 
                         onClick={() => setSelectedModel(model)}
@@ -240,7 +240,7 @@ export function ModelsSection() {
                 </button>
                 <button
                   onClick={handleCreateModel}
-                  className="flex-1 px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
+                  className="flex-1 px-4 py-2 bg-white text-fg border border-border rounded-md hover:bg-muted"
                 >
                   Create Model
                 </button>

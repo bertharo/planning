@@ -250,7 +250,7 @@ export function DataSourcePanel({ dataSources, setDataSources }: DataSourcePanel
                     className={`p-1 rounded transition-colors ${
                       source.connected 
                         ? 'text-success hover:bg-success/10' 
-                        : 'text-gray-400 hover:bg-accent'
+                        : 'text-fgMuted hover:bg-accent'
                     }`}
                   >
                     {source.connected ? (
@@ -435,8 +435,8 @@ export function DataSourcePanel({ dataSources, setDataSources }: DataSourcePanel
                                    )}
                                    {!testResult.success && testResult.message.includes('API key') && (
                                      <div className="mt-2 p-2 bg-accent/10 border border-accent/20 rounded text-xs">
-                                       <div className="font-medium text-blue-800 mb-1">📋 How to get a valid Google Sheets API key:</div>
-                                       <ol className="list-decimal list-inside space-y-1 text-blue-700">
+                                       <div className="font-medium text-fg mb-1">📋 How to get a valid Google Sheets API key:</div>
+                                       <ol className="list-decimal list-inside space-y-1 text-fg">
                                          <li>Go to <a href="https://console.cloud.google.com/" target="_blank" rel="noopener noreferrer" className="underline">Google Cloud Console</a></li>
                                          <li>Create a new project or select existing one</li>
                                          <li>Enable Google Sheets API</li>
@@ -444,9 +444,9 @@ export function DataSourcePanel({ dataSources, setDataSources }: DataSourcePanel
                                          <li>Copy the API key and paste it above</li>
                                          <li>Make your Google Sheet publicly readable</li>
                                        </ol>
-                                       <div className="mt-1 text-blue-600">
+                                       <div className="mt-1 text-fg">
                                          💡 <strong>Quick tip:</strong> Your sheet URL should look like: 
-                                         <code className="bg-blue-100 px-1 rounded">https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/edit</code>
+                                         <code className="bg-accent/10 px-1 rounded">https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/edit</code>
                                        </div>
                                      </div>
                                    )}
@@ -458,7 +458,7 @@ export function DataSourcePanel({ dataSources, setDataSources }: DataSourcePanel
                                <button
                                  onClick={() => testConnection(source.id)}
                                  disabled={isTestingConnection || !configForm.apiKey || !configForm.sheetsUrl}
-                                 className="w-full px-3 py-2 bg-accent text-accent-fg rounded-md text-sm hover:opacity-95 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2 mb-2"
+                                 className="w-full px-3 py-2 bg-white text-fg border border-border rounded-md text-sm hover:opacity-95 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2 mb-2"
                                >
                                  {isTestingConnection ? (
                                    <>
@@ -477,7 +477,7 @@ export function DataSourcePanel({ dataSources, setDataSources }: DataSourcePanel
                              <button
                                onClick={() => saveConfiguration(source.id)}
                                disabled={isSaving || Object.keys(configForm).length === 0}
-                               className="w-full px-3 py-2 bg-primary text-primary-foreground rounded-md text-sm hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+                               className="w-full px-3 py-2 bg-white text-fg border border-border rounded-md text-sm hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
                              >
                                {isSaving ? (
                                  <>
