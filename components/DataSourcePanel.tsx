@@ -249,7 +249,7 @@ export function DataSourcePanel({ dataSources, setDataSources }: DataSourcePanel
                     onClick={() => toggleConnection(source.id)}
                     className={`p-1 rounded transition-colors ${
                       source.connected 
-                        ? 'text-green-600 hover:bg-green-50' 
+                        ? 'text-success hover:bg-success/10' 
                         : 'text-gray-400 hover:bg-accent'
                     }`}
                   >
@@ -409,7 +409,7 @@ export function DataSourcePanel({ dataSources, setDataSources }: DataSourcePanel
                              )}
 
                              {saveStatus === 'success' && (
-                               <div className="flex items-center space-x-2 text-sm text-green-600 bg-green-50 p-2 rounded">
+                               <div className="flex items-center space-x-2 text-sm text-success bg-success/10 p-2 rounded">
                                  <Check className="w-4 h-4" />
                                  <span>Configuration saved successfully!</span>
                                </div>
@@ -418,7 +418,7 @@ export function DataSourcePanel({ dataSources, setDataSources }: DataSourcePanel
                              {testResult && (
                                <div className={`flex items-start space-x-2 text-sm p-2 rounded ${
                                  testResult.success 
-                                   ? 'text-green-600 bg-green-50' 
+                                   ? 'text-success bg-success/10' 
                                    : 'text-error bg-error/10'
                                }`}>
                                  {testResult.success ? <Check className="w-4 h-4 mt-0.5" /> : <AlertCircle className="w-4 h-4 mt-0.5" />}
@@ -458,7 +458,7 @@ export function DataSourcePanel({ dataSources, setDataSources }: DataSourcePanel
                                <button
                                  onClick={() => testConnection(source.id)}
                                  disabled={isTestingConnection || !configForm.apiKey || !configForm.sheetsUrl}
-                                 className="w-full px-3 py-2 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2 mb-2"
+                                 className="w-full px-3 py-2 bg-accent text-accent-fg rounded-md text-sm hover:opacity-95 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2 mb-2"
                                >
                                  {isTestingConnection ? (
                                    <>

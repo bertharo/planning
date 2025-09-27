@@ -294,9 +294,9 @@ interface MetricCardProps {
 
 function MetricCard({ title, value, growth, icon, color }: MetricCardProps) {
   const colorClasses = {
-    blue: 'bg-blue-50 text-blue-600 border-blue-200',
-    green: 'bg-green-50 text-green-600 border-green-200',
-    purple: 'bg-purple-50 text-purple-600 border-purple-200',
+    blue: 'bg-accent/10 text-accent border-accent/20',
+    green: 'bg-success/10 text-success border-success/20',
+    purple: 'bg-ch-3/10 text-ch-3 border-ch-3/20',
     warning: 'bg-warning/10 text-warning border-warning/20'
   }
 
@@ -391,7 +391,7 @@ function LineChart({ data }: { data: Array<{ month: string; value: number }> }) 
         return (
           <div key={index} className="flex flex-col items-center flex-1">
             <div
-              className="w-full bg-blue-500 rounded-t"
+              className="w-full bg-accent rounded-t"
               style={{ height: `${height}%`, minHeight: '4px' }}
             />
             <span className="text-xs text-muted-foreground mt-1">{point.month}</span>
@@ -412,7 +412,7 @@ function BarChart({ data }: { data: Array<{ month: string; value: number }> }) {
         return (
           <div key={index} className="flex flex-col items-center flex-1">
             <div
-              className="w-full bg-green-500 rounded-t"
+              className="w-full bg-success rounded-t"
               style={{ height: `${height}%`, minHeight: '4px' }}
             />
             <span className="text-xs text-muted-foreground mt-1">{point.month}</span>
