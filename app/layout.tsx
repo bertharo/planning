@@ -5,7 +5,7 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'SaaS Planning Platform',
+  title: 'LRP Prototype',
   description: 'Natural language interface for financial planning and modeling',
   icons: {
     icon: '/favicon.ico',

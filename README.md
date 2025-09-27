@@ -1,4 +1,4 @@
-# SaaS Planning Platform
+# LRP Prototype
 
 A modern financial planning platform with a natural language interface for creating and managing financial models and scenarios.
 

@@ -12,7 +12,7 @@ export function Header({ activeTab, setActiveTab }: HeaderProps) {
     <div className="border-b border-border bg-card px-3 lg:px-6 py-3 lg:py-4">
       <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between space-y-3 lg:space-y-0">
         <div className="flex flex-col lg:flex-row items-start lg:items-center space-y-3 lg:space-y-0 lg:space-x-8">
-          <h1 className="text-lg lg:text-2xl font-bold text-foreground">SaaS Planning Platform</h1>
+          <h1 className="text-lg lg:text-2xl font-bold text-foreground">LRP Prototype</h1>
 
           <nav className="flex flex-wrap gap-2 lg:gap-6">
             <button
