@@ -3,49 +3,88 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ==== MAXIMUM CONTRAST, READABLE SYSTEM ==== */
+/* ==== AGGRESSIVE OVERRIDE - FORCE READABLE COLORS ==== */
 @layer base {
   :root {
-    /* Surfaces & text - MAXIMUM CONTRAST */
-    --bg: 255 255 255;          /* Pure white background */
-    --fg: 0 0 0;                /* Pure black text */
-    --muted: 255 255 255;       /* White panels */
-    --card: 255 255 255;        /* White cards */
-    --border: 0 0 0;            /* Black borders for maximum contrast */
-
-    /* Brand / action - MAXIMUM CONTRAST */
-    --accent: 0 0 0;            /* Black accent for maximum contrast */
-    --accent-foreground: 255 255 255;
-
-    /* States - MAXIMUM CONTRAST */
-    --success: 0 128 0;         /* Pure green */
-    --warning: 255 165 0;       /* Orange warning */
-    --destructive: 255 0 0;     /* Pure red */
-
-    /* Focus ring */
-    --ring: 0 0 0;              /* Black focus ring */
-
-    /* Text - MAXIMUM CONTRAST */
-    --fg-muted: 0 0 0;          /* Black secondary text */
+    /* FORCE WHITE BACKGROUND EVERYWHERE */
+    --bg: 255 255 255 !important;
+    --fg: 0 0 0 !important;
+    --muted: 255 255 255 !important;
+    --card: 255 255 255 !important;
+    --border: 0 0 0 !important;
+    --accent: 0 0 0 !important;
+    --accent-foreground: 255 255 255 !important;
+    --success: 0 128 0 !important;
+    --warning: 255 140 0 !important;
+    --destructive: 220 38 38 !important;
+    --ring: 0 0 0 !important;
+    --fg-muted: 0 0 0 !important;
   }
 
-  /* ==== Dark Mode - MAXIMUM CONTRAST ==== */
   .dark {
-    --bg: 0 0 0;                /* Pure black background */
-    --fg: 255 255 255;          /* Pure white text */
-    --muted: 0 0 0;             /* Black panels */
-    --card: 0 0 0;              /* Black cards */
-    --border: 255 255 255;      /* White borders */
-
-    --accent: 255 255 255;      /* White accent */
-    --accent-foreground: 0 0 0;
-
-    --success: 0 255 0;         /* Bright green */
-    --warning: 255 255 0;       /* Bright yellow */
-    --destructive: 255 0 0;     /* Bright red */
-
-    --ring: 255 255 255;
-    --fg-muted: 255 255 255;    /* White secondary text */
+    --bg: 0 0 0 !important;
+    --fg: 255 255 255 !important;
+    --muted: 0 0 0 !important;
+    --card: 0 0 0 !important;
+    --border: 255 255 255 !important;
+    --accent: 255 255 255 !important;
+    --accent-foreground: 0 0 0 !important;
+    --success: 0 255 0 !important;
+    --warning: 255 255 0 !important;
+    --destructive: 255 0 0 !important;
+    --ring: 255 255 255 !important;
+    --fg-muted: 255 255 255 !important;
+  }
+  
+  /* AGGRESSIVE GLOBAL OVERRIDES */
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  
+  /* FORCE HEADER TO BE WHITE */
+  header {
+    background: white !important;
+    color: black !important;
+  }
+  
+  /* FORCE ALL CARDS TO BE WHITE */
+  .card, [class*="card"], [class*="Card"] {
+    background: white !important;
+    color: black !important;
+    border: 1px solid black !important;
+  }
+  
+  /* FORCE ALL PANELS TO BE WHITE */
+  [class*="panel"], [class*="Panel"], [class*="section"], [class*="Section"] {
+    background: white !important;
+    color: black !important;
+  }
+  
+  /* FIX CHAT BUBBLES */
+  [class*="chat"], [class*="bubble"], [class*="message"] {
+    background: white !important;
+    color: black !important;
+    border: 1px solid black !important;
+  }
+  
+  /* FORCE ALL TEXT TO BE BLACK */
+  p, span, div, h1, h2, h3, h4, h5, h6 {
+    color: black !important;
+  }
+  
+  /* FIX BUTTONS */
+  button, [role="button"] {
+    background: black !important;
+    color: white !important;
+    border: 1px solid black !important;
+  }
+  
+  /* FIX INPUTS */
+  input, textarea, select {
+    background: white !important;
+    color: black !important;
+    border: 1px solid black !important;
   }
 
   * {
@@ -125,13 +164,42 @@
 }
 
 @layer components {
-  /* FORCE HIGH CONTRAST - Override any existing styles */
-  .btn-primary {
-    @apply bg-black text-white font-semibold px-6 py-3 rounded-xl hover:bg-gray-800 shadow-lg transition-all duration-200;
+  /* NUCLEAR OPTION - OVERRIDE EVERYTHING */
+  * {
+    background: white !important;
+    color: black !important;
   }
-
-  .btn-secondary {
-    @apply bg-white border-2 border-black text-black font-semibold px-6 py-3 rounded-xl hover:bg-gray-100 transition-all duration-200;
+  
+  /* SPECIFIC FIXES FOR LIVE SITE ISSUES */
+  /* Fix gold header */
+  header, [class*="header"], [class*="Header"] {
+    background: white !important;
+    color: black !important;
+  }
+  
+  /* Fix yellow cards */
+  [class*="dashboard"], [class*="Dashboard"] {
+    background: white !important;
+    color: black !important;
+  }
+  
+  /* Fix data sources section */
+  [class*="data"], [class*="Data"] {
+    background: white !important;
+    color: black !important;
+  }
+  
+  /* Fix orange chat bubbles */
+  [class*="assistant"], [class*="Assistant"], [class*="ai"], [class*="AI"] {
+    background: white !important;
+    color: black !important;
+  }
+  
+  /* Force all buttons to be readable */
+  button, .btn, [class*="btn"], [class*="button"] {
+    background: black !important;
+    color: white !important;
+    border: 1px solid black !important;
   }
   
   /* Enhanced card styles */
