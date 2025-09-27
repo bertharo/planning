@@ -42,10 +42,37 @@
     --ch8: 168 85 247;           /* Violet */
   }
   
-  /* ==== BASE STYLES - WCAG 2.2 AA COMPLIANT ==== */
+  /* ==== FORCE WHITE THEME - OVERRIDE ALL DARK COLORS ==== */
+  * {
+    background-color: white !important;
+    color: #111827 !important;
+  }
+  
   body {
-    @apply bg-bg text-fg antialiased;
+    @apply bg-white text-gray-900 antialiased;
     font-feature-settings: "rlig" 1, "calt" 1;
+    background-color: white !important;
+    color: #111827 !important;
+  }
+  
+  /* Force all cards and panels to be white */
+  [class*="card"], [class*="Card"], .card, 
+  header, nav, main, section, article, aside, footer,
+  div, span, p, h1, h2, h3, h4, h5, h6 {
+    background-color: white !important;
+    color: #111827 !important;
+  }
+  
+  /* Keep only accent elements blue */
+  [class*="accent"], .bg-accent, .text-accent,
+  button[class*="accent"], [class*="primary"] {
+    background-color: #3b82f6 !important;
+    color: white !important;
+  }
+  
+  /* Ensure borders are light gray */
+  [class*="border"] {
+    border-color: #e5e7eb !important;
   }
   
 
