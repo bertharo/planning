@@ -10,8 +10,10 @@ import {
   Edit,
   Trash2,
   Copy,
-  Play
+  Play,
+  Settings
 } from 'lucide-react'
+import { ScenarioRunner } from './ScenarioRunner'
 
 interface Scenario {
   id: string
@@ -66,6 +68,7 @@ const statusColors = {
 export function ScenariosSection() {
   const [scenarios, setScenarios] = useState<Scenario[]>(mockScenarios)
   const [showCreateModal, setShowCreateModal] = useState(false)
+  const [showScenarioRunner, setShowScenarioRunner] = useState(false)
 
   const handleCreateScenario = () => {
     const newScenario: Scenario = {
@@ -104,13 +107,22 @@ export function ScenariosSection() {
           <h2 className="text-2xl font-bold">Scenarios</h2>
           <p className="text-muted-foreground">Create and analyze different business scenarios</p>
         </div>
-        <button
-          onClick={() => setShowCreateModal(true)}
-          className="flex items-center space-x-2 px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
-        >
-          <Plus className="w-4 h-4" />
-          <span>New Scenario</span>
-        </button>
+        <div className="flex items-center space-x-3">
+          <button
+            onClick={() => setShowScenarioRunner(true)}
+            className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+          >
+            <Settings className="w-4 h-4" />
+            <span>Run Scenario</span>
+          </button>
+          <button
+            onClick={() => setShowCreateModal(true)}
+            className="flex items-center space-x-2 px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
+          >
+            <Plus className="w-4 h-4" />
+            <span>New Scenario</span>
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -237,6 +249,32 @@ export function ScenariosSection() {
                   Create Scenario
                 </button>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Scenario Runner Modal */}
+      {showScenarioRunner && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-card border border-border rounded-lg w-full max-w-6xl max-h-[90vh] overflow-auto">
+            <div className="p-6 border-b border-border">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-xl font-semibold">Scenario Runner</h3>
+                  <p className="text-sm text-muted-foreground">Run financial scenarios using your Apps Script model</p>
+                </div>
+                <button
+                  onClick={() => setShowScenarioRunner(false)}
+                  className="p-2 hover:bg-accent rounded-md"
+                >
+                  ×
+                </button>
+              </div>
+            </div>
+            
+            <div className="p-6">
+              <ScenarioRunner />
             </div>
           </div>
         </div>
