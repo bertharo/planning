@@ -12,13 +12,13 @@ module.exports = {
         sans: ['Inter', 'system-ui', 'sans-serif'],
       },
       colors: {
-        // Semantic color tokens
-        bg: "rgb(var(--bg) / <alpha-value>)",
-        fg: "rgb(var(--fg) / <alpha-value>)",
-        fgMuted: "rgb(var(--fg-muted) / <alpha-value>)",
-        card: "rgb(var(--card) / <alpha-value>)",
-        muted: "rgb(var(--muted) / <alpha-value>)",
-        border: "rgb(var(--border) / <alpha-value>)",
+        // Semantic color tokens - HARDCODED WHITE
+        bg: "#ffffff",
+        fg: "#111827",
+        fgMuted: "#6b7280",
+        card: "#ffffff",
+        muted: "#f8fafc",
+        border: "#e5e7eb",
         
         accent: {
           DEFAULT: "rgb(var(--accent) / <alpha-value>)",
@@ -42,16 +42,16 @@ module.exports = {
           8: "rgb(var(--ch8) / <alpha-value>)",
         },
         
-        // Legacy mappings for existing components
-        background: "rgb(var(--bg) / <alpha-value>)",
-        foreground: "rgb(var(--fg) / <alpha-value>)",
+        // Legacy mappings for existing components - HARDCODED WHITE
+        background: "#ffffff",
+        foreground: "#111827",
         primary: {
-          DEFAULT: "rgb(var(--accent) / <alpha-value>)",
-          foreground: "rgb(var(--accent-fg) / <alpha-value>)",
+          DEFAULT: "#3b82f6",
+          foreground: "#ffffff",
         },
         secondary: {
-          DEFAULT: "rgb(var(--muted) / <alpha-value>)",
-          foreground: "rgb(var(--fg) / <alpha-value>)",
+          DEFAULT: "#f8fafc",
+          foreground: "#111827",
         },
         destructive: "rgb(var(--error) / <alpha-value>)",
       },
