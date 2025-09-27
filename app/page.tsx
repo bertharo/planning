@@ -20,9 +20,9 @@ export default function Home() {
   ])
 
   return (
-    <div className="flex flex-col lg:flex-row h-screen bg-background">
+    <div className="flex flex-col lg:flex-row h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100">
       {/* Mobile: Collapsible Data Sources Panel */}
-      <div className="lg:w-80 w-full border-b lg:border-b-0 lg:border-r border-border bg-card lg:block">
+      <div className="lg:w-80 w-full border-b lg:border-b-0 lg:border-r border-slate-200 bg-white lg:block shadow-sm">
         <DataSourcePanel
           dataSources={dataSources}
           setDataSources={setDataSources}
@@ -35,15 +35,17 @@ export default function Home() {
 
         <div className="flex-1 flex flex-col lg:flex-row min-h-0">
           {/* Mobile: Collapsible Natural Language Interface */}
-          <div className="lg:w-96 w-full border-b lg:border-b-0 lg:border-r border-border bg-card lg:block">
+          <div className="lg:w-96 w-full border-b lg:border-b-0 lg:border-r border-slate-200 bg-white lg:block shadow-sm">
             <NaturalLanguageInterface />
           </div>
 
           {/* Content Area - Full width on mobile, flexible on desktop */}
-          <div className="flex-1 p-3 lg:p-6 min-h-0 overflow-auto">
-            {activeTab === 'dashboard' && <DashboardSection />}
-            {activeTab === 'models' && <ModelsSection />}
-            {activeTab === 'scenarios' && <ScenariosSection />}
+          <div className="flex-1 p-4 lg:p-8 min-h-0 overflow-auto bg-gradient-to-br from-slate-50/50 to-white">
+            <div className="animate-fade-in">
+              {activeTab === 'dashboard' && <DashboardSection />}
+              {activeTab === 'models' && <ModelsSection />}
+              {activeTab === 'scenarios' && <ScenariosSection />}
+            </div>
           </div>
         </div>
       </div>

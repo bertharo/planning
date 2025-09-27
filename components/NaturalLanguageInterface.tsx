@@ -1376,10 +1376,17 @@ The forecast model has been saved and is available in your Models section. You c
          }
 
   return (
-    <div className="h-full flex flex-col max-h-screen lg:max-h-none">
-      <div className="p-3 lg:p-4 border-b border-border">
-        <h2 className="text-base lg:text-lg font-semibold">AI Assistant</h2>
-        <p className="text-xs lg:text-sm text-muted-foreground">Ask me anything about your financial planning</p>
+    <div className="h-full flex flex-col max-h-screen lg:max-h-none bg-gradient-to-b from-slate-50 to-white">
+      <div className="p-4 lg:p-6 border-b border-slate-200 bg-white">
+        <div className="flex items-center space-x-3 mb-3">
+          <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
+            <Bot className="w-6 h-6 text-white" />
+          </div>
+          <div>
+            <h2 className="text-lg lg:text-xl font-bold text-slate-900">AI Assistant</h2>
+            <p className="text-sm text-slate-600">Ask me anything about your financial planning</p>
+          </div>
+        </div>
 
         {connectedDataSources.length > 0 && (
           <div className="mt-2 lg:mt-3 p-2 bg-green-50 border border-green-200 rounded-md">

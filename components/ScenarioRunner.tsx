@@ -76,108 +76,161 @@ export function ScenarioRunner() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
 
       {/* Input Section */}
-      <div className="bg-card border border-border rounded-lg p-6">
-        <div className="space-y-4">
-          <div>
-            <label htmlFor="scenario-prompt" className="block text-sm font-medium mb-2">
-              Scenario Prompt
-            </label>
-            <textarea
-              id="scenario-prompt"
-              value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
-              placeholder="Enter your scenario prompt (e.g., 'Increase total ARR by $10M; EMEA ≤ $2M; Enterprise ≤ $5M')"
-              className="w-full px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring min-h-[100px]"
-              disabled={isRunning}
-            />
+      <div className="bg-gradient-to-br from-white to-slate-50 border border-slate-200 rounded-2xl p-8 shadow-sm">
+        <div className="space-y-6">
+          <div className="text-center space-y-2">
+            <h2 className="text-2xl font-bold text-slate-900">Run Financial Scenario</h2>
+            <p className="text-slate-600">Describe your scenario in natural language and see the financial impact</p>
           </div>
           
-          <button
-            onClick={handleRunScenario}
-            disabled={!prompt.trim() || isRunning}
-            className="flex items-center space-x-2 px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isRunning ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin" />
-                <span>Running Scenario...</span>
-              </>
-            ) : (
-              <>
-                <Play className="w-4 h-4" />
-                <span>Run Scenario</span>
-              </>
-            )}
-          </button>
+          <div>
+            <label htmlFor="scenario-prompt" className="block text-sm font-semibold text-slate-700 mb-3">
+              Scenario Description
+            </label>
+            <div className="relative">
+              <textarea
+                id="scenario-prompt"
+                value={prompt}
+                onChange={(e) => setPrompt(e.target.value)}
+                placeholder="Try: 'Increase total ARR by $10M; EMEA ≤ $2M' or 'Reduce churn by 2% across all products'"
+                className="w-full px-4 py-4 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100 min-h-[120px] text-slate-900 placeholder-slate-400 resize-none transition-all duration-200"
+                disabled={isRunning}
+              />
+              <div className="absolute bottom-3 right-3 text-xs text-slate-400">
+                {prompt.length}/500
+              </div>
+            </div>
+          </div>
+          
+          <div className="flex justify-center">
+            <button
+              onClick={handleRunScenario}
+              disabled={!prompt.trim() || isRunning}
+              className="flex items-center space-x-3 px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100"
+            >
+              {isRunning ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  <span>Analyzing Scenario...</span>
+                </>
+              ) : (
+                <>
+                  <Play className="w-5 h-5" />
+                  <span>Run Scenario Analysis</span>
+                </>
+              )}
+            </button>
+          </div>
+          
+          {/* Example Prompts */}
+          <div className="bg-slate-50 rounded-xl p-6">
+            <h3 className="text-sm font-semibold text-slate-700 mb-3">Example Scenarios</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <button
+                onClick={() => setPrompt("Increase total ARR by $5M")}
+                className="text-left p-3 bg-white rounded-lg border border-slate-200 hover:border-blue-300 hover:bg-blue-50 transition-colors text-sm"
+              >
+                💰 Increase total ARR by $5M
+              </button>
+              <button
+                onClick={() => setPrompt("Increase total ARR by $15M; EMEA ≤ $2M")}
+                className="text-left p-3 bg-white rounded-lg border border-slate-200 hover:border-blue-300 hover:bg-blue-50 transition-colors text-sm"
+              >
+                🌍 Increase ARR with EMEA constraint
+              </button>
+              <button
+                onClick={() => setPrompt("Reduce churn by 2% across all products")}
+                className="text-left p-3 bg-white rounded-lg border border-slate-200 hover:border-blue-300 hover:bg-blue-50 transition-colors text-sm"
+              >
+                📈 Reduce churn by 2%
+              </button>
+              <button
+                onClick={() => setPrompt("Hire 20 engineers for product development")}
+                className="text-left p-3 bg-white rounded-lg border border-slate-200 hover:border-blue-300 hover:bg-blue-50 transition-colors text-sm"
+              >
+                👥 Hire 20 engineers
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
       {/* Error Display */}
       {error && (
-        <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-4">
-          <div className="flex items-center space-x-2">
-            <AlertCircle className="w-5 h-5 text-destructive" />
-            <span className="text-destructive font-medium">Error</span>
+        <div className="bg-gradient-to-r from-red-50 to-red-100 border-2 border-red-200 rounded-2xl p-6 shadow-sm">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-red-500 rounded-xl flex items-center justify-center">
+              <AlertCircle className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <h3 className="text-red-900 font-semibold">Analysis Error</h3>
+              <p className="text-red-700 mt-1">{error}</p>
+            </div>
           </div>
-          <p className="text-destructive mt-1">{error}</p>
         </div>
       )}
 
       {/* Results Section */}
       {result && (
-        <div className="space-y-6">
+        <div className="space-y-8">
           {/* Summary Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-card border border-border rounded-lg p-4">
-              <div className="flex items-center space-x-2 mb-2">
-                <BarChart3 className="w-5 h-5 text-blue-600" />
-                <span className="text-sm font-medium">ARR Before</span>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-2xl p-6 shadow-sm">
+              <div className="flex items-center space-x-3 mb-3">
+                <div className="w-10 h-10 bg-blue-500 rounded-xl flex items-center justify-center">
+                  <BarChart3 className="w-5 h-5 text-white" />
+                </div>
+                <span className="text-sm font-semibold text-blue-700">ARR Before</span>
               </div>
-              <p className="text-2xl font-bold">{formatCurrency(result.arr_before)}</p>
+              <p className="text-3xl font-bold text-blue-900">{formatCurrency(result.arr_before)}</p>
             </div>
 
-            <div className="bg-card border border-border rounded-lg p-4">
-              <div className="flex items-center space-x-2 mb-2">
-                <TrendingUp className="w-5 h-5 text-green-600" />
-                <span className="text-sm font-medium">ARR After</span>
+            <div className="bg-gradient-to-br from-green-50 to-green-100 border border-green-200 rounded-2xl p-6 shadow-sm">
+              <div className="flex items-center space-x-3 mb-3">
+                <div className="w-10 h-10 bg-green-500 rounded-xl flex items-center justify-center">
+                  <TrendingUp className="w-5 h-5 text-white" />
+                </div>
+                <span className="text-sm font-semibold text-green-700">ARR After</span>
               </div>
-              <p className="text-2xl font-bold">{formatCurrency(result.arr_after)}</p>
+              <p className="text-3xl font-bold text-green-900">{formatCurrency(result.arr_after)}</p>
             </div>
 
-            <div className="bg-card border border-border rounded-lg p-4">
-              <div className="flex items-center space-x-2 mb-2">
-                <CheckCircle className="w-5 h-5 text-purple-600" />
-                <span className="text-sm font-medium">ARR Delta</span>
+            <div className={`bg-gradient-to-br ${result.arr_delta >= 0 ? 'from-emerald-50 to-emerald-100 border-emerald-200' : 'from-red-50 to-red-100 border-red-200'} border rounded-2xl p-6 shadow-sm`}>
+              <div className="flex items-center space-x-3 mb-3">
+                <div className={`w-10 h-10 ${result.arr_delta >= 0 ? 'bg-emerald-500' : 'bg-red-500'} rounded-xl flex items-center justify-center`}>
+                  <CheckCircle className="w-5 h-5 text-white" />
+                </div>
+                <span className={`text-sm font-semibold ${result.arr_delta >= 0 ? 'text-emerald-700' : 'text-red-700'}`}>ARR Impact</span>
               </div>
-              <p className={`text-2xl font-bold ${result.arr_delta >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+              <p className={`text-3xl font-bold ${result.arr_delta >= 0 ? 'text-emerald-900' : 'text-red-900'}`}>
                 {result.arr_delta >= 0 ? '+' : ''}{formatCurrency(result.arr_delta)}
               </p>
-              <p className="text-sm text-muted-foreground">
+              <p className={`text-sm ${result.arr_delta >= 0 ? 'text-emerald-700' : 'text-red-700'}`}>
                 {formatPercentage(calculateGrowthRate(result.arr_before, result.arr_after))} growth
               </p>
             </div>
           </div>
 
           {/* Tabs */}
-          <div className="border-b border-border">
-            <nav className="flex space-x-8">
+          <div className="bg-white border border-slate-200 rounded-2xl p-2 shadow-sm">
+            <nav className="flex space-x-1">
               {[
                 { id: 'summary', label: 'Summary', icon: BarChart3 },
-                { id: 'deltas', label: 'Deltas', icon: TrendingUp },
-                { id: 'narrative', label: 'Narrative', icon: FileText }
+                { id: 'deltas', label: 'Detailed Analysis', icon: TrendingUp },
+                { id: 'narrative', label: 'Executive Report', icon: FileText }
               ].map((tab) => {
                 const Icon = tab.icon
                 return (
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id as any)}
-                    className={`flex items-center space-x-2 py-2 px-1 border-b-2 font-medium text-sm ${
+                    className={`flex items-center space-x-2 py-3 px-4 rounded-xl font-medium text-sm transition-all duration-200 ${
                       activeTab === tab.id
-                        ? 'border-primary text-primary'
-                        : 'border-transparent text-muted-foreground hover:text-foreground'
+                        ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg'
+                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                     }`}
                   >
                     <Icon className="w-4 h-4" />
@@ -189,7 +242,7 @@ export function ScenarioRunner() {
           </div>
 
           {/* Tab Content */}
-          <div className="bg-card border border-border rounded-lg p-6">
+          <div className="bg-gradient-to-br from-white to-slate-50 border border-slate-200 rounded-2xl p-8 shadow-sm">
             {activeTab === 'summary' && (
               <div className="space-y-4">
                 <div>

@@ -202,17 +202,22 @@ export function DataSourcePanel({ dataSources, setDataSources }: DataSourcePanel
   }
 
   return (
-    <div className="h-full flex flex-col max-h-screen lg:max-h-none">
-      <div className="p-3 lg:p-4 border-b border-border">
-        <div className="flex items-center justify-between mb-3 lg:mb-4">
-          <h2 className="text-base lg:text-lg font-semibold">Data Sources</h2>
-          <button className="p-2 hover:bg-accent rounded-md">
-            <Plus className="w-4 h-4" />
+    <div className="h-full flex flex-col max-h-screen lg:max-h-none bg-gradient-to-b from-slate-50 to-white">
+      <div className="p-4 lg:p-6 border-b border-slate-200 bg-white">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-gradient-to-br from-green-600 to-blue-600 rounded-xl flex items-center justify-center">
+              <Database className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <h2 className="text-lg lg:text-xl font-bold text-slate-900">Data Sources</h2>
+              <p className="text-sm text-slate-600">Connect and configure your financial data sources</p>
+            </div>
+          </div>
+          <button className="p-2.5 hover:bg-slate-100 rounded-xl transition-colors">
+            <Plus className="w-5 h-5 text-slate-600" />
           </button>
         </div>
-        <p className="text-xs lg:text-sm text-muted-foreground">
-          Connect and configure your financial data sources.
-        </p>
       </div>
 
       <div className="flex-1 overflow-y-auto p-3 lg:p-4 space-y-3">

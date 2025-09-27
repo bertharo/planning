@@ -12,6 +12,14 @@ export async function GET(req: NextRequest) {
       )
     }
 
+    // Check if we should use mock responses
+    const useMockResponses = process.env.USE_MOCK_SCENARIOS === 'true'
+    
+    if (useMockResponses && run_id.startsWith('RUN_') && run_id.length > 20) {
+      console.log('Using mock VW deltas for scenario:', run_id)
+      return handleMockVWDeltas(run_id)
+    }
+
     const gasUrl = process.env.GAS_URL
     const gasKey = process.env.GAS_KEY
 
@@ -43,4 +51,75 @@ export async function GET(req: NextRequest) {
       { status: 500 }
     )
   }
+}
+
+function handleMockVWDeltas(run_id: string) {
+  const mockDeltas = [
+    {
+      RUN_ID: run_id,
+      metric: 'ARR',
+      scope_type: 'product',
+      scope_val: 'Core Platform',
+      before: 75000000,
+      after: 76000000,
+      delta: 1000000,
+      unit: 'USD'
+    },
+    {
+      RUN_ID: run_id,
+      metric: 'ARR',
+      scope_type: 'product',
+      scope_val: 'Enterprise Suite',
+      before: 35000000,
+      after: 35700000,
+      delta: 700000,
+      unit: 'USD'
+    },
+    {
+      RUN_ID: run_id,
+      metric: 'ARR',
+      scope_type: 'product',
+      scope_val: 'SMB Package',
+      before: 15500000,
+      after: 15800000,
+      delta: 300000,
+      unit: 'USD'
+    },
+    {
+      RUN_ID: run_id,
+      metric: 'Churn Rate',
+      scope_type: 'product',
+      scope_val: 'Core Platform',
+      before: 0.08,
+      after: 0.06,
+      delta: -0.02,
+      unit: 'percentage'
+    },
+    {
+      RUN_ID: run_id,
+      metric: 'Churn Rate',
+      scope_type: 'product',
+      scope_val: 'Enterprise Suite',
+      before: 0.06,
+      after: 0.04,
+      delta: -0.02,
+      unit: 'percentage'
+    },
+    {
+      RUN_ID: run_id,
+      metric: 'Churn Rate',
+      scope_type: 'product',
+      scope_val: 'SMB Package',
+      before: 0.12,
+      after: 0.10,
+      delta: -0.02,
+      unit: 'percentage'
+    }
+  ]
+
+  return NextResponse.json({
+    ok: true,
+    run_id: run_id,
+    rows: mockDeltas
+  })
 }
