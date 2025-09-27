@@ -21,10 +21,10 @@ export default function Home() {
   ])
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-bg text-fg">
       <Header activeTab={activeTab} setActiveTab={setActiveTab} />
       
-      <div className="container mx-auto max-w-7xl px-4 py-6">
+      <main className="mx-auto max-w-screen-2xl px-6 md:px-8 py-6">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Data Sources Panel */}
           <MotionCard className="lg:col-span-3">
@@ -48,7 +48,7 @@ export default function Home() {
             <NaturalLanguageInterface />
           </MotionCard>
         </div>
-      </div>
+      </main>
     </div>
   )
 }

@@ -5,46 +5,41 @@ module.exports = {
     './components/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
-  darkMode: 'class',
+  darkMode: ['class'],
   theme: {
     extend: {
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
       },
       colors: {
-        border: "rgb(var(--border))",
-        input: "rgb(var(--input))",
-        ring: "rgb(var(--ring))",
-        background: "rgb(var(--bg))",
-        foreground: "rgb(var(--fg))",
-        muted: {
-          DEFAULT: "rgb(var(--muted))",
-          foreground: "rgb(var(--muted-fg))",
+        bg:       "rgb(var(--bg) / <alpha-value>)",
+        fg:       "rgb(var(--fg) / <alpha-value>)",
+        muted:    "rgb(var(--muted) / <alpha-value>)",
+        card:     "rgb(var(--card) / <alpha-value>)",
+        border:   "rgb(var(--border) / <alpha-value>)",
+        accent:   {
+          DEFAULT: "rgb(var(--accent) / <alpha-value>)",
+          fg:      "rgb(var(--accent-foreground) / <alpha-value>)",
         },
-        accent: {
-          DEFAULT: "rgb(var(--accent))",
-          foreground: "rgb(var(--accent-fg))",
-        },
+        ring:     "rgb(var(--ring) / <alpha-value>)",
+        success:  "rgb(var(--success) / <alpha-value>)",
+        warning:  "rgb(var(--warning) / <alpha-value>)",
+        destructive: "rgb(var(--destructive) / <alpha-value>)",
+        fgMuted:  "rgb(var(--fg-muted) / <alpha-value>)",
+        // Legacy mappings for existing components
+        background: "rgb(var(--bg) / <alpha-value>)",
+        foreground: "rgb(var(--fg) / <alpha-value>)",
         primary: {
-          DEFAULT: "rgb(var(--primary))",
-          foreground: "rgb(var(--primary-fg))",
+          DEFAULT: "rgb(var(--accent) / <alpha-value>)",
+          foreground: "rgb(var(--accent-foreground) / <alpha-value>)",
         },
         secondary: {
-          DEFAULT: "rgb(var(--secondary))",
-          foreground: "rgb(var(--secondary-fg))",
+          DEFAULT: "rgb(var(--muted) / <alpha-value>)",
+          foreground: "rgb(var(--fg) / <alpha-value>)",
         },
-        destructive: {
-          DEFAULT: "rgb(var(--destructive))",
-          foreground: "rgb(var(--destructive-fg))",
-        },
-        card: {
-          DEFAULT: "rgb(var(--card))",
-          foreground: "rgb(var(--card-fg))",
-        },
-        popover: {
-          DEFAULT: "rgb(var(--popover))",
-          foreground: "rgb(var(--popover-fg))",
-        },
+      },
+      boxShadow: {
+        card: "0 1px 2px rgba(0,0,0,0.06), 0 6px 24px rgba(0,0,0,0.06)",
       },
       borderRadius: {
         '2xl': '1rem',

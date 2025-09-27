@@ -17,17 +17,17 @@ export function Header({ activeTab, setActiveTab }: HeaderProps) {
   ]
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b border-border bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/60">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         {/* Logo & Brand */}
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-accent">
-              <TrendingUp className="h-4 w-4 text-primary-fg" />
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent">
+              <TrendingUp className="h-4 w-4 text-accent-fg" />
             </div>
             <div className="flex flex-col">
-              <h1 className="text-lg font-semibold text-foreground">LRP Prototype</h1>
-              <p className="text-xs text-muted-foreground">Financial Planning Platform</p>
+              <h1 className="text-lg font-semibold text-fg">LRP Prototype</h1>
+              <p className="text-xs text-fgMuted">Financial Planning Platform</p>
             </div>
           </div>
         </div>
@@ -44,7 +44,7 @@ export function Header({ activeTab, setActiveTab }: HeaderProps) {
                 onClick={() => setActiveTab(tab.id)}
                 className={cn(
                   "flex items-center space-x-2 px-3",
-                  activeTab === tab.id && "bg-accent text-accent-fg"
+                  activeTab === tab.id && "bg-muted text-fg"
                 )}
               >
                 <Icon className="h-4 w-4" />
@@ -67,7 +67,7 @@ export function Header({ activeTab, setActiveTab }: HeaderProps) {
                   onClick={() => setActiveTab(tab.id)}
                   className={cn(
                     "flex items-center space-x-1 px-2",
-                    activeTab === tab.id && "bg-background text-foreground"
+                    activeTab === tab.id && "bg-card text-fg"
                   )}
                 >
                   <Icon className="h-4 w-4" />

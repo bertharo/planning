@@ -106,9 +106,9 @@ export function ScenarioRunner() {
                 className="min-h-[120px] resize-none"
                 disabled={isRunning}
               />
-              <div className="absolute bottom-3 right-3 text-xs text-muted-foreground">
-                {prompt.length}/500
-              </div>
+                  <div className="absolute bottom-3 right-3 text-xs text-fgMuted">
+                    {prompt.length}/500
+                  </div>
             </div>
           </div>
           
@@ -199,10 +199,10 @@ export function ScenarioRunner() {
             <Card>
               <CardContent className="p-6">
                 <div className="flex items-center space-x-3 mb-3">
-                  <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                    <BarChart3 className="w-4 h-4 text-primary-fg" />
+                  <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center">
+                    <BarChart3 className="w-4 h-4 text-accent-fg" />
                   </div>
-                  <span className="text-sm font-medium text-muted-foreground">ARR Before</span>
+                  <span className="text-sm font-medium text-fgMuted">ARR Before</span>
                 </div>
                 <p className="text-2xl font-bold">{formatCurrency(result.arr_before)}</p>
               </CardContent>
@@ -211,10 +211,10 @@ export function ScenarioRunner() {
             <Card>
               <CardContent className="p-6">
                 <div className="flex items-center space-x-3 mb-3">
-                  <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
+                  <div className="w-8 h-8 bg-success rounded-lg flex items-center justify-center">
                     <TrendingUp className="w-4 h-4 text-white" />
                   </div>
-                  <span className="text-sm font-medium text-muted-foreground">ARR After</span>
+                  <span className="text-sm font-medium text-fgMuted">ARR After</span>
                 </div>
                 <p className="text-2xl font-bold">{formatCurrency(result.arr_after)}</p>
               </CardContent>
@@ -222,28 +222,28 @@ export function ScenarioRunner() {
 
             <Card className={cn(
               result.arr_delta >= 0 
-                ? "border-green-200 bg-green-50/50" 
-                : "border-red-200 bg-red-50/50"
+                ? "border-success/20 bg-success/5" 
+                : "border-destructive/20 bg-destructive/5"
             )}>
               <CardContent className="p-6">
                 <div className="flex items-center space-x-3 mb-3">
                   <div className={cn(
                     "w-8 h-8 rounded-lg flex items-center justify-center",
-                    result.arr_delta >= 0 ? "bg-green-500" : "bg-red-500"
+                    result.arr_delta >= 0 ? "bg-success" : "bg-destructive"
                   )}>
                     <CheckCircle className="w-4 h-4 text-white" />
                   </div>
-                  <span className="text-sm font-medium text-muted-foreground">ARR Impact</span>
+                  <span className="text-sm font-medium text-fgMuted">ARR Impact</span>
                 </div>
                 <p className={cn(
                   "text-2xl font-bold",
-                  result.arr_delta >= 0 ? "text-green-700" : "text-red-700"
+                  result.arr_delta >= 0 ? "text-success" : "text-destructive"
                 )}>
                   {result.arr_delta >= 0 ? '+' : ''}{formatCurrency(result.arr_delta)}
                 </p>
                 <p className={cn(
                   "text-sm",
-                  result.arr_delta >= 0 ? "text-green-600" : "text-red-600"
+                  result.arr_delta >= 0 ? "text-success/80" : "text-destructive/80"
                 )}>
                   {formatPercentage(calculateGrowthRate(result.arr_before, result.arr_after))} growth
                 </p>
@@ -295,9 +295,9 @@ export function ScenarioRunner() {
                           <span>Ending ARR:</span>
                           <span className="font-medium">{formatCurrency(result.arr_after)}</span>
                         </div>
-                        <div className="flex justify-between font-semibold border-t pt-2">
+                        <div className="flex justify-between font-semibold border-t border-border pt-2">
                           <span>Total Change:</span>
-                          <span className={result.arr_delta >= 0 ? 'text-green-600' : 'text-red-600'}>
+                          <span className={result.arr_delta >= 0 ? 'text-success' : 'text-destructive'}>
                             {result.arr_delta >= 0 ? '+' : ''}{formatCurrency(result.arr_delta)}
                           </span>
                         </div>
@@ -347,13 +347,13 @@ export function ScenarioRunner() {
                         </thead>
                         <tbody>
                           {vwDeltas.map((delta, index) => (
-                            <tr key={index} className="border-b border-border/50 hover:bg-muted/50">
+                            <tr key={index} className="border-b border-border hover:bg-muted/50">
                               <td className="py-3 px-4 text-sm">{delta.metric}</td>
                               <td className="py-3 px-4 text-sm">{delta.scope_type}: {delta.scope_val}</td>
                               <td className="py-3 px-4 text-sm text-right font-medium">{formatCurrency(delta.before)}</td>
                               <td className="py-3 px-4 text-sm text-right font-medium">{formatCurrency(delta.after)}</td>
                               <td className={`py-3 px-4 text-sm text-right font-semibold ${
-                                delta.delta >= 0 ? 'text-green-600' : 'text-red-600'
+                                delta.delta >= 0 ? 'text-success' : 'text-destructive'
                               }`}>
                                 {delta.delta >= 0 ? '+' : ''}{formatCurrency(delta.delta)}
                               </td>
@@ -363,9 +363,9 @@ export function ScenarioRunner() {
                       </table>
                     </div>
                   ) : (
-                    <div className="text-center py-12">
-                      <p className="text-muted-foreground">No delta data available</p>
-                    </div>
+                      <div className="text-center py-12">
+                        <p className="text-fgMuted">No delta data available</p>
+                      </div>
                   )}
                 </CardContent>
               </Card>

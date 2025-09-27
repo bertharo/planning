@@ -3,52 +3,49 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Apple-quality semantic design tokens */
+/* ==== Base Tokens (Light) ==== */
 @layer base {
   :root {
-    /* Light theme */
-    --bg: 255 255 255;
-    --fg: 17 24 39;
-    --muted: 246 247 249;
-    --muted-fg: 107 114 128;
-    --card: 255 255 255;
-    --card-fg: 17 24 39;
-    --border: 229 231 235;
-    --input: 243 244 246;
-    --ring: 59 130 246;
-    --accent: 20 110 255;
-    --accent-fg: 255 255 255;
-    --primary: 59 130 246;
-    --primary-fg: 255 255 255;
-    --secondary: 243 244 246;
-    --secondary-fg: 17 24 39;
-    --destructive: 239 68 68;
-    --destructive-fg: 255 255 255;
-    --popover: 255 255 255;
-    --popover-fg: 17 24 39;
+    /* Surfaces & text */
+    --bg: 248 249 251;          /* #F8F9FB */
+    --fg: 17 24 39;             /* #111827 */
+    --muted: 244 245 247;       /* subtle panels */
+    --card: 255 255 255;        /* cards/dialogs */
+    --border: 225 228 233;      /* soft dividers */
+
+    /* Brand / action */
+    --accent: 28 100 242;       /* refined blue, not neon */
+    --accent-foreground: 255 255 255;
+
+    /* States */
+    --success: 16 157 89;
+    --warning: 204 135 0;
+    --destructive: 220 38 38;
+
+    /* Focus ring */
+    --ring: 28 100 242;         /* same as accent */
+
+    /* Subtle text */
+    --fg-muted: 87 96 110;      /* secondary text */
   }
 
+  /* ==== Base Tokens (Dark) ==== */
   .dark {
-    /* Dark theme */
-    --bg: 10 10 12;
-    --fg: 235 236 240;
-    --muted: 18 18 22;
-    --muted-fg: 156 163 175;
-    --card: 16 16 19;
-    --card-fg: 235 236 240;
-    --border: 38 38 42;
-    --input: 24 24 27;
-    --ring: 93 156 255;
-    --accent: 80 120 255;
-    --accent-fg: 255 255 255;
-    --primary: 93 156 255;
-    --primary-fg: 10 10 12;
-    --secondary: 24 24 27;
-    --secondary-fg: 235 236 240;
+    --bg: 13 16 20;             /* #0D1014 */
+    --fg: 232 234 237;          /* near-white */
+    --muted: 20 24 29;
+    --card: 18 21 26;
+    --border: 47 53 61;
+
+    --accent: 93 156 255;       /* lighter, still calm */
+    --accent-foreground: 12 14 18;
+
+    --success: 52 211 153;
+    --warning: 250 204 21;
     --destructive: 248 113 113;
-    --destructive-fg: 10 10 12;
-    --popover: 16 16 19;
-    --popover-fg: 235 236 240;
+
+    --ring: 93 156 255;
+    --fg-muted: 161 167 176;
   }
 
   * {
@@ -74,7 +71,7 @@
 
   /* Selection styling */
   ::selection {
-    @apply bg-accent/20 text-accent-foreground;
+    @apply bg-accent/20 text-accent-fg;
   }
 
   /* Custom scrollbar */
@@ -92,7 +89,7 @@
   }
   
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-muted-foreground/50;
+    @apply bg-fgMuted/50;
   }
 
   /* Reduced motion support */
@@ -106,6 +103,14 @@
       scroll-behavior: auto !important;
     }
   }
+}
+
+@layer utilities {
+  /* Utility classes for direct color usage */
+  .bg-app      { background-color: rgb(var(--bg)); }
+  .text-app    { color: rgb(var(--fg)); }
+  .bg-card     { background-color: rgb(var(--card)); }
+  .border-app  { border-color: rgb(var(--border)); }
 }
 
 @layer components {
