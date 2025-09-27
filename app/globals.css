@@ -1,23 +1,82 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Enhanced consumer-grade styling */
+/* Apple-quality semantic design tokens */
 @layer base {
+  :root {
+    /* Light theme */
+    --bg: 255 255 255;
+    --fg: 17 24 39;
+    --muted: 246 247 249;
+    --muted-fg: 107 114 128;
+    --card: 255 255 255;
+    --card-fg: 17 24 39;
+    --border: 229 231 235;
+    --input: 243 244 246;
+    --ring: 59 130 246;
+    --accent: 20 110 255;
+    --accent-fg: 255 255 255;
+    --primary: 59 130 246;
+    --primary-fg: 255 255 255;
+    --secondary: 243 244 246;
+    --secondary-fg: 17 24 39;
+    --destructive: 239 68 68;
+    --destructive-fg: 255 255 255;
+    --popover: 255 255 255;
+    --popover-fg: 17 24 39;
+  }
+
+  .dark {
+    /* Dark theme */
+    --bg: 10 10 12;
+    --fg: 235 236 240;
+    --muted: 18 18 22;
+    --muted-fg: 156 163 175;
+    --card: 16 16 19;
+    --card-fg: 235 236 240;
+    --border: 38 38 42;
+    --input: 24 24 27;
+    --ring: 93 156 255;
+    --accent: 80 120 255;
+    --accent-fg: 255 255 255;
+    --primary: 93 156 255;
+    --primary-fg: 10 10 12;
+    --secondary: 24 24 27;
+    --secondary-fg: 235 236 240;
+    --destructive: 248 113 113;
+    --destructive-fg: 10 10 12;
+    --popover: 16 16 19;
+    --popover-fg: 235 236 240;
+  }
+
   * {
     @apply border-border;
   }
   
-  body {
-    @apply bg-gradient-to-br from-slate-50 via-white to-slate-100 text-slate-900 antialiased;
+  html {
+    scroll-behavior: smooth;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
   
-  /* Smooth scrolling */
-  html {
-    scroll-behavior: smooth;
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
-  
+
+  /* Enhanced focus rings */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+
+  /* Selection styling */
+  ::selection {
+    @apply bg-accent/20 text-accent-foreground;
+  }
+
   /* Custom scrollbar */
   ::-webkit-scrollbar {
     width: 6px;
@@ -25,15 +84,27 @@
   }
   
   ::-webkit-scrollbar-track {
-    @apply bg-slate-100;
+    @apply bg-muted;
   }
   
   ::-webkit-scrollbar-thumb {
-    @apply bg-slate-300 rounded-full;
+    @apply bg-border rounded-full;
   }
   
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-slate-400;
+    @apply bg-muted-foreground/50;
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }
 
