@@ -67,6 +67,12 @@
     @apply bg-bg text-fg antialiased;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
+  
+  /* ==== ENSURE PROFESSIONAL COLORS TAKE PRECEDENCE ==== */
+  html, body {
+    background-color: rgb(var(--bg)) !important;
+    color: rgb(var(--fg)) !important;
+  }
 
   /* ==== FOCUS MANAGEMENT - ACCESSIBILITY ==== */
   * {
@@ -165,22 +171,11 @@
 }
 
 @layer utilities {
-  /* Utility classes for direct color usage */
+  /* ==== PROFESSIONAL COLOR UTILITIES ==== */
   .bg-app      { background-color: rgb(var(--bg)); }
   .text-app    { color: rgb(var(--fg)); }
   .bg-card     { background-color: rgb(var(--card)); }
   .border-app  { border-color: rgb(var(--border)); }
-  
-  /* FORCE HIGH CONTRAST OVERRIDES */
-  .force-contrast {
-    background-color: white !important;
-    color: black !important;
-  }
-  
-  .force-contrast-dark {
-    background-color: black !important;
-    color: white !important;
-  }
 }
 
 @layer components {
@@ -220,6 +215,30 @@
   
   .state-error {
     @apply bg-error/10 text-error border-error/20;
+  }
+  
+  /* ==== OVERRIDE ANY REMAINING GOLD/YELLOW COLORS ==== */
+  * {
+    background-color: rgb(var(--bg)) !important;
+    color: rgb(var(--fg)) !important;
+  }
+  
+  /* Specific overrides for common problematic elements */
+  header, nav, main, section, article, aside, footer {
+    background-color: rgb(var(--bg)) !important;
+    color: rgb(var(--fg)) !important;
+  }
+  
+  div, span, p, h1, h2, h3, h4, h5, h6 {
+    background-color: transparent !important;
+    color: rgb(var(--fg)) !important;
+  }
+  
+  /* Force cards and panels to use professional colors */
+  .card, [class*="card"], [class*="Card"] {
+    background-color: rgb(var(--card)) !important;
+    color: rgb(var(--fg)) !important;
+    border-color: rgb(var(--border)) !important;
   }
 }
 
