@@ -434,7 +434,7 @@ export function DataSourcePanel({ dataSources, setDataSources }: DataSourcePanel
                                      </div>
                                    )}
                                    {!testResult.success && testResult.message.includes('API key') && (
-                                     <div className="mt-2 p-2 bg-blue-50 border border-blue-200 rounded text-xs">
+                                     <div className="mt-2 p-2 bg-accent/10 border border-accent/20 rounded text-xs">
                                        <div className="font-medium text-blue-800 mb-1">📋 How to get a valid Google Sheets API key:</div>
                                        <ol className="list-decimal list-inside space-y-1 text-blue-700">
                                          <li>Go to <a href="https://console.cloud.google.com/" target="_blank" rel="noopener noreferrer" className="underline">Google Cloud Console</a></li>
