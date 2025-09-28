@@ -17,7 +17,7 @@
     --secondary: 248 250 252;      /* Very light gray */
     --secondary-foreground: 17 24 39; /* Dark text on light gray */
     --muted: 248 250 252;          /* Very light gray */
-    --muted-foreground: 17 24 39; /* Pure black text for maximum readability */
+    --muted-foreground: 0 0 0; /* Pure black text - RGB(0,0,0) */
     --accent: 59 130 246;          /* Blue accents */
     --accent-foreground: 255 255 255; /* White text on accents */
     --destructive: 239 68 68;      /* Red for errors */
@@ -50,5 +50,11 @@
   ::selection {
     background-color: hsl(var(--accent) / 0.2);
     color: hsl(var(--foreground));
+  }
+
+  /* Force all muted text to be pure black */
+  .text-muted-foreground,
+  [class*="text-muted"] {
+    color: #000000 !important;
   }
 }
