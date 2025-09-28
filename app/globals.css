@@ -57,4 +57,13 @@
   [class*="text-muted"] {
     color: #000000 !important;
   }
+
+  /* Force all headers and titles to be pure black and bold */
+  h1, h2, h3, h4, h5, h6,
+  [class*="font-bold"], [class*="font-semibold"],
+  [class*="text-lg"], [class*="text-xl"], [class*="text-2xl"],
+  .text-fg, .text-foreground {
+    color: #000000 !important;
+    font-weight: 700 !important;
+  }
 }
