@@ -27,7 +27,7 @@
     --ring: 59 130 246;            /* Blue focus rings */
     --success: 34 197 94;          /* Clean green */
     --success-foreground: 255 255 255; /* White on green */
-    --warning: 245 158 11;         /* Clean amber */
+    --warning: 107 114 128;        /* Gray instead of amber */
     --warning-foreground: 255 255 255; /* White on amber */
     --error: 239 68 68;            /* Clean red */
     --error-foreground: 255 255 255; /* White on red */
@@ -39,11 +39,33 @@
   }
 
   body {
-    background-color: hsl(var(--background));
+    background-color: #ffffff !important;
     color: hsl(var(--foreground));
     font-feature-settings: "rlig" 1, "calt" 1;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* NUCLEAR FIX - Force white backgrounds everywhere */
+  *, *::before, *::after,
+  html, body, #__next, main, section, article, aside, div, span,
+  .min-h-screen, .bg-bg, .bg-background, .bg-card, .bg-secondary,
+  .bg-muted, .bg-popover, .bg-white,
+  .card, [class*="card"], [class*="Card"],
+  [class*="bg-"], [class*="background"] {
+    background-color: #ffffff !important;
+    background: #ffffff !important;
+  }
+
+  /* Override any Tailwind yellow classes */
+  .bg-yellow-50, .bg-yellow-100, .bg-yellow-200, .bg-yellow-300,
+  .bg-yellow-400, .bg-yellow-500, .bg-yellow-600, .bg-yellow-700,
+  .bg-yellow-800, .bg-yellow-900,
+  .bg-amber-50, .bg-amber-100, .bg-amber-200, .bg-amber-300,
+  .bg-amber-400, .bg-amber-500, .bg-amber-600, .bg-amber-700,
+  .bg-amber-800, .bg-amber-900 {
+    background-color: #ffffff !important;
+    background: #ffffff !important;
   }
 
   /* Focus styles */
