@@ -78,7 +78,7 @@ export function DashboardSection() {
       const productBreakdown = [
         { product: 'Product 001', value: Math.floor(currentRevenue * 0.35), color: '#3b82f6' },
         { product: 'Product 013', value: Math.floor(currentRevenue * 0.25), color: '#10b981' },
-        { product: 'Product 007', value: Math.floor(currentRevenue * 0.20), color: '#f59e0b' },
+        { product: 'Product 007', value: Math.floor(currentRevenue * 0.20), color: '#6b7280' },
         { product: 'Product 045', value: Math.floor(currentRevenue * 0.15), color: '#ef4444' },
         { product: 'Others', value: Math.floor(currentRevenue * 0.05), color: '#8b5cf6' }
       ]
@@ -86,7 +86,7 @@ export function DashboardSection() {
       const regionBreakdown = [
         { region: 'US', value: Math.floor(currentRevenue * 0.45), color: '#3b82f6' },
         { region: 'Europe', value: Math.floor(currentRevenue * 0.25), color: '#10b981' },
-        { region: 'Asia', value: Math.floor(currentRevenue * 0.20), color: '#f59e0b' },
+        { region: 'Asia', value: Math.floor(currentRevenue * 0.20), color: '#6b7280' },
         { region: 'Australia', value: Math.floor(currentRevenue * 0.10), color: '#ef4444' }
       ]
 

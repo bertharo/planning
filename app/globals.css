@@ -33,11 +33,16 @@
   }
 
   body {
-    background-color: hsl(var(--background));
+    background-color: #ffffff !important;
     color: hsl(var(--foreground));
     font-feature-settings: "rlig" 1, "calt" 1;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Force white background everywhere */
+  html, body, #__next, main, div {
+    background-color: #ffffff !important;
   }
 
   /* Focus styles */
