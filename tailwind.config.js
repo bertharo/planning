@@ -69,10 +69,29 @@ module.exports = {
           foreground: "rgb(var(--error-foreground))",
         },
         
-        // UTILITY COLORS FOR COMPONENTS
+        // SHARP EDGE UTILITY COLORS
         fg: "rgb(var(--foreground))",
         fgMuted: "rgb(var(--muted-foreground))",
         bg: "rgb(var(--background))",
+        
+        // Sharp Edge Color Palette
+        "electric-blue": "rgb(var(--electric-blue))",
+        "deep-purple": "rgb(var(--deep-purple))",
+        "acid-green": "rgb(var(--acid-green))",
+        "coral-red": "rgb(var(--coral-red))",
+        "golden-yellow": "rgb(var(--golden-yellow))",
+        
+        // Slate variations
+        slate: {
+          50: "rgb(var(--slate-50))",
+          100: "rgb(var(--slate-100))",
+          200: "rgb(var(--slate-200))",
+          300: "rgb(var(--slate-300))",
+          600: "rgb(var(--slate-600))",
+          700: "rgb(var(--slate-700))",
+          800: "rgb(var(--slate-800))",
+          900: "rgb(var(--slate-900))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

@@ -4,49 +4,73 @@
 @tailwind utilities;
 
 @layer base {
-  /* BULLETPROOF LIGHT THEME - NO CONFLICTS */
+  /* SHARP EDGE COLOR THEME - VIBRANT & PROFESSIONAL */
   :root {
-    /* Core colors - RGB values for HSL conversion */
+    /* Sharp Edge Palette - RGB values */
     --white: 255 255 255;
     --black: 0 0 0;
-    --gray-100: 243 244 246;
-    --gray-200: 229 231 235;
-    --gray-300: 209 213 219;
-    --gray-600: 75 85 99;
-    --gray-700: 55 65 81;
-    --blue-500: 59 130 246;
-    --blue-600: 37 99 235;
-    --green-500: 34 197 94;
-    --green-600: 22 163 74;
-    --red-500: 239 68 68;
-    --red-600: 220 38 38;
     
-    /* Semantic color system */
+    /* Sharp Edge Primary Colors */
+    --electric-blue: 0 123 255;        /* Vibrant electric blue */
+    --deep-purple: 103 58 183;         /* Rich deep purple */
+    --acid-green: 76 175 80;           /* Sharp acid green */
+    --coral-red: 244 67 54;            /* Bold coral red */
+    --golden-yellow: 255 193 7;        /* Sharp golden yellow */
+    
+    /* Neutral grays for balance */
+    --slate-50: 248 250 252;
+    --slate-100: 241 245 249;
+    --slate-200: 226 232 240;
+    --slate-300: 203 213 225;
+    --slate-600: 71 85 105;
+    --slate-700: 51 65 85;
+    --slate-800: 30 41 59;
+    --slate-900: 15 23 42;
+    
+    /* Sharp Edge Semantic Color System */
     --background: var(--white);
-    --foreground: var(--black);
+    --foreground: var(--slate-900);
     --card: var(--white);
-    --card-foreground: var(--black);
+    --card-foreground: var(--slate-900);
     --popover: var(--white);
-    --popover-foreground: var(--black);
-    --primary: var(--blue-500);
+    --popover-foreground: var(--slate-900);
+    
+    /* Primary uses electric blue for main actions */
+    --primary: var(--electric-blue);
     --primary-foreground: var(--white);
-    --secondary: var(--gray-100);
-    --secondary-foreground: var(--black);
-    --muted: var(--gray-100);
-    --muted-foreground: var(--black);
-    --accent: var(--blue-500);
+    
+    /* Secondary uses subtle slate for supporting elements */
+    --secondary: var(--slate-100);
+    --secondary-foreground: var(--slate-700);
+    
+    /* Muted uses light slate for subtle text */
+    --muted: var(--slate-100);
+    --muted-foreground: var(--slate-600);
+    
+    /* Accent uses deep purple for highlights */
+    --accent: var(--deep-purple);
     --accent-foreground: var(--white);
-    --destructive: var(--red-500);
-    --destructive-foreground: var(--white);
-    --border: var(--gray-200);
-    --input: var(--white);
-    --ring: var(--blue-500);
-    --success: var(--green-500);
+    
+    /* Success uses acid green */
+    --success: var(--acid-green);
     --success-foreground: var(--white);
-    --warning: var(--gray-600);
-    --warning-foreground: var(--white);
-    --error: var(--red-500);
+    
+    /* Error uses coral red */
+    --error: var(--coral-red);
     --error-foreground: var(--white);
+    
+    /* Warning uses golden yellow */
+    --warning: var(--golden-yellow);
+    --warning-foreground: var(--slate-900);
+    
+    /* Destructive also uses coral red */
+    --destructive: var(--coral-red);
+    --destructive-foreground: var(--white);
+    
+    /* Borders and inputs use slate */
+    --border: var(--slate-200);
+    --input: var(--white);
+    --ring: var(--electric-blue);
     --radius: 0.75rem;
   }
 
@@ -66,26 +90,27 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* FORCE ALL BACKGROUNDS TO BE WHITE */
+  /* SHARP EDGE BACKGROUND OVERRIDES */
   *, *::before, *::after {
     background-color: rgb(var(--white)) !important;
   }
 
-  /* ALLOW ONLY SPECIFIC ELEMENTS TO HAVE NON-WHITE BACKGROUNDS */
-  .bg-accent, .bg-primary, .bg-success, .bg-error, .bg-destructive,
-  .bg-blue-500, .bg-blue-600, .bg-green-500, .bg-green-600,
-  .bg-red-500, .bg-red-600 {
+  /* ALLOW SHARP EDGE ACCENT COLORS */
+  .bg-primary, .bg-accent, .bg-success, .bg-error, .bg-destructive, .bg-warning,
+  .bg-electric-blue, .bg-deep-purple, .bg-acid-green, .bg-coral-red, .bg-golden-yellow {
     background-color: inherit !important;
   }
 
-  /* FORCE ALL TEXT TO BE BLACK */
-  *, h1, h2, h3, h4, h5, h6, p, span, div, label, input, textarea, button {
-    color: rgb(var(--black)) !important;
+  /* SHARP EDGE TEXT OVERRIDES */
+  h1, h2, h3, h4, h5, h6, p, span, div, label {
+    color: rgb(var(--foreground)) !important;
   }
 
-  /* ALLOW ONLY SPECIFIC ELEMENTS TO HAVE NON-BLACK TEXT */
-  .text-white, .text-accent-foreground, .text-primary-foreground,
-  .text-success-foreground, .text-error-foreground, .text-destructive-foreground {
+  /* ALLOW SHARP EDGE ACCENT TEXT COLORS */
+  .text-primary, .text-accent, .text-success, .text-error, .text-destructive, .text-warning,
+  .text-electric-blue, .text-deep-purple, .text-acid-green, .text-coral-red, .text-golden-yellow,
+  .text-primary-foreground, .text-accent-foreground, .text-success-foreground, 
+  .text-error-foreground, .text-destructive-foreground, .text-warning-foreground {
     color: inherit !important;
   }
 

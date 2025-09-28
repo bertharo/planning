@@ -76,18 +76,18 @@ export function DashboardSection() {
       }))
 
       const productBreakdown = [
-        { product: 'Product 001', value: Math.floor(currentRevenue * 0.35), color: 'rgb(59 130 246)' },
-        { product: 'Product 013', value: Math.floor(currentRevenue * 0.25), color: 'rgb(34 197 94)' },
-        { product: 'Product 007', value: Math.floor(currentRevenue * 0.20), color: 'rgb(75 85 99)' },
-        { product: 'Product 045', value: Math.floor(currentRevenue * 0.15), color: 'rgb(239 68 68)' },
-        { product: 'Others', value: Math.floor(currentRevenue * 0.05), color: 'rgb(139 92 246)' }
+        { product: 'Product 001', value: Math.floor(currentRevenue * 0.35), color: 'rgb(0 123 255)' },
+        { product: 'Product 013', value: Math.floor(currentRevenue * 0.25), color: 'rgb(76 175 80)' },
+        { product: 'Product 007', value: Math.floor(currentRevenue * 0.20), color: 'rgb(103 58 183)' },
+        { product: 'Product 045', value: Math.floor(currentRevenue * 0.15), color: 'rgb(244 67 54)' },
+        { product: 'Others', value: Math.floor(currentRevenue * 0.05), color: 'rgb(255 193 7)' }
       ]
 
       const regionBreakdown = [
-        { region: 'US', value: Math.floor(currentRevenue * 0.45), color: 'rgb(59 130 246)' },
-        { region: 'Europe', value: Math.floor(currentRevenue * 0.25), color: 'rgb(34 197 94)' },
-        { region: 'Asia', value: Math.floor(currentRevenue * 0.20), color: 'rgb(75 85 99)' },
-        { region: 'Australia', value: Math.floor(currentRevenue * 0.10), color: 'rgb(239 68 68)' }
+        { region: 'US', value: Math.floor(currentRevenue * 0.45), color: 'rgb(0 123 255)' },
+        { region: 'Europe', value: Math.floor(currentRevenue * 0.25), color: 'rgb(76 175 80)' },
+        { region: 'Asia', value: Math.floor(currentRevenue * 0.20), color: 'rgb(103 58 183)' },
+        { region: 'Australia', value: Math.floor(currentRevenue * 0.10), color: 'rgb(244 67 54)' }
       ]
 
       const topProducts = [
