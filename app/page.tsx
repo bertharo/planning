@@ -27,7 +27,7 @@ export default function Home() {
       <main className="mx-auto max-w-screen-2xl px-6 md:px-8 py-6">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Data Sources Panel */}
-          <MotionCard className="lg:col-span-3">
+          <MotionCard className="lg:col-span-3 border-r-0 lg:border-r border-border">
             <DataSourcePanel
               dataSources={dataSources}
               setDataSources={setDataSources}
@@ -35,8 +35,8 @@ export default function Home() {
           </MotionCard>
 
           {/* Main Content Area */}
-          <div className="lg:col-span-6">
-            <MotionCard>
+          <div className="lg:col-span-6 border-r-0 lg:border-r border-border">
+            <MotionCard className="border-0">
               {activeTab === 'dashboard' && <DashboardSection />}
               {activeTab === 'models' && <ModelsSection />}
               {activeTab === 'scenarios' && <ScenariosSection />}
@@ -44,7 +44,7 @@ export default function Home() {
           </div>
 
           {/* Natural Language Interface */}
-          <MotionCard className="lg:col-span-3">
+          <MotionCard className="lg:col-span-3 border-0">
             <NaturalLanguageInterface />
           </MotionCard>
         </div>
