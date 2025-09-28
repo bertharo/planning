@@ -140,11 +140,11 @@ export function ModelsSection() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {models.map((model) => {
+        {models.map((model, index) => {
           const Icon = modelIcons[model.type]
           
           return (
-            <div key={model.id} className="border border-border rounded-lg p-6 hover:shadow-md transition-shadow">
+            <div key={model.id} className={`border border-border rounded-lg p-6 hover:shadow-md transition-shadow ${index % 3 !== 2 ? 'md:border-r-2 md:border-r-gray-300 lg:border-r-2 lg:border-r-gray-300' : ''}`}>
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center space-x-3">
                   <div className="p-2 bg-gray-200 rounded-md">
