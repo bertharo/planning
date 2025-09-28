@@ -1405,7 +1405,7 @@ The forecast model has been saved and is available in your Models section. You c
         )}
       </div>
 
-      <div className="flex-1 overflow-y-auto p-3 lg:p-4 space-y-3 lg:space-y-4">
+      <div className="flex-1 overflow-y-auto p-3 lg:p-4 space-y-3 lg:space-y-4 max-h-96">
         {messages.map((message) => (
           <div key={message.id} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
             <div className={`flex items-start space-x-2 max-w-[90%] lg:max-w-[85%] ${message.type === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
@@ -1443,7 +1443,7 @@ The forecast model has been saved and is available in your Models section. You c
         )}
       </div>
 
-      <div className="p-3 lg:p-4 border-t border-border">
+      <div className="p-3 lg:p-4 border-t border-border flex-shrink-0">
         <form onSubmit={handleSubmit} className="flex space-x-2">
           <input
             type="text"
