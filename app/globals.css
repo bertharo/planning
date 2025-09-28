@@ -17,7 +17,7 @@
     --secondary: 248 250 252;      /* Very light gray */
     --secondary-foreground: 17 24 39; /* Dark text on light gray */
     --muted: 248 250 252;          /* Very light gray */
-    --muted-foreground: 31 41 55; /* Much darker gray text for maximum readability */
+    --muted-foreground: 17 24 39; /* Pure black text for maximum readability */
     --accent: 59 130 246;          /* Blue accents */
     --accent-foreground: 255 255 255; /* White text on accents */
     --destructive: 239 68 68;      /* Red for errors */
