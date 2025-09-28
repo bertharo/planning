@@ -207,7 +207,7 @@ export function DataSourcePanel({ dataSources, setDataSources }: DataSourcePanel
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 bg-accent rounded-xl flex items-center justify-center">
-              <Database className="w-6 h-6 text-white" />
+              <Database className="w-6 h-6 text-accent-foreground" />
             </div>
             <div>
               <h2 className="text-lg lg:text-xl font-bold text-fg">Data Sources</h2>

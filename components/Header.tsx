@@ -22,8 +22,8 @@ export function Header({ activeTab, setActiveTab }: HeaderProps) {
         {/* Logo & Brand */}
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent">
-              <TrendingUp className="h-4 w-4 text-accent-fg" />
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
+              <TrendingUp className="h-4 w-4 text-primary-foreground" />
             </div>
             <div className="flex flex-col">
               <h1 className="text-lg font-semibold text-fg">LRP Prototype</h1>
@@ -44,7 +44,7 @@ export function Header({ activeTab, setActiveTab }: HeaderProps) {
                 onClick={() => setActiveTab(tab.id)}
                 className={cn(
                   "flex items-center space-x-2 px-3",
-                  activeTab === tab.id && "bg-muted text-fg"
+                  activeTab === tab.id && "bg-primary text-primary-foreground"
                 )}
               >
                 <Icon className="h-4 w-4" />

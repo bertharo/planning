@@ -90,15 +90,23 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* SHARP EDGE BACKGROUND OVERRIDES */
+  /* SHARP EDGE BACKGROUND OVERRIDES - ENHANCED */
   *, *::before, *::after {
     background-color: rgb(var(--white)) !important;
   }
 
-  /* ALLOW SHARP EDGE ACCENT COLORS */
+  /* ENHANCED SHARP EDGE ACCENT COLORS */
   .bg-primary, .bg-accent, .bg-success, .bg-error, .bg-destructive, .bg-warning,
-  .bg-electric-blue, .bg-deep-purple, .bg-acid-green, .bg-coral-red, .bg-golden-yellow {
+  .bg-electric-blue, .bg-deep-purple, .bg-acid-green, .bg-coral-red, .bg-golden-yellow,
+  .bg-blue-500, .bg-blue-600, .bg-purple-500, .bg-purple-600, .bg-green-500, .bg-green-600,
+  .bg-red-500, .bg-red-600, .bg-yellow-500, .bg-yellow-600 {
     background-color: inherit !important;
+  }
+
+  /* Add subtle color hints to interactive elements */
+  button:hover, .hover\:bg-primary:hover, .hover\:bg-accent:hover {
+    background-color: rgb(var(--primary)) !important;
+    color: rgb(var(--primary-foreground)) !important;
   }
 
   /* SHARP EDGE TEXT OVERRIDES */

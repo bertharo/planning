@@ -10,10 +10,10 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        primary: "bg-accent text-accent-fg hover:opacity-95 active:opacity-90 focus-visible:ring-accent",
+        primary: "bg-primary text-primary-foreground hover:bg-primary/90 active:opacity-90 focus-visible:ring-primary shadow-lg hover:shadow-xl transition-all duration-200",
         secondary: "bg-muted text-fg hover:bg-muted/80 border border-border",
         ghost: "bg-transparent text-fg hover:bg-muted active:bg-muted/80 border border-transparent",
-        destructive: "bg-error text-accent-fg hover:opacity-95 focus-visible:ring-error",
+        destructive: "bg-error text-error-foreground hover:bg-error/90 active:opacity-90 focus-visible:ring-error shadow-lg hover:shadow-xl transition-all duration-200",
         outline: "border border-border bg-card text-fg hover:bg-muted focus-visible:ring-ring",
       },
       size: {
