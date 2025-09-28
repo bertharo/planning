@@ -220,7 +220,7 @@ export function DashboardSection() {
           value={formatCurrency(dashboardData.arr.current)}
           growth={dashboardData.arr.growth}
           icon={<TrendingUp className="w-5 h-5" />}
-          color="purple"
+          color="blue"
         />
         <MetricCard
           title="MRR"
@@ -289,14 +289,13 @@ interface MetricCardProps {
   value: string
   growth: number
   icon: React.ReactNode
-  color: 'blue' | 'green' | 'purple' | 'warning'
+  color: 'blue' | 'green' | 'warning'
 }
 
 function MetricCard({ title, value, growth, icon, color }: MetricCardProps) {
   const colorClasses = {
     blue: 'bg-accent/10 text-accent border-accent/20',
     green: 'bg-success/10 text-success border-success/20',
-    purple: 'bg-ch-3/10 text-ch-3 border-ch-3/20',
     warning: 'bg-warning/10 text-warning border-warning/20'
   }
 

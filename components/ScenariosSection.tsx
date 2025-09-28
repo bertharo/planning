@@ -186,7 +186,7 @@ export function ScenariosSection() {
               <div className="space-y-1">
                 {scenario.assumptions.map((assumption, index) => (
                   <div key={index} className="flex items-center space-x-2">
-                    <div className="w-1.5 h-1.5 bg-primary rounded-full"></div>
+                    <div className="w-1.5 h-1.5 bg-gray-600 rounded-full"></div>
                     <span className="text-sm text-muted-foreground">{assumption}</span>
                   </div>
                 ))}
