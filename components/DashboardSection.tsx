@@ -76,18 +76,18 @@ export function DashboardSection() {
       }))
 
       const productBreakdown = [
-        { product: 'Product 001', value: Math.floor(currentRevenue * 0.35), color: '#3b82f6' },
-        { product: 'Product 013', value: Math.floor(currentRevenue * 0.25), color: '#10b981' },
-        { product: 'Product 007', value: Math.floor(currentRevenue * 0.20), color: '#6b7280' },
-        { product: 'Product 045', value: Math.floor(currentRevenue * 0.15), color: '#ef4444' },
-        { product: 'Others', value: Math.floor(currentRevenue * 0.05), color: '#8b5cf6' }
+        { product: 'Product 001', value: Math.floor(currentRevenue * 0.35), color: 'rgb(59 130 246)' },
+        { product: 'Product 013', value: Math.floor(currentRevenue * 0.25), color: 'rgb(34 197 94)' },
+        { product: 'Product 007', value: Math.floor(currentRevenue * 0.20), color: 'rgb(75 85 99)' },
+        { product: 'Product 045', value: Math.floor(currentRevenue * 0.15), color: 'rgb(239 68 68)' },
+        { product: 'Others', value: Math.floor(currentRevenue * 0.05), color: 'rgb(139 92 246)' }
       ]
 
       const regionBreakdown = [
-        { region: 'US', value: Math.floor(currentRevenue * 0.45), color: '#3b82f6' },
-        { region: 'Europe', value: Math.floor(currentRevenue * 0.25), color: '#10b981' },
-        { region: 'Asia', value: Math.floor(currentRevenue * 0.20), color: '#6b7280' },
-        { region: 'Australia', value: Math.floor(currentRevenue * 0.10), color: '#ef4444' }
+        { region: 'US', value: Math.floor(currentRevenue * 0.45), color: 'rgb(59 130 246)' },
+        { region: 'Europe', value: Math.floor(currentRevenue * 0.25), color: 'rgb(34 197 94)' },
+        { region: 'Asia', value: Math.floor(currentRevenue * 0.20), color: 'rgb(75 85 99)' },
+        { region: 'Australia', value: Math.floor(currentRevenue * 0.10), color: 'rgb(239 68 68)' }
       ]
 
       const topProducts = [
@@ -155,7 +155,7 @@ export function DashboardSection() {
   const formatGrowth = (growth: number) => {
     const isPositive = growth >= 0
     return (
-      <span className={`flex items-center space-x-1 ${isPositive ? 'text-green-600' : 'text-red-600'}`}>
+      <span className={`flex items-center space-x-1 ${isPositive ? 'text-success' : 'text-error'}`}>
         {isPositive ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
         <span>{Math.abs(growth).toFixed(1)}%</span>
       </span>

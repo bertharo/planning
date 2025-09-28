@@ -144,11 +144,11 @@ export function ModelsSection() {
           const Icon = modelIcons[model.type]
           
           return (
-            <div key={model.id} className={`border border-border rounded-lg p-6 hover:shadow-md transition-shadow ${index % 3 !== 2 ? 'md:border-r-2 md:border-r-gray-300 lg:border-r-2 lg:border-r-gray-300' : ''}`}>
+            <div key={model.id} className={`border border-border rounded-lg p-6 hover:shadow-md transition-shadow ${index % 3 !== 2 ? 'md:border-r-2 md:border-r-border lg:border-r-2 lg:border-r-border' : ''}`}>
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center space-x-3">
-                  <div className="p-2 bg-gray-200 rounded-md">
-                    <Icon className="w-5 h-5 text-gray-700" />
+                  <div className="p-2 bg-secondary rounded-md">
+                    <Icon className="w-5 h-5 text-foreground" />
                   </div>
                   <div>
                     <h3 className="font-semibold">{model.name}</h3>

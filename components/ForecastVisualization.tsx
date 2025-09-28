@@ -121,7 +121,7 @@ export function ForecastVisualization({ forecastData }: ForecastVisualizationPro
 
         <div className="bg-card border border-border rounded-lg p-3">
           <div className="flex items-center space-x-2 mb-2">
-            <Activity className="w-4 h-4 text-green-600" />
+            <Activity className="w-4 h-4 text-success" />
             <span className="text-sm font-medium">MAPE</span>
           </div>
           <p className="text-lg font-bold">{forecastData.metrics.mape.toFixed(1)}%</p>
@@ -131,9 +131,9 @@ export function ForecastVisualization({ forecastData }: ForecastVisualizationPro
         <div className="bg-card border border-border rounded-lg p-3">
           <div className="flex items-center space-x-2 mb-2">
             {forecastData.metrics.trend > 0 ? (
-              <TrendingUp className="w-4 h-4 text-green-600" />
+              <TrendingUp className="w-4 h-4 text-success" />
             ) : (
-              <TrendingDown className="w-4 h-4 text-red-600" />
+              <TrendingDown className="w-4 h-4 text-error" />
             )}
             <span className="text-sm font-medium">Trend</span>
           </div>
@@ -185,7 +185,7 @@ export function ForecastVisualization({ forecastData }: ForecastVisualizationPro
                 <span>Historical Data</span>
               </div>
               <div className="flex items-center space-x-2">
-                <div className="w-3 h-3 bg-green-500 rounded"></div>
+                <div className="w-3 h-3 bg-success rounded"></div>
                 <span>Forecast</span>
               </div>
             </div>
@@ -200,9 +200,9 @@ export function ForecastVisualization({ forecastData }: ForecastVisualizationPro
             
             {/* Risk Metrics */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
-              <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-                <div className="text-sm font-medium text-red-800">VaR (95%)</div>
-                <div className="text-lg font-bold text-red-900">
+              <div className="bg-error/10 border border-error/20 rounded-lg p-3">
+                <div className="text-sm font-medium text-error">VaR (95%)</div>
+                <div className="text-lg font-bold text-error">
                   {formatPercentage(forecastData.monteCarlo.riskMetrics.valueAtRisk95)}
                 </div>
               </div>
@@ -241,7 +241,7 @@ export function ForecastVisualization({ forecastData }: ForecastVisualizationPro
                     <div className="absolute bottom-0 w-full">
                       {/* 90% confidence interval */}
                       <div
-                        className="w-full bg-red-100 absolute bottom-0"
+                        className="w-full bg-error/20 absolute bottom-0"
                         style={{ 
                           height: `${p90Height - p10Height}%`,
                           minHeight: '2px'
@@ -283,7 +283,7 @@ export function ForecastVisualization({ forecastData }: ForecastVisualizationPro
                 <span>50% confidence interval</span>
               </div>
               <div className="flex items-center space-x-2">
-                <div className="w-3 h-3 bg-red-100 rounded"></div>
+                <div className="w-3 h-3 bg-error/20 rounded"></div>
                 <span>90% confidence interval</span>
               </div>
             </div>
@@ -304,7 +304,7 @@ export function ForecastVisualization({ forecastData }: ForecastVisualizationPro
                   <div key={index} className="flex flex-col items-center flex-1 space-y-1">
                     {/* Optimistic */}
                     <div
-                      className="w-full bg-green-500 rounded-t"
+                      className="w-full bg-success rounded-t"
                       style={{ height: `${optimisticHeight * 0.3}%`, minHeight: '2px' }}
                       title={`Optimistic: ${formatCurrency(forecastData.monteCarlo?.scenarios.optimistic[index].value || 0)}`}
                     />
@@ -316,7 +316,7 @@ export function ForecastVisualization({ forecastData }: ForecastVisualizationPro
                     />
                     {/* Pessimistic */}
                     <div
-                      className="w-full bg-red-500 rounded-t"
+                      className="w-full bg-error rounded-t"
                       style={{ height: `${pessimisticHeight * 0.3}%`, minHeight: '2px' }}
                       title={`Pessimistic: ${formatCurrency(forecastData.monteCarlo?.scenarios.pessimistic[index].value || 0)}`}
                     />
@@ -331,7 +331,7 @@ export function ForecastVisualization({ forecastData }: ForecastVisualizationPro
             
             <div className="flex items-center space-x-4 mt-4 text-sm">
               <div className="flex items-center space-x-2">
-                <div className="w-3 h-3 bg-green-500 rounded"></div>
+                <div className="w-3 h-3 bg-success rounded"></div>
                 <span>Optimistic (90th percentile)</span>
               </div>
               <div className="flex items-center space-x-2">
@@ -339,16 +339,16 @@ export function ForecastVisualization({ forecastData }: ForecastVisualizationPro
                 <span>Realistic (50th percentile)</span>
               </div>
               <div className="flex items-center space-x-2">
-                <div className="w-3 h-3 bg-red-500 rounded"></div>
+                <div className="w-3 h-3 bg-error rounded"></div>
                 <span>Pessimistic (10th percentile)</span>
               </div>
             </div>
 
             {/* Scenario Summary */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-6">
-              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                <h5 className="font-semibold text-green-800 mb-2">Optimistic Scenario</h5>
-                <p className="text-2xl font-bold text-green-900">
+              <div className="bg-success/10 border border-success/20 rounded-lg p-4">
+                <h5 className="font-semibold text-success mb-2">Optimistic Scenario</h5>
+                <p className="text-2xl font-bold text-success">
                   {formatCurrency(forecastData.monteCarlo.scenarios.optimistic[forecastData.monteCarlo.scenarios.optimistic.length - 1]?.value || 0)}
                 </p>
                 <p className="text-sm text-fgMuted">Final period projection</p>
@@ -362,12 +362,12 @@ export function ForecastVisualization({ forecastData }: ForecastVisualizationPro
                 <p className="text-sm text-fgMuted">Most likely outcome</p>
               </div>
               
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                <h5 className="font-semibold text-red-800 mb-2">Pessimistic Scenario</h5>
-                <p className="text-2xl font-bold text-red-900">
+              <div className="bg-error/10 border border-error/20 rounded-lg p-4">
+                <h5 className="font-semibold text-error mb-2">Pessimistic Scenario</h5>
+                <p className="text-2xl font-bold text-error">
                   {formatCurrency(forecastData.monteCarlo.scenarios.pessimistic[forecastData.monteCarlo.scenarios.pessimistic.length - 1]?.value || 0)}
                 </p>
-                <p className="text-sm text-red-700">Worst-case scenario</p>
+                <p className="text-sm text-error">Worst-case scenario</p>
               </div>
             </div>
           </div>

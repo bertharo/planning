@@ -1389,13 +1389,13 @@ The forecast model has been saved and is available in your Models section. You c
         </div>
 
         {connectedDataSources.length > 0 && (
-          <div className="mt-2 lg:mt-3 p-2 bg-green-50 border border-green-200 rounded-md">
-            <p className="text-xs font-medium text-green-800 mb-1">Connected Data Sources:</p>
+          <div className="mt-2 lg:mt-3 p-2 bg-success/10 border border-success/20 rounded-md">
+            <p className="text-xs font-medium text-success mb-1">Connected Data Sources:</p>
             <div className="flex flex-wrap gap-1">
               {connectedDataSources.map((source) => (
                 <span
                   key={source.id}
-                  className="px-1.5 lg:px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full"
+                  className="px-1.5 lg:px-2 py-1 bg-success/20 text-success text-xs rounded-full"
                 >
                   {source.name}
                 </span>
