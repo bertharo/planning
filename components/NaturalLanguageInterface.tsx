@@ -1418,7 +1418,7 @@ The forecast model has been saved and is available in your Models section. You c
               </div>
               <div className={`rounded-lg p-2 lg:p-3 ${message.type === 'user' ? 'bg-white text-fg border border-border' : 'bg-secondary'}`}>
                 <p className="text-xs lg:text-sm whitespace-pre-wrap">{message.content}</p>
-                <p className={`text-xs mt-1 ${message.type === 'user' ? 'text-primary-foreground/70' : 'text-muted-foreground'}`}>
+                <p className={`text-xs mt-1 ${message.type === 'user' ? 'text-muted-foreground' : 'text-muted-foreground'}`}>
                   {message.timestamp.toLocaleTimeString()}
                 </p>
               </div>
