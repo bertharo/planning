@@ -218,16 +218,16 @@ export function EnhancedScenariosSection() {
         {filteredScenarios.map((scenario) => (
           <Card key={scenario.id} className="hover:shadow-lg transition-shadow duration-200">
             <CardHeader className="pb-3">
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <CardTitle className="text-lg font-semibold text-gray-900 mb-1">
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex-1 min-w-0">
+                  <CardTitle className="text-lg font-semibold text-gray-900 mb-1 break-words">
                     {scenario.name}
                   </CardTitle>
-                  <CardDescription className="text-sm text-gray-600 mb-3">
+                  <CardDescription className="text-sm text-gray-600 mb-3 break-words">
                     {scenario.description}
                   </CardDescription>
                 </div>
-                <Badge className={`${getStatusColor(scenario.status)} text-xs font-medium`}>
+                <Badge className={`${getStatusColor(scenario.status)} text-xs font-medium flex-shrink-0`}>
                   {scenario.status}
                 </Badge>
               </div>
@@ -245,22 +245,22 @@ export function EnhancedScenariosSection() {
             <CardContent className="space-y-4">
               {/* ARR Impact */}
               <div className="bg-gray-50 rounded-lg p-4">
-                <div className="grid grid-cols-3 gap-4 text-center">
-                  <div>
+                <div className="grid grid-cols-3 gap-2 text-center">
+                  <div className="min-w-0">
                     <div className="text-xs text-gray-500 mb-1">Before</div>
-                    <div className="font-semibold text-gray-900">
+                    <div className="font-semibold text-gray-900 text-sm break-words">
                       {formatCurrency(scenario.arrBefore)}
                     </div>
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <div className="text-xs text-gray-500 mb-1">After</div>
-                    <div className="font-semibold text-gray-900">
+                    <div className="font-semibold text-gray-900 text-sm break-words">
                       {formatCurrency(scenario.arrAfter)}
                     </div>
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <div className="text-xs text-gray-500 mb-1">Delta</div>
-                    <div className={`font-semibold ${
+                    <div className={`font-semibold text-sm break-words ${
                       scenario.arrDelta >= 0 ? 'text-green-600' : 'text-red-600'
                     }`}>
                       {formatDelta(scenario.arrDelta)}
@@ -291,11 +291,13 @@ export function EnhancedScenariosSection() {
               )}
 
               {/* Actions */}
-              <div className="flex items-center justify-between pt-2 border-t border-gray-100">
-                <div className="text-xs text-gray-500">
-                  by {scenario.author} • {scenario.createdAt.toLocaleDateString()}
+              <div className="flex items-center justify-between pt-2 border-t border-gray-100 gap-2">
+                <div className="text-xs text-gray-500 flex-1 min-w-0">
+                  <span className="break-words">by {scenario.author}</span>
+                  <span className="mx-1">•</span>
+                  <span className="break-words">{scenario.createdAt.toLocaleDateString()}</span>
                 </div>
-                <div className="flex items-center space-x-1">
+                <div className="flex items-center space-x-1 flex-shrink-0">
                   {scenario.status === 'running' ? (
                     <Button variant="outline" size="sm" disabled>
                       <Pause className="h-3 w-3 mr-1" />

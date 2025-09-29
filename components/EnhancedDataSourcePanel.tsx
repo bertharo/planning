@@ -187,9 +187,9 @@ export function EnhancedDataSourcePanel() {
               source.connected ? 'border-green-200 bg-green-50' : 'hover:shadow-md'
             }`}>
               <CardContent className="p-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex items-start space-x-3 flex-1 min-w-0">
+                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${
                       source.connected ? 'bg-green-100' : 'bg-gray-100'
                     }`}>
                       <TypeIcon className={`h-5 w-5 ${
@@ -197,43 +197,44 @@ export function EnhancedDataSourcePanel() {
                       }`} />
                     </div>
                     
-                    <div className="flex-1">
-                      <div className="flex items-center space-x-2">
-                        <h3 className="font-semibold text-gray-900">{source.name}</h3>
-                        <Badge className={`text-xs ${getTypeColor(source.type)}`}>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center space-x-2 mb-1">
+                        <h3 className="font-semibold text-gray-900 break-words">{source.name}</h3>
+                        <Badge className={`text-xs flex-shrink-0 ${getTypeColor(source.type)}`}>
                           {source.type}
                         </Badge>
-                        {source.connected && (
-                          <Badge variant="outline" className="text-green-600 border-green-200 bg-green-50">
-                            <CheckCircle className="h-3 w-3 mr-1" />
-                            Connected
-                          </Badge>
-                        )}
                       </div>
                       
+                      {source.connected && (
+                        <Badge variant="outline" className="text-green-600 border-green-200 bg-green-50 text-xs mb-2 inline-flex items-center">
+                          <CheckCircle className="h-3 w-3 mr-1" />
+                          Connected
+                        </Badge>
+                      )}
+                      
                       {source.connected && source.recordCount && (
-                        <div className="flex items-center space-x-4 mt-1 text-sm text-gray-600">
-                          <span>{source.recordCount.toLocaleString()} records</span>
+                        <div className="text-sm text-gray-600 space-y-1">
+                          <div className="break-words">{source.recordCount.toLocaleString()} records</div>
                           {source.lastSync && (
-                            <span>Last sync: {source.lastSync.toLocaleDateString()}</span>
+                            <div className="break-words">Last sync: {source.lastSync.toLocaleDateString()}</div>
                           )}
                         </div>
                       )}
                     </div>
                   </div>
 
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-2 flex-shrink-0">
                     {source.connected ? (
                       <>
-                        <Button variant="outline" size="sm">
-                          <Settings className="h-4 w-4 mr-1" />
+                        <Button variant="outline" size="sm" className="text-xs">
+                          <Settings className="h-3 w-3 mr-1" />
                           Configure
                         </Button>
                         <Button 
                           variant="outline" 
                           size="sm" 
                           onClick={() => handleDisconnect(source.id)}
-                          className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                          className="text-red-600 hover:text-red-700 hover:bg-red-50 text-xs"
                         >
                           Disconnect
                         </Button>
@@ -242,16 +243,16 @@ export function EnhancedDataSourcePanel() {
                         <Button 
                           onClick={() => handleConnect(source.id)}
                           disabled={isCurrentlyConfiguring}
-                          className="bg-blue-600 hover:bg-blue-700"
+                          className="bg-blue-600 hover:bg-blue-700 text-xs"
                         >
                           {isCurrentlyConfiguring ? (
                           <>
-                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                            <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin mr-1" />
                             Connecting...
                           </>
                         ) : (
                           <>
-                            <Circle className="h-4 w-4 mr-1" />
+                            <Circle className="h-3 w-3 mr-1" />
                             Connect
                           </>
                         )}

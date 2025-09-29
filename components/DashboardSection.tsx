@@ -100,16 +100,16 @@ export function DashboardSection() {
           return (
             <Card key={index} className="relative overflow-hidden border-0 shadow-sm hover:shadow-md transition-shadow">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-gray-600">{kpi.title}</CardTitle>
-                <Icon className="h-4 w-4 text-gray-400" />
+                <CardTitle className="text-sm font-medium text-gray-600 break-words">{kpi.title}</CardTitle>
+                <Icon className="h-4 w-4 text-gray-400 flex-shrink-0" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-gray-900">{kpi.value}</div>
-                <div className="flex items-center space-x-1 mt-1">
-                  <TrendIcon className={`h-3 w-3 ${kpi.color}`} />
-                  <span className={`text-sm font-medium ${kpi.color}`}>{kpi.change}</span>
-                  <span className="text-sm text-gray-500">{kpi.description}</span>
-                </div>
+                <div className="text-2xl font-bold text-gray-900 break-words">{kpi.value}</div>
+                <div className="flex items-center space-x-1 mt-1 flex-wrap">
+                  <TrendIcon className={`h-3 w-3 ${kpi.color} flex-shrink-0`} />
+                  <span className={`text-sm font-medium ${kpi.color} break-words`}>{kpi.change}</span>
+                  <span className="text-sm text-gray-500 break-words">{kpi.description}</span>
+      </div>
               </CardContent>
               <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-gray-50 to-transparent rounded-bl-full"></div>
             </Card>
@@ -131,29 +131,29 @@ export function DashboardSection() {
           <CardContent>
             <div className="space-y-4">
               {recentScenarios.map((scenario, index) => (
-                <div key={index} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                  <div className="flex-1">
-                    <div className="flex items-center space-x-2 mb-1">
-                      <h4 className="font-medium text-gray-900">{scenario.name}</h4>
+                <div key={index} className="flex items-start justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors gap-3">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center space-x-2 mb-1 flex-wrap">
+                      <h4 className="font-medium text-gray-900 break-words">{scenario.name}</h4>
                       <Badge 
                         variant={scenario.status === 'completed' ? 'default' : scenario.status === 'in-progress' ? 'secondary' : 'outline'}
-                        className="text-xs"
+                        className="text-xs flex-shrink-0"
                       >
                         {scenario.status}
                       </Badge>
-                    </div>
-                    <div className="flex items-center space-x-4 text-sm text-gray-600">
-                      <span className="font-medium text-green-600">{scenario.impact}</span>
-                      <span>{scenario.type}</span>
-                      <span>{scenario.date}</span>
-                    </div>
-                  </div>
-                  <Button variant="ghost" size="sm">
+      </div>
+                    <div className="flex items-center space-x-4 text-sm text-gray-600 flex-wrap gap-2">
+                      <span className="font-medium text-green-600 break-words">{scenario.impact}</span>
+                      <span className="break-words">{scenario.type}</span>
+                      <span className="break-words">{scenario.date}</span>
+      </div>
+    </div>
+                  <Button variant="ghost" size="sm" className="flex-shrink-0">
                     <ArrowUpRight className="h-4 w-4" />
                   </Button>
-                </div>
+    </div>
               ))}
-            </div>
+      </div>
           </CardContent>
         </Card>
 
@@ -167,7 +167,7 @@ export function DashboardSection() {
             <div className="space-y-3">
               {quickActions.map((action, index) => {
                 const Icon = action.icon
-                return (
+  return (
                   <Button 
                     key={index} 
                     variant="outline" 
@@ -175,15 +175,15 @@ export function DashboardSection() {
                   >
                     <div className={`w-8 h-8 rounded-lg ${action.color} flex items-center justify-center mr-3`}>
                       <Icon className="h-4 w-4 text-white" />
-                    </div>
+          </div>
                     {action.label}
                   </Button>
-                )
-              })}
-            </div>
+        )
+      })}
+    </div>
           </CardContent>
         </Card>
-      </div>
+    </div>
 
       {/* Performance Chart Placeholder */}
       <Card>
@@ -193,12 +193,12 @@ export function DashboardSection() {
         </CardHeader>
         <CardContent>
           <div className="h-64 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg flex items-center justify-center">
-            <div className="text-center">
+        <div className="text-center">
               <BarChart3 className="h-12 w-12 text-blue-400 mx-auto mb-4" />
               <p className="text-gray-600">Chart visualization will appear here</p>
               <p className="text-sm text-gray-500">Connect your data sources to see real metrics</p>
-            </div>
-          </div>
+        </div>
+      </div>
         </CardContent>
       </Card>
     </div>
