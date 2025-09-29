@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { EnhancedDataSourcePanel } from '@/components/EnhancedDataSourcePanel'
 import { EnhancedNaturalLanguageInterface } from '@/components/EnhancedNaturalLanguageInterface'
 import { ModelsSection } from '@/components/ModelsSection'
-import { EnhancedScenariosSection } from '@/components/EnhancedScenariosSection'
+import { ScenariosSection } from '@/components/ScenariosSection'
 import { DashboardSection } from '@/components/DashboardSection'
 import { Header } from '@/components/Header'
 import { MotionCard } from '@/components/ui/motion'
@@ -38,7 +38,7 @@ export default function Home() {
             <MotionCard className="border-r-0 lg:border-r-2 border-gray-300">
               {activeTab === 'dashboard' && <DashboardSection />}
               {activeTab === 'models' && <ModelsSection />}
-              {activeTab === 'scenarios' && <EnhancedScenariosSection />}
+              {activeTab === 'scenarios' && <ScenariosSection />}
             </MotionCard>
           </div>
 
