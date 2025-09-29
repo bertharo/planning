@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { googleSheetsService } from '@/lib/googleSheets'
 
 export async function POST(req: NextRequest) {
   try {
@@ -10,6 +11,17 @@ export async function POST(req: NextRequest) {
         { error: 'Missing prompt' }, 
         { status: 400 }
       )
+    }
+
+    // Try to use the LRP Copilot Google Sheets model first
+    try {
+      const lrpCopilotResult = await handleLRPCopilotScenario(prompt)
+      if (lrpCopilotResult) {
+        console.log('Using LRP Copilot Google Sheets model')
+        return lrpCopilotResult
+      }
+    } catch (error) {
+      console.log('LRP Copilot model not available, falling back to mock responses:', error)
     }
 
     // Check if we should use mock responses (only if Apps Script is not available)
@@ -338,4 +350,51 @@ function generateHeadcountChangeNarrative(prompt: string, action: string, count:
   narrative += `Recommendation: Proceed with ${action === 'hire' ? 'strategic hiring' : 'workforce optimization'} while ensuring operational continuity.`
   
   return narrative
+}
+
+async function handleLRPCopilotScenario(prompt: string) {
+  try {
+    const gasUrl = process.env.GAS_URL
+    const gasKey = process.env.GAS_KEY
+
+    if (!gasUrl || !gasKey) {
+      console.log('Apps Script configuration missing')
+      return null
+    }
+
+    const url = `${gasUrl}?key=${gasKey}`
+    console.log('Calling LRP Copilot Apps Script:', url)
+    
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ prompt })
+    })
+
+    if (!response.ok) {
+      console.log('Apps Script not available:', response.status)
+      return null
+    }
+
+    const data = await response.json()
+    console.log('LRP Copilot response:', data)
+
+    // Transform the response to match expected format
+    return NextResponse.json({
+      run_id: data.runId || data.run_id,
+      prompt: data.prompt,
+      arr_before: data.before?.ARR || data.arr_before,
+      arr_after: data.after?.ARR || data.arr_after,
+      arr_delta: data.delta?.ARR || data.arr_delta,
+      caps: data.constraintViolations || [],
+      narrative: data.narrative || 'Scenario completed successfully',
+      vwDeltas: data.vwDeltas || []
+    })
+
+  } catch (error) {
+    console.log('LRP Copilot error:', error)
+    return null
+  }
 }
