@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
-import { ScenarioRunner } from '@/components/ScenarioRunner'
 
 interface Scenario {
   id: string
@@ -184,7 +183,32 @@ export function EnhancedScenariosSection() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <ScenarioRunner onClose={() => setIsCreating(false)} />
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <label htmlFor="scenario-prompt" className="text-sm font-medium">
+                  Scenario Description
+                </label>
+                <textarea
+                  id="scenario-prompt"
+                  placeholder="Try: 'Increase total ARR by $15M; EMEA ≤ $2M' or 'Hire 20 engineers for product development'"
+                  className="w-full min-h-[100px] p-3 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="text-sm text-gray-600">
+                  Use natural language to describe your scenario
+                </div>
+                <div className="flex space-x-2">
+                  <Button variant="outline" onClick={() => setIsCreating(false)}>
+                    Cancel
+                  </Button>
+                  <Button>
+                    <Play className="h-4 w-4 mr-2" />
+                    Run Scenario
+                  </Button>
+                </div>
+              </div>
+            </div>
           </CardContent>
         </Card>
       )}

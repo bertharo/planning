@@ -12,7 +12,7 @@ interface DataSource {
   name: string
   type: string
   connected: boolean
-  config?: { [key: string]: string | boolean }
+  config?: { [key: string]: any }
   lastSync?: Date
   recordCount?: number
   status?: 'active' | 'error' | 'syncing'
@@ -180,7 +180,7 @@ export function EnhancedDataSourcePanel() {
       <div className="space-y-3">
         {dataSources.map((source) => {
           const TypeIcon = getTypeIcon(source.type)
-          const isConfiguring = isConfiguring === source.id
+          const isCurrentlyConfiguring = isConfiguring === source.id
           
           return (
             <Card key={source.id} className={`transition-all duration-200 ${
@@ -239,12 +239,12 @@ export function EnhancedDataSourcePanel() {
                         </Button>
                       </>
                     ) : (
-                      <Button 
-                        onClick={() => handleConnect(source.id)}
-                        disabled={isConfiguring}
-                        className="bg-blue-600 hover:bg-blue-700"
-                      >
-                        {isConfiguring ? (
+                        <Button 
+                          onClick={() => handleConnect(source.id)}
+                          disabled={isCurrentlyConfiguring}
+                          className="bg-blue-600 hover:bg-blue-700"
+                        >
+                          {isCurrentlyConfiguring ? (
                           <>
                             <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
                             Connecting...
@@ -260,7 +260,7 @@ export function EnhancedDataSourcePanel() {
                   </div>
                 </div>
 
-                {isConfiguring && (
+                {isCurrentlyConfiguring && (
                   <div className="mt-4 p-3 bg-blue-50 rounded-lg">
                     <div className="flex items-center space-x-2 text-blue-700">
                       <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />

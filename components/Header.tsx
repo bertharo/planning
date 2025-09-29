@@ -40,7 +40,7 @@ export function Header({ activeTab, setActiveTab }: HeaderProps) {
             return (
               <Button
                 key={tab.id}
-                variant={activeTab === tab.id ? "default" : "ghost"}
+                variant={activeTab === tab.id ? "secondary" : "ghost"}
                 size="sm"
                 onClick={() => setActiveTab(tab.id)}
                 className={cn(
@@ -94,7 +94,7 @@ export function Header({ activeTab, setActiveTab }: HeaderProps) {
               return (
                 <Button
                   key={tab.id}
-                  variant={activeTab === tab.id ? "default" : "ghost"}
+                  variant={activeTab === tab.id ? "secondary" : "ghost"}
                   size="sm"
                   onClick={() => setActiveTab(tab.id)}
                   className={cn(
