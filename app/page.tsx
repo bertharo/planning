@@ -1,10 +1,10 @@
 'use client'
 
 import { useState } from 'react'
-import { DataSourcePanel } from '@/components/DataSourcePanel'
-import { NaturalLanguageInterface } from '@/components/NaturalLanguageInterface'
+import { EnhancedDataSourcePanel } from '@/components/EnhancedDataSourcePanel'
+import { EnhancedNaturalLanguageInterface } from '@/components/EnhancedNaturalLanguageInterface'
 import { ModelsSection } from '@/components/ModelsSection'
-import { ScenariosSection } from '@/components/ScenariosSection'
+import { EnhancedScenariosSection } from '@/components/EnhancedScenariosSection'
 import { DashboardSection } from '@/components/DashboardSection'
 import { Header } from '@/components/Header'
 import { MotionCard } from '@/components/ui/motion'
@@ -29,10 +29,7 @@ export default function Home() {
           {/* Data Sources Panel */}
           <div className="lg:col-span-3">
             <MotionCard className="border-r-0 lg:border-r-2 border-gray-300">
-              <DataSourcePanel
-                dataSources={dataSources}
-                setDataSources={setDataSources}
-              />
+              <EnhancedDataSourcePanel />
             </MotionCard>
           </div>
 
@@ -41,14 +38,14 @@ export default function Home() {
             <MotionCard className="border-r-0 lg:border-r-2 border-gray-300">
               {activeTab === 'dashboard' && <DashboardSection />}
               {activeTab === 'models' && <ModelsSection />}
-              {activeTab === 'scenarios' && <ScenariosSection />}
+              {activeTab === 'scenarios' && <EnhancedScenariosSection />}
             </MotionCard>
           </div>
 
           {/* Natural Language Interface */}
           <div className="lg:col-span-3">
             <MotionCard>
-              <NaturalLanguageInterface />
+              <EnhancedNaturalLanguageInterface />
             </MotionCard>
           </div>
         </div>
